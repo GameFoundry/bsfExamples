@@ -1,0 +1,8 @@
+# Ignored files
+*~
+*.suo
+*.sdf
+*.opensdf
+bin
+Build
+Data

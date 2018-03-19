@@ -1,0 +1,4 @@
+#pragma once
+
+static constexpr const char* EXAMPLE_ROOT = "@PROJECT_SOURCE_DIR@/"; 
+static constexpr const char* EXAMPLE_DATA_PATH = "@PROJECT_SOURCE_DIR@/Data/"; 
