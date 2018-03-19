@@ -25,6 +25,5 @@
 	- Example binaries are placed in the `bsfExamples/bin` folder
 
 # Examples
-* ExampleGettingStarted - Example covering basic operations, including start up, asset import, camera setup, rendering and GUI.
 * ExamplePhysicallyBasedRendering - Example demonstrating the physically based renderer.
 * ExampleLowLevelRendering - Example demonstrating how to use the low-level rendering system to manually issue rendering commands. This is similar to using DirectX/OpenGL/Vulkan, except it uses bs::framework's platform-agnostic rendering layer.
