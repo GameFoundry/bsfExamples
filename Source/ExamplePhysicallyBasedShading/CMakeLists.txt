@@ -11,3 +11,10 @@ set_target_properties(ExamplePhysicallyBasedShading PROPERTIES VS_DEBUGGER_WORKI
 # Libraries
 ## Local libs
 target_link_libraries(ExamplePhysicallyBasedShading Common)
+
+# Plugin dependencies
+add_engine_dependencies(ExamplePhysicallyBasedShading)
+add_dependencies(ExamplePhysicallyBasedShading bsfFBXImporter bsfFontImporter bsfFreeImgImporter)
+
+# IDE specific
+set_property(TARGET ExamplePhysicallyBasedShading PROPERTY FOLDER Examples)

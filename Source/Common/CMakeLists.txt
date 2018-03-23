@@ -9,21 +9,28 @@ target_include_directories(Common PUBLIC "./")
 	
 # Libraries
 ## Local libs
-target_link_libraries(Common ${bsf_LIBRARIES})
+target_link_libraries(Common bsf)
+
+# IDE specific
+set_property(TARGET Common PROPERTY FOLDER Examples)
 
 # Copy bsf binaries
-set(BIN_SRC_DIR "${bsf_INCLUDE_DIRS}/../bin")
-set(BIN_DST_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>)
-
-if(WIN32 AND bsf_FOUND)
-	file(GLOB BIN_FILES "${BIN_SRC_DIR}/*.dll")
+if(WIN32)
+	set(BIN_SRC_DIR "${BSF_DIRECTORY}/bin")
+	set(BIN_DST_DIR ${PROJECT_SOURCE_DIR}/bin)
 	
+	file(GLOB_RECURSE BIN_FILES RELATIVE ${BIN_SRC_DIR} "${BIN_SRC_DIR}/*.dll")
+
 	foreach(CUR_PATH ${BIN_FILES})
 		get_filename_component(FILENAME ${CUR_PATH} NAME)
 	
-	   set(SRC ${CUR_PATH})
-	   set(DST ${BIN_DST_DIR}/${FILENAME})
-	   add_custom_command(
+		if(FILENAME MATCHES "^bsf.*")
+			continue()
+		endif()
+	
+		set(SRC ${BIN_SRC_DIR}/${CUR_PATH})
+		set(DST ${BIN_DST_DIR}/${CUR_PATH})
+		add_custom_command(
 		   TARGET Common POST_BUILD
 		   COMMAND ${CMAKE_COMMAND}
 		   ARGS    -E copy_if_different ${SRC} ${DST}
@@ -31,14 +38,3 @@ if(WIN32 AND bsf_FOUND)
 		   )
 	endforeach()
 endif()
-
-# Copy bsf data files
-set(DATA_SRC_DIR "${BIN_SRC_DIR}/Data")
-set(DATA_DST_DIR "${BIN_DST_DIR}/Data")
-
-add_custom_command(
-   TARGET Common POST_BUILD
-   COMMAND ${CMAKE_COMMAND}
-   ARGS    -E copy_directory ${DATA_SRC_DIR} ${DATA_DST_DIR}
-   COMMENT "Copying ${DATA_SRC_DIR} ${DATA_DST_DIR}\n"
-)

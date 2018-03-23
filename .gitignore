@@ -4,5 +4,6 @@
 *.sdf
 *.opensdf
 bin
+lib
 Build
 Data
