@@ -17,10 +17,6 @@
 #include "Renderer/BsRendererUtility.h"
 #include "BsEngineConfig.h"
 
-#if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This example uses the low-level rendering API to render a textured cube mesh. This is opposed to using scene objects
 // and components, in which case objects are rendered automatically based on their transform and other properties.
@@ -31,7 +27,7 @@
 // and start-up/shut-down events. This is normally not necessary for a high level scene object based model.
 //
 // The rendering is performed on the core (i.e. rendering) thread, as opposed to the main thread, where majority of
-// Banshee's code executes.
+// bsf's code executes.
 //
 // The example first sets up necessary resources, like GPU programs, pipeline state, vertex & index buffers. Then every
 // frame it binds the necessary rendering resources and executes the draw call.
@@ -83,6 +79,7 @@ namespace bs
 		// Called when the engine is about to be shut down
 		void onShutDown() override
 		{
+			// Queue the method for execution on the core thread
 			gCoreThread().queueCommand(&ct::shutdown);
 
 			// Shut-down engine components
@@ -92,15 +89,16 @@ namespace bs
 		// Called every frame, before any other engine system (optionally use postUpdate())
 		void preUpdate() override
 		{
+			// Queue the method for execution on the core thread
 			gCoreThread().queueCommand(&ct::render);
 		}
 	};
 }
 
-using namespace bs;
-
 // Main entry point into the application
 #if BS_PLATFORM == BS_PLATFORM_WIN32
+#include <windows.h>
+
 int CALLBACK WinMain(
 	_In_  HINSTANCE hInstance,
 	_In_  HINSTANCE hPrevInstance,
@@ -111,17 +109,20 @@ int CALLBACK WinMain(
 int main()
 #endif
 {
+	using namespace bs;
+
 	// Define a video mode for the resolution of the primary rendering window.
 	VideoMode videoMode(windowResWidth, windowResHeight);
 
 	// Start-up the engine using our custom MyApplication class. This will also create the primary rendering window.
 	// We provide the initial resolution of the window, its title and fullscreen state.
-	Application::startUp<MyApplication>(videoMode, "Banshee Example App", false);
+	Application::startUp<MyApplication>(videoMode, "bsf Example App", false);
 
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
 	Application::instance().runMainLoop();
 
+	// Clean up when done
 	Application::shutDown();
 
 	return 0;

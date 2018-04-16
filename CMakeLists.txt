@@ -5,6 +5,7 @@ set(BSF_DIRECTORY "${PROJECT_SOURCE_DIR}/../bsf" CACHE STRING "bsf directory")
 
 set (BSF_SOURCE_DIR ${BSF_DIRECTORY}/Source)
 set (APP_ROOT_DIR ${BSF_DIRECTORY})
+set (SECONDARY_APP_ROOT_DIR "${PROJECT_SOURCE_DIR}")
 set (BS_IS_BANSHEE3D 0)
 
 include(${BSF_SOURCE_DIR}/CMake/Properties.cmake)
@@ -23,5 +24,6 @@ check_and_update_builtin_assets(bsfExamples ${PROJECT_SOURCE_DIR}/Data ${BS_EXAM
 	
 # Sub-directories
 add_subdirectory(Source/Common)
-add_subdirectory(Source/ExampleLowLevelRendering)
-add_subdirectory(Source/ExamplePhysicallyBasedShading)
+add_subdirectory(Source/LowLevelRendering)
+add_subdirectory(Source/PhysicallyBasedShading)
+add_subdirectory(Source/CustomMaterials)
