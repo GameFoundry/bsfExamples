@@ -14,16 +14,17 @@ include(${BSF_SOURCE_DIR}/CMake/HelperMethods.cmake)
 
 add_subdirectory(${BSF_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/bsf)
 
-set(BS_EXAMPLES_BUILTIN_ASSETS_VERSION 1)
+set(BS_EXAMPLES_BUILTIN_ASSETS_VERSION 2)
 
 # Generate config file
 configure_file("${PROJECT_SOURCE_DIR}/Source/CMake/BsExampleConfig.h.in" "${PROJECT_SOURCE_DIR}/Source/Common/BsExampleConfig.h")
 
 # Check data dependencies
-check_and_update_builtin_assets(bsfExamples ${PROJECT_SOURCE_DIR}/Data ${BS_EXAMPLES_BUILTIN_ASSETS_VERSION})
+check_and_update_builtin_assets(bsfExamples ${PROJECT_SOURCE_DIR}/Data ${BS_EXAMPLES_BUILTIN_ASSETS_VERSION} NO)
 	
 # Sub-directories
 add_subdirectory(Source/Common)
 add_subdirectory(Source/LowLevelRendering)
 add_subdirectory(Source/PhysicallyBasedShading)
 add_subdirectory(Source/CustomMaterials)
+add_subdirectory(Source/GUI)

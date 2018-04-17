@@ -22,6 +22,7 @@
 	- Example binaries are placed in the `bsfExamples/bin` folder
 
 # Examples
-* CustomMaterials - Example demonstrating how to use custom materials that override vertex, surface and lighting aspects of the renderer.
-* PhysicallyBasedRendering - Example demonstrating the physically based renderer using the built-in shaders & lighting.
-* LowLevelRendering - Example demonstrating how to use the low-level rendering system to manually issue rendering commands. This is similar to using DirectX/OpenGL/Vulkan, except it uses bs::framework's platform-agnostic rendering layer.
+* CustomMaterials - Demonstrates how to use custom materials that override vertex, surface and lighting aspects of the renderer.
+* GUI - Demonstrates how to use the built-in GUI system. Demoes a variety of basic controls, the layout system and shows how to use styles to customize the look of GUI elements.
+* PhysicallyBasedRendering - Demonstrates the physically based renderer using the built-in shaders & lighting by rendering an object in a HDR environment.
+* LowLevelRendering - Demonstrates how to use the low-level rendering system to manually issue rendering commands. This is similar to using DirectX/OpenGL/Vulkan, except it uses bs::framework's platform-agnostic rendering layer.

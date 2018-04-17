@@ -6,6 +6,7 @@
 #include "Components/BsCCamera.h"
 #include "Components/BsCRenderable.h"
 #include "Components/BsCSkybox.h"
+#include "Components/BsCLight.h"
 #include "GUI/BsCGUIWidget.h"
 #include "GUI/BsGUIPanel.h"
 #include "GUI/BsGUILayoutY.h"
@@ -15,13 +16,11 @@
 #include "Scene/BsSceneObject.h"
 #include "Renderer/BsRenderer.h"
 #include "Material/BsShader.h"
-#include "Mesh/BsMesh.h"
 
 // Example includes
 #include "BsCameraFlyer.h"
 #include "BsObjectRotator.h"
 #include "BsExampleFramework.h"
-#include "Components/BsCLight.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This example renders an object using a variety of custom materials, showing you how you can customize the rendering of
@@ -209,6 +208,10 @@ namespace bs
 		// Position and orient the camera scene object
 		sceneCameraSO->setPosition(Vector3(2.0f, 1.0f, 2.0f));
 		sceneCameraSO->lookAt(Vector3(-0.4f, 0, 0));
+
+		/************************************************************************/
+		/* 									GUI		                     		*/
+		/************************************************************************/
 
 		// Add a GUIWidget component we will use for rendering the GUI
 		HSceneObject guiSO = SceneObject::create("GUI");

@@ -3,11 +3,14 @@
 #include "BsPrerequisites.h"
 #include "Reflection/BsRTTIType.h"
 #include "Resources/BsResources.h"
+#include "Resources/BsResourceManifest.h"
 #include "Mesh/BsMesh.h"
 #include "Importer/BsImporter.h"
 #include "Importer/BsMeshImportOptions.h"
 #include "Importer/BsTextureImportOptions.h"
 #include "BsExampleConfig.h"
+#include "Text/BsFontImportOptions.h"
+#include "FileSystem/BsFileSystem.h"
 
 namespace bs
 {
@@ -24,7 +27,11 @@ namespace bs
 		PistolNormal,
 		PistolRoughness,
 		PistolMetalness,
-		EnvironmentPaperMill
+		EnvironmentPaperMill,
+		GUIBansheeIcon,
+		GUIExampleButtonNormal,
+		GUIExampleButtonHover,
+		GUIExampleButtonActive
 	};
 
 	/** A list of shader assets provided with the example projects. */
@@ -36,10 +43,41 @@ namespace bs
 		CustomForward
 	};
 
+	/** A list of font assets provided with the example projects. */
+	enum class ExampleFont
+	{
+		SegoeUILight,
+		SegoeUISemiBold
+	};
+
 	/** Various helper functionality used throught the examples. */
 	class ExampleFramework
 	{
 	public:
+		/** Loads a manifest of all resources that were previously saved using this class. */
+		static void loadResourceManifest()
+		{
+			const Path dataPath = EXAMPLE_DATA_PATH;
+			const Path manifestPath = dataPath + "ResourceManifest.asset";
+
+			if (FileSystem::exists(manifestPath))
+				manifest = ResourceManifest::load(manifestPath, dataPath);
+			else
+				manifest = ResourceManifest::create("ExampleAssets");
+
+			gResources().registerResourceManifest(manifest);
+		}
+
+		/** Saves the current resource manifest. */
+		static void saveResourceManifest()
+		{
+			const Path dataPath = EXAMPLE_DATA_PATH;
+			const Path manifestPath = dataPath + "ResourceManifest.asset";
+
+			if(manifest)
+				ResourceManifest::save(manifest, manifestPath, dataPath);
+		}
+
 		/** Registers a common set of keys/buttons that are used for controlling the examples. */
 		static void setupInputConfig()
 		{
@@ -108,6 +146,11 @@ namespace bs
 
 				// Save for later use, so we don't have to import on the next run.
 				gResources().save(model, assetPath, true);
+
+				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
+				// the application was restarted, which is important if resource was referenced in some serialized object.
+				if(manifest)
+					manifest->registerResource(model.getUUID(), assetPath);
 			}
 
 			return model;
@@ -120,9 +163,10 @@ namespace bs
 		 * Textures not in sRGB space (e.g. normal maps) need to be specially marked by setting 'isSRGB' to false. Also 
 		 * allows for conversion of texture to cubemap by setting the 'isCubemap' parameter. If the data should be imported
 		 * in a floating point format, specify 'isHDR' to true. Note these options are only relevant when a texture is
-		 * being imported (i.e. when asset file is missing).
+		 * being imported (i.e. when asset file is missing). If 'mips' is true, mip-map levels will be generated.
 		 */
-		static HTexture loadTexture(ExampleTexture type, bool isSRGB = true, bool isCubemap = false, bool isHDR = false)
+		static HTexture loadTexture(ExampleTexture type, bool isSRGB = true, bool isCubemap = false, bool isHDR = false, 
+			bool mips = true)
 		{
 			// Map from the enum to the actual file path
 			static Path assetPaths[] =
@@ -132,6 +176,10 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "Pistol/Pistol_RGH.png",
 				Path(EXAMPLE_DATA_PATH) + "Pistol/Pistol_MTL.png",
 				Path(EXAMPLE_DATA_PATH) + "Environments/PaperMill_E_3k.hdr",
+				Path(EXAMPLE_DATA_PATH) + "GUI/BansheeIcon.png",
+				Path(EXAMPLE_DATA_PATH) + "GUI/ExampleButtonNormal.png",
+				Path(EXAMPLE_DATA_PATH) + "GUI/ExampleButtonHover.png",
+				Path(EXAMPLE_DATA_PATH) + "GUI/ExampleButtonActive.png",
 			};
 
 			const Path& srcAssetPath = assetPaths[(UINT32)type];
@@ -153,7 +201,7 @@ namespace bs
 					TextureImportOptions* importOptions = static_cast<TextureImportOptions*>(textureImportOptions.get());
 
 					// We want maximum number of mipmaps to be generated
-					importOptions->setGenerateMipmaps(true);
+					importOptions->setGenerateMipmaps(mips);
 
 					// If the texture is in sRGB space the system needs to know about it
 					importOptions->setSRGB(isSRGB);
@@ -177,6 +225,11 @@ namespace bs
 
 				// Save for later use, so we don't have to import on the next run.
 				gResources().save(texture, assetPath, true);
+
+				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
+				// the application was restarted, which is important if resource was referenced in some serialized object.
+				if(manifest)
+					manifest->registerResource(texture.getUUID(), assetPath);
 			}
 
 			return texture;
@@ -210,9 +263,85 @@ namespace bs
 
 				// Save for later use, so we don't have to import on the next run.
 				gResources().save(shader, assetPath, true);
+
+				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
+				// the application was restarted, which is important if resource was referenced in some serialized object.
+				if(manifest)
+					manifest->registerResource(shader.getUUID(), assetPath);
 			}
 
 			return shader;
 		}
+
+		/** 
+		 * Loads one of the builtin font assets. If the asset doesn't exist, the font will be re-imported from the 
+		 * source file, and then saved so it can be loaded on the next call to this method. 
+		 *
+		 * Use the 'fontSizes' parameter to determine which sizes of this font should be imported. Note this option is only
+		 * relevant when a font is being imported (i.e. when the asset file is missing).
+		 */
+		static HFont loadFont(ExampleFont type, Vector<UINT32> fontSizes)
+		{
+			// Map from the enum to the actual file path
+			static Path assetPaths[] =
+			{
+				Path(EXAMPLE_DATA_PATH) + "GUI/segoeuil.ttf",
+				Path(EXAMPLE_DATA_PATH) + "GUI/seguisb.ttf",
+			};
+
+			const Path& srcAssetPath = assetPaths[(UINT32)type];
+
+			// Attempt to load the previously processed asset
+			Path assetPath = srcAssetPath;
+			assetPath.setExtension(srcAssetPath.getExtension() + ".asset");
+
+			HFont font = gResources().load<Font>(assetPath);
+			if (font == nullptr) // Font file doesn't exist, import from the source file.
+			{
+				// When importing you may specify optional import options that control how is the asset imported.
+				SPtr<FontImportOptions> fontImportOptions = FontImportOptions::create();
+				fontImportOptions->setFontSizes(fontSizes);
+
+				font = gImporter().import<Font>(srcAssetPath, fontImportOptions);
+
+				// Save for later use, so we don't have to import on the next run.
+				gResources().save(font, assetPath, true);
+
+				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
+				// the application was restarted, which is important if resource was referenced in some serialized object.
+				if(manifest)
+				{
+					manifest->registerResource(font.getUUID(), assetPath);
+
+					// Font has child resources, which also need to be registered
+					for (auto& size : fontSizes)
+					{
+						SPtr<const FontBitmap> fontData = font->getBitmap(size);
+
+						Path texPageOutputPath = Path(EXAMPLE_DATA_PATH) + "GUI/";
+
+						UINT32 pageIdx = 0;
+						for (const auto& tex : fontData->texturePages)
+						{
+							WString fontName = srcAssetPath.getWFilename(false);
+							texPageOutputPath.setFilename(fontName + L"_" + toWString(size) + L"_texpage_" +
+								toWString(pageIdx) + L".asset");
+
+							gResources().save(tex, texPageOutputPath, true);
+							manifest->registerResource(tex.getUUID(), texPageOutputPath);
+
+							pageIdx++;
+						}
+					}
+				}
+			}
+
+			return font;
+		}
+
+	private:
+		static SPtr<ResourceManifest> manifest;
 	};
+
+	SPtr<ResourceManifest> ExampleFramework::manifest;
 }
