@@ -81,7 +81,7 @@ namespace bs
 
 		////////////////////// Add a variety of GUI controls /////////////////////
 		// Clickable button with a textual label
-		GUIButton* button = mainPanel->addNewElement<GUIButton>(HString(L"Click me!"));
+		GUIButton* button = mainPanel->addNewElement<GUIButton>(HString("Click me!"));
 		button->onClick.connect([]()
 		{
 			// Log a message when the user clicks the button
@@ -92,7 +92,7 @@ namespace bs
 		button->setSize(100, 30);
 
 		// Toggleable button
-		GUIToggle* toggle = mainPanel->addNewElement<GUIToggle>(HString(L""));
+		GUIToggle* toggle = mainPanel->addNewElement<GUIToggle>(HString(""));
 		toggle->onToggled.connect([](bool enabled)
 		{
 			// Log a message when the user toggles the button
@@ -109,35 +109,35 @@ namespace bs
 		toggle->setPosition(10, 90);
 
 		// Add non-interactable label next to the toggle
-		GUILabel* toggleLabel = mainPanel->addNewElement<GUILabel>(HString(L"Toggle me!"));
+		GUILabel* toggleLabel = mainPanel->addNewElement<GUILabel>(HString("Toggle me!"));
 		toggleLabel->setPosition(30, 92);
 
 		// Single-line box in which user can input text into
 		GUIInputBox* inputBox = mainPanel->addNewElement<GUIInputBox>();
-		inputBox->onValueChanged.connect([](const WString& value)
+		inputBox->onValueChanged.connect([](const String& value)
 		{
 			// Log a message when the user enters new text in the input box
-			LOGDBG("User entered: \"" + toString(value) + "\"");
+			LOGDBG("User entered: \"" + value + "\"");
 		});
 
-		inputBox->setText(L"Type in me...");
+		inputBox->setText("Type in me...");
 		inputBox->setPosition(10, 115);
 		inputBox->setWidth(100);
 
 		// List box allowing you to select one of the specified elements
 		Vector<HString> listBoxElements =
 		{
-			HString(L"Blue"),
-			HString(L"Black"),
-			HString(L"Green"),
-			HString(L"Orange")
+			HString("Blue"),
+			HString("Black"),
+			HString("Green"),
+			HString("Orange")
 		};
 
 		GUIListBox* listBox = mainPanel->addNewElement<GUIListBox>(listBoxElements);
 		listBox->onSelectionToggled.connect([listBoxElements](UINT32 idx, bool enabled)
 		{
 			// Log a message when the user selects a new element
-			LOGDBG("User selected element: \"" + toString(listBoxElements[idx].getValue()) + "\"");
+			LOGDBG("User selected element: \"" + listBoxElements[idx].getValue() + "\"");
 			
 		});
 
@@ -175,7 +175,7 @@ namespace bs
 		skin->setStyle("HeaderLabelStyle", headerLabelStyle);
 
 		// Create and position the label
-		GUILabel* basicControlsLbl = mainPanel->addNewElement<GUILabel>(HString(L"Basic controls"), "HeaderLabelStyle");
+		GUILabel* basicControlsLbl = mainPanel->addNewElement<GUILabel>(HString("Basic controls"), "HeaderLabelStyle");
 		basicControlsLbl->setPosition(10, 10);
 
 		///////////////////////////  vertical layout /////////////////////////
@@ -186,7 +186,7 @@ namespace bs
 		// Add five buttons to the layout
 		for(UINT32 i = 0; i < 5; i++)
 		{
-			vertLayout->addNewElement<GUIButton>(HString(L"Click me!"));
+			vertLayout->addNewElement<GUIButton>(HString("Click me!"));
 
 			// Add a 10 pixel spacing between each button
 			vertLayout->addNewElement<GUIFixedSpace>(10);
@@ -200,7 +200,7 @@ namespace bs
 		vertLayout->setWidth(100);
 
 		// Add a header
-		GUILabel* vertLayoutLbl = mainPanel->addNewElement<GUILabel>(HString(L"Vertical layout"), "HeaderLabelStyle");
+		GUILabel* vertLayoutLbl = mainPanel->addNewElement<GUILabel>(HString("Vertical layout"), "HeaderLabelStyle");
 		vertLayoutLbl->setPosition(300, 10);
 
 		////////////////////////// Horizontal layout ///////////////////////
@@ -211,7 +211,7 @@ namespace bs
 		// Add vive buttons to the layout
 		for(UINT32 i = 0; i < 5; i++)
 		{
-			horzLayout->addNewElement<GUIButton>(HString(L"Click me!"));
+			horzLayout->addNewElement<GUIButton>(HString("Click me!"));
 			horzLayout->addNewElement<GUIFlexibleSpace>();
 		}
 
@@ -220,7 +220,7 @@ namespace bs
 		horzLayout->setHeight(30);
 
 		// Add a header
-		GUILabel* horzLayoutLbl = mainPanel->addNewElement<GUILabel>(HString(L"Horizontal layout"), "HeaderLabelStyle");
+		GUILabel* horzLayoutLbl = mainPanel->addNewElement<GUILabel>(HString("Horizontal layout"), "HeaderLabelStyle");
 		horzLayoutLbl->setPosition(10, 300);
 
 		//////////////////////////// Scroll area ///////////////////////
@@ -232,13 +232,13 @@ namespace bs
 		GUILayout& scrollLayout = scrollArea->getLayout();
 
 		for(UINT32 i = 0; i < 15; i++)
-			scrollLayout.addNewElement<GUIButton>(HString(L"Click me!"));
+			scrollLayout.addNewElement<GUIButton>(HString("Click me!"));
 
 		scrollArea->setPosition(565, 50);
 		scrollArea->setSize(130, 200);
 
 		// Add a header
-		GUILabel* scrollAreaLbl = mainPanel->addNewElement<GUILabel>(HString(L"Scroll area"), "HeaderLabelStyle");
+		GUILabel* scrollAreaLbl = mainPanel->addNewElement<GUILabel>(HString("Scroll area"), "HeaderLabelStyle");
 		scrollAreaLbl->setPosition(550, 10);
 
 		///////////////////////////// Button using a custom style ///////////////////
@@ -275,11 +275,11 @@ namespace bs
 		skin->setStyle("CustomButtonStyle", customBtnStyle);
 
 		// Create the button that uses the custom style
-		GUIButton* customButton = mainPanel->addNewElement<GUIButton>(HString(L"Click me!"), "CustomButtonStyle");
+		GUIButton* customButton = mainPanel->addNewElement<GUIButton>(HString("Click me!"), "CustomButtonStyle");
 		customButton->setPosition(800, 50);
 
 		// Add a header
-		GUILabel* customButtonLbl = mainPanel->addNewElement<GUILabel>(HString(L"Custom button"), "HeaderLabelStyle");
+		GUILabel* customButtonLbl = mainPanel->addNewElement<GUILabel>(HString("Custom button"), "HeaderLabelStyle");
 		customButtonLbl->setPosition(800, 10);
 	}
 }

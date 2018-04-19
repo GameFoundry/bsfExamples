@@ -227,17 +227,17 @@ namespace bs
 		mainPanel->clear();
 
 		// Set up strings to display
-		WString materialNameLookup[] =
+		String materialNameLookup[] =
 		{
-			L"Standard",
-			L"Vertex wobble (Deferred)",
-			L"Surface noise (Deferred)",
-			L"Lambert BRDF (Deferred)",
-			L"Surface noise & Lambert BRDF (Forward)"
+			"Standard",
+			"Vertex wobble (Deferred)",
+			"Surface noise (Deferred)",
+			"Lambert BRDF (Deferred)",
+			"Surface noise & Lambert BRDF (Forward)"
 		};
 
-		HString toggleString(L"Press Q to toggle between materials");
-		HString currentMaterialString(L"Current material: {0}");
+		HString toggleString("Press Q to toggle between materials");
+		HString currentMaterialString("Current material: {0}");
 
 		currentMaterialString.setParameter(0, materialNameLookup[gMaterialIdx]);
 

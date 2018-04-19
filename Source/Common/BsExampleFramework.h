@@ -323,9 +323,9 @@ namespace bs
 						UINT32 pageIdx = 0;
 						for (const auto& tex : fontData->texturePages)
 						{
-							WString fontName = srcAssetPath.getWFilename(false);
-							texPageOutputPath.setFilename(fontName + L"_" + toWString(size) + L"_texpage_" +
-								toWString(pageIdx) + L".asset");
+							String fontName = srcAssetPath.getFilename(false);
+							texPageOutputPath.setFilename(fontName + "_" + toString(size) + "_texpage_" +
+								toString(pageIdx) + ".asset");
 
 							gResources().save(tex, texPageOutputPath, true);
 							manifest->registerResource(tex.getUUID(), texPageOutputPath);
