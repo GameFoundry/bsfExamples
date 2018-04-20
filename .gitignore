@@ -7,4 +7,4 @@ bin
 lib
 Build
 Data
-ExampleConfig.h
+BsExampleConfig.h

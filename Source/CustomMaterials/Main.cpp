@@ -244,7 +244,7 @@ namespace bs
 		// Create a vertical GUI layout to align the two labels one below each other
 		GUILayoutY* vertLayout = GUILayoutY::create();
 
-		// Createa couple of GUI labels displaying the two strings we created above
+		// Create a couple of GUI labels displaying the two strings we created above
 		vertLayout->addNewElement<GUILabel>(toggleString);
 		vertLayout->addNewElement<GUILabel>(currentMaterialString);
 
