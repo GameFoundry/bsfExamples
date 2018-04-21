@@ -23,7 +23,15 @@
 #include "BsExampleConfig.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO
+// This example demonstrates how to import audio clips and then play them back using a variety of settings.
+//
+// The example starts off by import the relevant audio clips, demonstrating various settings for streaming, compression and
+// 2D/3D audio. It then sets up a camera that will be used for GUI rendering, unrelated to audio. It proceeds to
+// add an AudioListener component which is required to play back 3D sounds (it determines what are sounds relative to). It
+// then creates a couple of AudioSources - one that is static and used for music playback (2D audio), and another that
+// moves around the listener and demonstrates 3D audio playback. Follow that, input is hooked up that lets the user switch
+// between the playback of the two audio sources. It also demonstrates how to play one-shot audio clips without the
+// AudioSource component. Finally, GUI is set up that lets the user know which input controls are available.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace bs
 {

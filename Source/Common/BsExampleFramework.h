@@ -17,7 +17,7 @@ namespace bs
 	/** A list of mesh assets provided with the example projects. */
 	enum class ExampleMesh
 	{
-		Pistol
+		Pistol,
 	};
 
 	/** A list of texture assets provided with the example projects. */
@@ -31,7 +31,11 @@ namespace bs
 		GUIBansheeIcon,
 		GUIExampleButtonNormal,
 		GUIExampleButtonHover,
-		GUIExampleButtonActive
+		GUIExampleButtonActive,
+		DroneAlbedo,
+		DroneNormal,
+		DroneRoughness,
+		DroneMetalness
 	};
 
 	/** A list of shader assets provided with the example projects. */
@@ -180,6 +184,10 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "GUI/ExampleButtonNormal.png",
 				Path(EXAMPLE_DATA_PATH) + "GUI/ExampleButtonHover.png",
 				Path(EXAMPLE_DATA_PATH) + "GUI/ExampleButtonActive.png",
+				Path(EXAMPLE_DATA_PATH) + "MechDrone/Drone_diff.jpg",
+				Path(EXAMPLE_DATA_PATH) + "MechDrone/Drone_normal.jpg",
+				Path(EXAMPLE_DATA_PATH) + "MechDrone/Drone_rough.jpg",
+				Path(EXAMPLE_DATA_PATH) + "MechDrone/Drone_metal.jpg",
 			};
 
 			const Path& srcAssetPath = assetPaths[(UINT32)type];
