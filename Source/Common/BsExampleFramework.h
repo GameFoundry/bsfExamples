@@ -11,6 +11,7 @@
 #include "BsExampleConfig.h"
 #include "Text/BsFontImportOptions.h"
 #include "FileSystem/BsFileSystem.h"
+#include "Input/BsVirtualInput.h"
 
 namespace bs
 {
@@ -35,7 +36,9 @@ namespace bs
 		DroneAlbedo,
 		DroneNormal,
 		DroneRoughness,
-		DroneMetalness
+		DroneMetalness,
+		GridPattern,
+		GridPattern2
 	};
 
 	/** A list of shader assets provided with the example projects. */
@@ -188,6 +191,8 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "MechDrone/Drone_normal.jpg",
 				Path(EXAMPLE_DATA_PATH) + "MechDrone/Drone_rough.jpg",
 				Path(EXAMPLE_DATA_PATH) + "MechDrone/Drone_metal.jpg",
+				Path(EXAMPLE_DATA_PATH) + "Grid/GridPattern.png",
+				Path(EXAMPLE_DATA_PATH) + "Grid/GridPattern2.png",
 			};
 
 			const Path& srcAssetPath = assetPaths[(UINT32)type];

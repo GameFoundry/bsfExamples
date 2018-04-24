@@ -118,6 +118,9 @@ namespace bs
 		HCamera sceneCamera = sceneCameraSO->addComponent<CCamera>();
 		sceneCamera->getViewport()->setTarget(window);
 
+		// Set background color
+		sceneCamera->getViewport()->setClearColorValue(Color::Black);
+
 		/************************************************************************/
 		/* 									AUDIO	                     		*/
 		/************************************************************************/

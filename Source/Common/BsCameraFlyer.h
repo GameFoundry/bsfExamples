@@ -7,10 +7,7 @@
 
 namespace bs
 {
-	/** 
-	 * Component that controls movement and rotation of a Camera component. The Camera component must be attached to the 
-	 * same SceneObject this component is on.
-	 */
+	/** Component that controls movement and rotation of the scene object it's attached to. */
 	class CameraFlyer : public Component
 	{
 	public:
@@ -22,11 +19,9 @@ namespace bs
 	private:
 		float mCurrentSpeed; /**< Current speed of the camera. */
 
-		Degree mPitch; /**< Current pitch rotation of the camera (looking up or down). */
-		Degree mYaw; /**< Current yar rotation of the camera (looking left or right). */
-		bool mLastButtonState; /**< Determines was the user rotating the camera last frame. */
-
-		HCamera mCamera; /**< Camera component that is influenced by the flyer. */
+		Degree mPitch = Degree(0.0f); /**< Current pitch rotation of the camera (looking up or down). */
+		Degree mYaw = Degree(0.0f); /**< Current yaw rotation of the camera (looking left or right). */
+		bool mLastButtonState = false; /**< Determines was the user rotating the camera last frame. */
 
 		VirtualButton mMoveForward; /**< Key binding for moving the camera forward. */
 		VirtualButton mMoveBack; /**< Key binding for moving the camera backward. */
@@ -41,6 +36,6 @@ namespace bs
 		static const float TOP_SPEED; /**< Maximum movement speed. */
 		static const float ACCELERATION; /**< Acceleration that determines how quickly to go from starting to top speed. */
 		static const float FAST_MODE_MULTIPLIER; /**< Multiplier applied to the speed when the fast move button is held. */
-		static const float ROTATION_SPEED; /**< Determines speed for rotation, in degrees per second. */
+		static const float ROTATION_SPEED; /**< Determines speed of camera rotation. */
 	};
 }

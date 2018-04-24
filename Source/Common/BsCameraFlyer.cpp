@@ -27,13 +27,10 @@ namespace bs
 	}
 
 	CameraFlyer::CameraFlyer(const HSceneObject& parent)
-		:Component(parent), mPitch(0.0f), mYaw(0.0f), mLastButtonState(false)
+		:Component(parent)
 	{
 		// Set a name for the component, so we can find it later if needed
 		setName("CameraFlyer");
-
-		// Find the camera component we're influencing (must be on the same SceneObject we're on)
-		mCamera = sceneObject()->getComponent<CCamera>();
 
 		// Get handles for key bindings. Actual keys attached to these bindings will be registered during app start-up.
 		mMoveForward = VirtualButton("Forward");
