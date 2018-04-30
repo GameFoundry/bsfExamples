@@ -10,7 +10,6 @@
 	- `cd Build`
 	- `cmake -G "$generator$" ../`
 		- Where *$generator$* should be replaced with any of the supported generators. Some common ones:
-			- `Visual Studio 14 2015 Win64` - Visual Studio 2015 (64-bit build)
 			- `Visual Studio 15 2017 Win64` - Visual Studio 2017 (64-bit build)
 			- `Unix Makefiles`
 			- `Ninja`
