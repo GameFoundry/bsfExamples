@@ -11,7 +11,6 @@
 #include "Scene/BsSceneObject.h"
 
 // Example includes
-#include "BsCameraFlyer.h"
 #include "BsObjectRotator.h"
 #include "BsExampleFramework.h"
 
@@ -47,13 +46,13 @@ namespace bs
 		Assets assets;
 
 		// Load a 3D model
-		assets.exampleModel = ExampleFramework::loadMesh(ExampleMesh::Pistol, 10.0f);
+		assets.exampleModel = ExampleFramework::loadMesh(ExampleMesh::Cerberus);
 
 		// Load PBR textures for the 3D model
-		assets.exampleAlbedoTex = ExampleFramework::loadTexture(ExampleTexture::PistolAlbedo);
-		assets.exampleNormalsTex = ExampleFramework::loadTexture(ExampleTexture::PistolNormal, false);
-		assets.exampleRoughnessTex = ExampleFramework::loadTexture(ExampleTexture::PistolRoughness, false);
-		assets.exampleMetalnessTex = ExampleFramework::loadTexture(ExampleTexture::PistolMetalness, false);
+		assets.exampleAlbedoTex = ExampleFramework::loadTexture(ExampleTexture::CerberusAlbedo);
+		assets.exampleNormalsTex = ExampleFramework::loadTexture(ExampleTexture::CerberusNormal, false);
+		assets.exampleRoughnessTex = ExampleFramework::loadTexture(ExampleTexture::CerberusRoughness, false);
+		assets.exampleMetalnessTex = ExampleFramework::loadTexture(ExampleTexture::CerberusMetalness, false);
 
 		// Create a material using the default physically based shader, and apply the PBR textures we just loaded
 		HShader shader = gBuiltinResources().getBuiltinShader(BuiltinShader::Standard);
@@ -88,6 +87,8 @@ namespace bs
 		HRenderable renderable = pistolSO->addComponent<CRenderable>();
 		renderable->setMesh(assets.exampleModel);
 		renderable->setMaterial(assets.exampleMaterial);
+
+		pistolSO->setRotation(Quaternion(Degree(0.0f), Degree(-160.0f), Degree(0.0f)));
 
 		// Add a rotator component so we can rotate the object during runtime
 		pistolSO->addComponent<ObjectRotator>();
@@ -133,12 +134,9 @@ namespace bs
 		// Enable multi-sample anti-aliasing for better quality
 		sceneCamera->setMSAACount(4);
 
-		// Add a CameraFlyer component that allows us to move the camera. See CameraFlyer for more information.
-		sceneCameraSO->addComponent<CameraFlyer>();
-
 		// Position and orient the camera scene object
-		sceneCameraSO->setPosition(Vector3(2.0f, 1.0f, 2.0f));
-		sceneCameraSO->lookAt(Vector3(-0.4f, 0, 0));
+		sceneCameraSO->setPosition(Vector3(0.2f, 0.05f, 1.4f));
+		sceneCameraSO->lookAt(Vector3(0.2f, 0.05f, 0.0f));
 	}
 }
 

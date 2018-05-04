@@ -222,7 +222,7 @@ namespace bs
 		/************************************************************************/
 
 		// Load a skybox texture
-		HTexture skyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentPaperMill);
+		HTexture skyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentDaytime, false, true, true);
 
 		// Add a skybox texture for sky reflections
 		HSceneObject skyboxSO = SceneObject::create("Skybox");
@@ -337,7 +337,7 @@ int main()
 
 	// Set up the scene with an object to render and a camera
 	setUpScene();
-	
+
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
 	Application::instance().runMainLoop();

@@ -31,6 +31,15 @@ namespace bs
 		mRotateObj = VirtualButton("RotateObj");
 		mHorizontalAxis = VirtualAxis("Horizontal");
 		mVerticalAxis = VirtualAxis("Vertical");
+
+		// Determine initial yaw and pitch
+		Quaternion rotation = SO()->getTransform().getRotation();
+
+		Radian pitch, yaw, roll;
+		(void)rotation.toEulerAngles(pitch, yaw, roll);
+
+		mPitch = pitch;
+		mYaw = yaw;
 	}
 
 	void ObjectRotator::update()

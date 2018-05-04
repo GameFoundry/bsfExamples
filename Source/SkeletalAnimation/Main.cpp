@@ -88,7 +88,7 @@ namespace bs
 		assets.exampleMaterial->setTexture("gMetalnessTex", assets.exampleMetalnessTex);
 
 		// Load an environment map
-		assets.exampleSkyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentPaperMill, false, true, true);
+		assets.exampleSkyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentMachineShop, false, true, true);
 
 		return assets;
 	}

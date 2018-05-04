@@ -19,6 +19,7 @@ namespace bs
 	enum class ExampleMesh
 	{
 		Pistol,
+		Cerberus
 	};
 
 	/** A list of texture assets provided with the example projects. */
@@ -38,7 +39,13 @@ namespace bs
 		DroneRoughness,
 		DroneMetalness,
 		GridPattern,
-		GridPattern2
+		GridPattern2,
+		EnvironmentDaytime,
+		EnvironmentMachineShop,
+		CerberusAlbedo,
+		CerberusNormal,
+		CerberusRoughness,
+		CerberusMetalness
 	};
 
 	/** A list of shader assets provided with the example projects. */
@@ -126,6 +133,7 @@ namespace bs
 			static Path assetPaths[] =
 			{
 				Path(EXAMPLE_DATA_PATH) + "Pistol/Pistol01.fbx",
+				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus.FBX",
 			};
 
 			const Path& srcAssetPath = assetPaths[(UINT32)type];
@@ -193,6 +201,12 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "MechDrone/Drone_metal.jpg",
 				Path(EXAMPLE_DATA_PATH) + "Grid/GridPattern.png",
 				Path(EXAMPLE_DATA_PATH) + "Grid/GridPattern2.png",
+				Path(EXAMPLE_DATA_PATH) + "Environments/daytime.hdr",
+				Path(EXAMPLE_DATA_PATH) + "Environments/MachineShop.exr",
+				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus_A.tga",
+				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus_N.tga",
+				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus_R.tga",
+				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus_M.tga",
 			};
 
 			const Path& srcAssetPath = assetPaths[(UINT32)type];
