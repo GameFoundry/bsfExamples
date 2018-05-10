@@ -88,7 +88,7 @@ namespace bs
 		assets.exampleMaterial->setTexture("gMetalnessTex", assets.exampleMetalnessTex);
 
 		// Load an environment map
-		assets.exampleSkyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentMachineShop, false, true, true);
+		assets.exampleSkyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentRathaus, false, true, true);
 
 		return assets;
 	}
@@ -173,7 +173,7 @@ namespace bs
 		sceneCameraSO->addComponent<CameraFlyer>();
 
 		// Position and orient the camera scene object
-		sceneCameraSO->setPosition(Vector3(0.0f, 1.5f, -4.0f));
+		sceneCameraSO->setPosition(Vector3(0.0f, 2.5f, -4.0f) * 0.65f);
 		sceneCameraSO->lookAt(Vector3(0, 1.5f, 0));
 	}
 }
