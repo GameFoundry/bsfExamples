@@ -18,3 +18,5 @@ add_dependencies(SkeletalAnimation bsfFBXImporter bsfFontImporter bsfFreeImgImpo
 
 # IDE specific
 set_property(TARGET SkeletalAnimation PROPERTY FOLDER Examples)
+
+cotire(SkeletalAnimation)

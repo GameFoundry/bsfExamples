@@ -16,3 +16,5 @@ set_property(TARGET Common PROPERTY FOLDER Examples)
 
 # Copy bsf binaries
 copyBsfBinaries(Common ${BSF_DIRECTORY})
+
+cotire(Common)

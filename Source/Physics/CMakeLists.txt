@@ -18,3 +18,5 @@ add_dependencies(Physics bsfFBXImporter bsfFontImporter bsfFreeImgImporter)
 
 # IDE specific
 set_property(TARGET Physics PROPERTY FOLDER Examples)
+
+cotire(Physics)
