@@ -14,6 +14,8 @@ include(${BSF_SOURCE_DIR}/CMake/Properties.cmake)
 include(${BSF_SOURCE_DIR}/CMake/FindPackageOrBuild.cmake)
 include(${BSF_SOURCE_DIR}/CMake/HelperMethods.cmake)
 
+enable_colored_output()
+
 add_subdirectory(${BSF_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/bsf)
 
 set(BS_EXAMPLES_BUILTIN_ASSETS_VERSION 7)
