@@ -50,7 +50,7 @@ install:
 
   - cd ${TRAVIS_BUILD_DIR}
   - git clone https://github.com/cwfitzgerald/bsf.git ../bsf -b cotire
-  -
+
 
 script:
   - INSTALL_DIR="${TRAVIS_BUILD_DIR}/Install"
