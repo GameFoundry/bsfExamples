@@ -48,6 +48,19 @@ install:
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
     fi
 
+  # Download binutils 2.28
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      BINUTILS_URL="http://data.banshee3d.com/binutils-2.28-trusty.zip"
+      cd ${DEPS_DIR}
+      mkdir binutils
+      cd binutils
+      wget --no-check-certificate --quiet - ${BINUTILS_URL}
+      unzip -q binutils-2.28-trusty.zip
+      export PATH=${DEPS_DIR}/binutils/bin:${PATH}
+      export LD_LIBRARY_PATH=${DEPS_DIR}/binutils/lib:$LD_LIBRARY_PATH
+    fi
+
   - cd ${TRAVIS_BUILD_DIR}
   - git clone https://github.com/cwfitzgerald/bsf.git ../bsf -b cotire
 
@@ -62,5 +75,5 @@ script:
     else
       cmake -DCMAKE_INSTALL_PREFIX:STRING=${INSTALL_DIR} .. -GNinja
     fi
-  - ninja -j2
+  - ninja -j3
   - ninja install
