@@ -19,4 +19,4 @@ add_dependencies(LowLevelRendering bsfFBXImporter bsfFontImporter bsfFreeImgImpo
 # IDE specific
 set_property(TARGET LowLevelRendering PROPERTY FOLDER Examples)
 
-cotire(LowLevelRendering)
+conditional_cotire(LowLevelRendering)

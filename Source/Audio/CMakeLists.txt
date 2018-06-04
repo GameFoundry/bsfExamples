@@ -19,4 +19,4 @@ add_dependencies(Audio bsfFBXImporter bsfFontImporter bsfFreeImgImporter)
 # IDE specific
 set_property(TARGET Audio PROPERTY FOLDER Examples)
 
-cotire(Audio)
+conditional_cotire(Audio)

@@ -2938,7 +2938,7 @@ function (cotire_choose_target_languages _target _targetLanguagesVar _wholeTarge
 			NOT "${COTIREMSG_${_target}}" STREQUAL "${_targetMsg}")
 			# cache message to avoid redundant messages on re-configure
 			set (COTIREMSG_${_target} "${_targetMsg}" CACHE INTERNAL "${_target} cotire message.")
-			message (${_targetMsgLevel} "${_targetMsg}")
+#			message (${_targetMsgLevel} "${_targetMsg}")
 		endif()
 	endif()
 	list (LENGTH _targetLanguages _numberOfLanguages)

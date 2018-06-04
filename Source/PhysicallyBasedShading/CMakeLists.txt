@@ -19,4 +19,4 @@ add_dependencies(PhysicallyBasedShading bsfFBXImporter bsfFontImporter bsfFreeIm
 # IDE specific
 set_property(TARGET PhysicallyBasedShading PROPERTY FOLDER Examples)
 
-cotire(PhysicallyBasedShading)
+conditional_cotire(PhysicallyBasedShading)

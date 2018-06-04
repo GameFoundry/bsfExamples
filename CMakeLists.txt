@@ -8,7 +8,9 @@ set (APP_ROOT_DIR ${BSF_DIRECTORY})
 set (SECONDARY_APP_ROOT_DIR "${PROJECT_SOURCE_DIR}")
 set (BS_IS_BANSHEE3D 0)
 
-include(cotire.cmake)
+if(ENABLE_COTIRE)
+    include(cotire.cmake)
+endif()
 
 include(${BSF_SOURCE_DIR}/CMake/Properties.cmake)
 include(${BSF_SOURCE_DIR}/CMake/FindPackageOrBuild.cmake)

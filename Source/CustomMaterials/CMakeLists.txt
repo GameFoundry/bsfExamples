@@ -19,4 +19,4 @@ add_dependencies(CustomMaterials bsfFBXImporter bsfFontImporter bsfFreeImgImport
 # IDE specific
 set_property(TARGET CustomMaterials PROPERTY FOLDER Examples)
 
-cotire(CustomMaterials)
+conditional_cotire(CustomMaterials)

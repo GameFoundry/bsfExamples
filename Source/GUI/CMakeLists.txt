@@ -19,4 +19,4 @@ add_dependencies(GUI bsfFBXImporter bsfFontImporter bsfFreeImgImporter)
 # IDE specific
 set_property(TARGET GUI PROPERTY FOLDER Examples)
 
-cotire(GUI)
+conditional_cotire(GUI)
