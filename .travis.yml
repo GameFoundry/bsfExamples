@@ -62,5 +62,5 @@ script:
     else
       cmake -DCMAKE_INSTALL_PREFIX:STRING=${INSTALL_DIR} .. -GNinja
     fi
-  - ninja -j3
+  - ninja -j2
   - ninja install
