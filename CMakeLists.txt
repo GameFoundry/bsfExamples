@@ -8,6 +8,8 @@ set (APP_ROOT_DIR ${BSF_DIRECTORY})
 set (SECONDARY_APP_ROOT_DIR "${PROJECT_SOURCE_DIR}")
 set (BS_IS_BANSHEE3D 0)
 
+set(ENABLE_COTIRE false CACHE BOOL "Enable cotire's precompiled headers and unity build support (experimental)")
+
 if(ENABLE_COTIRE)
     include(cotire.cmake)
 endif()
