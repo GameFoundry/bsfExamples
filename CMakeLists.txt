@@ -8,9 +8,17 @@ set (APP_ROOT_DIR ${BSF_DIRECTORY})
 set (SECONDARY_APP_ROOT_DIR "${PROJECT_SOURCE_DIR}")
 set (BS_IS_BANSHEE3D 0)
 
+set(ENABLE_COTIRE false CACHE BOOL "Enable cotire's precompiled headers and unity build support (experimental)")
+
+if(ENABLE_COTIRE)
+    include(cotire.cmake)
+endif()
+
 include(${BSF_SOURCE_DIR}/CMake/Properties.cmake)
 include(${BSF_SOURCE_DIR}/CMake/FindPackageOrBuild.cmake)
 include(${BSF_SOURCE_DIR}/CMake/HelperMethods.cmake)
+
+enable_colored_output()
 
 add_subdirectory(${BSF_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/bsf)
 
