@@ -18,3 +18,6 @@ add_dependencies(PhysicallyBasedShading bsfFBXImporter bsfFontImporter bsfFreeIm
 
 # IDE specific
 set_property(TARGET PhysicallyBasedShading PROPERTY FOLDER Examples)
+
+# Precompiled header & Unity build
+conditional_cotire(PhysicallyBasedShading)

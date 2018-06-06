@@ -18,3 +18,6 @@ add_dependencies(LowLevelRendering bsfFBXImporter bsfFontImporter bsfFreeImgImpo
 
 # IDE specific
 set_property(TARGET LowLevelRendering PROPERTY FOLDER Examples)
+
+# Precompiled header & Unity build
+conditional_cotire(LowLevelRendering)

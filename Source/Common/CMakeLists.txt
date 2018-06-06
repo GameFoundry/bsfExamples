@@ -16,3 +16,6 @@ set_property(TARGET Common PROPERTY FOLDER Examples)
 
 # Copy bsf binaries
 copyBsfBinaries(Common ${BSF_DIRECTORY})
+
+# Precompiled header & Unity build
+conditional_cotire(Common)
