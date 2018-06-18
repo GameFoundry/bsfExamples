@@ -19,7 +19,7 @@
 #include "RenderAPI/BsRenderWindow.h"
 #include "Scene/BsSceneObject.h"
 #include "BsExampleFramework.h"
-#include "2D/BsSpriteTexture.h"
+#include "Image/BsSpriteTexture.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This example demonstrates how to set up a graphical user interface. It demoes a variety of common GUI elements, as well
