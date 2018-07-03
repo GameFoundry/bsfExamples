@@ -6,6 +6,7 @@
 #include "Components/BsCCharacterController.h"
 #include "BsApplication.h"
 #include "Physics/BsPhysics.h"
+#include "Utility/BsTime.h"
 
 namespace bs
 {
@@ -60,7 +61,7 @@ namespace bs
 		direction.y = 0.0f;
 		direction.normalize();
 
-		const float frameDelta = gApplication().getFixedUpdateStep();
+		const float frameDelta = gTime().getFixedFrameDelta();
 
 		// If a direction is chosen, normalize it to determine final direction.
 		if (direction.squaredLength() != 0)
