@@ -20,7 +20,7 @@ set(BS_EXAMPLES_BUILTIN_ASSETS_VERSION 7)
 configure_file("${PROJECT_SOURCE_DIR}/Source/CMake/BsExampleConfig.h.in" "${PROJECT_SOURCE_DIR}/Source/Common/BsExampleConfig.h")
 
 # Check data dependencies
-check_and_update_builtin_assets(bsfExamples ${PROJECT_SOURCE_DIR}/Data ${BS_EXAMPLES_BUILTIN_ASSETS_VERSION} NO)
+check_and_update_builtin_assets(bsfExamples ${PROJECT_SOURCE_DIR}/Data Data ${BS_EXAMPLES_BUILTIN_ASSETS_VERSION} NO)
 	
 # Sub-directories
 add_subdirectory(Source/Common)

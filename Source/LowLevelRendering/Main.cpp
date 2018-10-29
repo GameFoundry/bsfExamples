@@ -91,6 +91,9 @@ namespace bs
 		{
 			// Queue the method for execution on the core thread
 			gCoreThread().queueCommand(&ct::render);
+
+			// Call the default version of this method to handle normal functionality
+			Application::preUpdate();
 		}
 	};
 }
