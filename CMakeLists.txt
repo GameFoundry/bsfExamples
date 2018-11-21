@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.12.4)
+cmake_minimum_required (VERSION 3.12.0)
 project (bsfExamples)
 
 set(BSF_DIRECTORY "${PROJECT_SOURCE_DIR}/../bsf" CACHE STRING "bsf directory")
