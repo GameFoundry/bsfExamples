@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.9.0)
+cmake_minimum_required (VERSION 3.12.4)
 project (bsfExamples)
 
 set(BSF_DIRECTORY "${PROJECT_SOURCE_DIR}/../bsf" CACHE STRING "bsf directory")
@@ -33,3 +33,4 @@ add_subdirectory(Source/SkeletalAnimation)
 add_subdirectory(Source/Physics)
 add_subdirectory_optional(Source/Experimental/Shadows)
 add_subdirectory_optional(Source/Experimental/Particles)
+add_subdirectory_optional(Source/Experimental/Decals)

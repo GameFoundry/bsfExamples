@@ -1,6 +1,6 @@
 # Compile steps
 
-- Install git (https://git-scm.com) and CMake 3.9.0 or higher (https://cmake.org)
+- Install git (https://git-scm.com) and CMake 3.12.4 or higher (https://cmake.org)
 	- Ensure they are added to your *PATH* environment variable
 - Run the following commands in the terminal/command line:
     - `git clone https://github.com/GameFoundry/bsf.git`
