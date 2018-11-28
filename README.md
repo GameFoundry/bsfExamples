@@ -1,3 +1,7 @@
+| CI            | Community   | Support |
+| ------------- |-------------|--------|
+[![Build Status](https://travis-ci.org/GameFoundry/bsfExamples.svg?branch=master)](https://travis-ci.org/GameFoundry/bsfExamples) [![Build status](https://ci.appveyor.com/api/projects/status/wvb1erthd4pvehqr?svg=true)](https://ci.appveyor.com/project/BearishSun/bsfexamples) | [![Community](https://img.shields.io/discourse/https/discourse.bsframework.io/posts.svg)](https://discourse.bsframework.io) | [![Patreon](https://img.shields.io/badge/Donate-Patreon-orange.svg)](https://www.patreon.com/bePatron?c=1646501) [![Paypal](https://img.shields.io/badge/Donate-Paypal-blue.svg)](https://www.paypal.me/MarkoPintera/10)
+
 # Compile steps
 
 - Install git (https://git-scm.com) and CMake 3.12.4 or higher (https://cmake.org)
