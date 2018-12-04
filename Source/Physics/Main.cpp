@@ -32,11 +32,11 @@
 // and shoot the placed geometry demonstrating various aspects of the physics system. This includes a demonstration of
 // static colliders, dynamic rigidbodies, physical materials, character controller and manual application of forces.
 //
-// The example first loads necessary resources, including textures, materials, textures and physical materials.. Then it
-// set up the scene, consisting of a floor, and multiple stacks of boxes that can be knocked down. Character controller is
-// created next, as well as the camera. Components for moving the character controller and the camera are attached to
-// allow the user to control the character. Finally an input callback is hooked up that shoots spheres when user presses
-// the left mouse button. 
+// The example first loads necessary resources, including textures, materialss and physical materials. Then it sets up the 
+// scene, consisting of a floor, and multiple stacks of boxes that can be knocked down. Character controller is created 
+// next, as well as the camera. Components for moving the character controller and the camera are attached to allow the 
+// user to control the character. Finally an input callback is hooked up that shoots spheres when user presses the left 
+// mouse button. 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace bs
 {

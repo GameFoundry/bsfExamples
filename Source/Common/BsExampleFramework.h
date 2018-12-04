@@ -45,7 +45,8 @@ namespace bs
 		CerberusAlbedo,
 		CerberusNormal,
 		CerberusRoughness,
-		CerberusMetalness
+		CerberusMetalnessa,
+		ParticleSmoke
 	};
 
 	/** A list of shader assets provided with the example projects. */
@@ -62,6 +63,12 @@ namespace bs
 	{
 		SegoeUILight,
 		SegoeUISemiBold
+	};
+
+	/** A list of assets without a speccific type provided with the example projects. */
+	enum class ExampleResource
+	{
+		VectorField
 	};
 
 	/** Various helper functionality used throught the examples. */
@@ -207,6 +214,7 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus_N.tga",
 				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus_R.tga",
 				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus_M.tga",
+				Path(EXAMPLE_DATA_PATH) + "Particles/Smoke.png",
 			};
 
 			const Path& srcAssetPath = assetPaths[(UINT32)type];
@@ -365,6 +373,43 @@ namespace bs
 
 			return font;
 		}
+
+		/** 
+		 * Loads one of the builtin non-specific assets. If the asset doesn't exist, it will be re-imported from the 
+		 * source file, and then saved so it can be loaded on the next call to this method. 
+		 */
+		template<class T>
+		static ResourceHandle<T> loadResource(ExampleResource type)
+		{
+			// Map from the enum to the actual file path
+			static Path assetPaths[] =
+			{
+				Path(EXAMPLE_DATA_PATH) + "Particles/VectorField.fga",
+			};
+
+			const Path& srcAssetPath = assetPaths[(UINT32)type];
+
+			// Attempt to load the previously processed asset
+			Path assetPath = srcAssetPath;
+			assetPath.setExtension(srcAssetPath.getExtension() + ".asset");
+
+			ResourceHandle<T> resource = gResources().load<T>(assetPath);
+			if (resource == nullptr) // Shader file doesn't exist, import from the source file.
+			{
+				resource = gImporter().import<T>(srcAssetPath);
+
+				// Save for later use, so we don't have to import on the next run.
+				gResources().save(resource, assetPath, true);
+
+				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
+				// the application was restarted, which is important if resource was referenced in some serialized object.
+				if(manifest)
+					manifest->registerResource(resource.getUUID(), assetPath);
+			}
+
+			return resource;
+		}
+
 
 	private:
 		static SPtr<ResourceManifest> manifest;

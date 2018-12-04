@@ -42,7 +42,7 @@ namespace bs
 	UINT32 windowResHeight = 720;
 
 	/** Container for all resources used by the example. */
-	struct Assets
+	struct ParticleSystemAssets
 	{
 		HMesh exampleModel;
 		HTexture exampleAlbedoTex;
@@ -59,10 +59,10 @@ namespace bs
 		HShader deferredLightingShader;
 	};
 
-	Assets gAssets;
+	ParticleSystemAssets gAssets;
 
 	/** Helper method that creates a material from the provided shader, and assigns the relevant PBR textures. */
-	HMaterial createPBRMaterial(const HShader& shader, const Assets& assets)
+	HMaterial createPBRMaterial(const HShader& shader, const ParticleSystemAssets& assets)
 	{
 		HMaterial material = Material::create(shader);
 
@@ -75,9 +75,9 @@ namespace bs
 	}
 
 	/** Load the resources we'll be using throughout the example. */
-	Assets loadAssets()
+	ParticleSystemAssets loadParticleSystemAssets()
 	{
-		Assets assets;
+		ParticleSystemAssets assets;
 
 		// Load a 3D model
 		assets.exampleModel = ExampleFramework::loadMesh(ExampleMesh::Pistol, 10.0f);
@@ -128,7 +128,7 @@ namespace bs
 	UINT32 gMaterialIdx = 0;
 
 	/** Set up the 3D object used by the example, and the camera to view the world through. */
-	void setUp3DScene(const Assets& assets)
+	void setUp3DScene(const ParticleSystemAssets& assets)
 	{
 		/************************************************************************/
 		/* 									RENDERABLE                  		*/
@@ -347,7 +347,7 @@ int main()
 	setupInput();
 
 	// Load a model and textures, create materials
-	gAssets = loadAssets();
+	gAssets = loadParticleSystemAssets();
 
 	// Set up the scene with an object to render and a camera
 	setUp3DScene(gAssets);
