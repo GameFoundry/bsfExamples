@@ -45,7 +45,7 @@ namespace bs
 		CerberusAlbedo,
 		CerberusNormal,
 		CerberusRoughness,
-		CerberusMetalnessa,
+		CerberusMetalness,
 		ParticleSmoke
 	};
 
