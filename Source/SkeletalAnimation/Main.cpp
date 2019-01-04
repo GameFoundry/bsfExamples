@@ -32,7 +32,7 @@ namespace bs
 	UINT32 windowResHeight = 720;
 
 	/** Container for all resources used by the example. */
-	struct ParticleSystemAssets
+	struct Assets
 	{
 		HMesh exampleModel;
 		HAnimationClip exampleAnimClip;
@@ -45,9 +45,9 @@ namespace bs
 	};
 
 	/** Load the resources we'll be using throughout the example. */
-	ParticleSystemAssets loadParticleSystemAssets()
+	Assets loadAssets()
 	{
-		ParticleSystemAssets assets;
+		Assets assets;
 
 		// Load the 3D model and the animation clip
 
@@ -94,7 +94,7 @@ namespace bs
 	}
 
 	/** Set up the 3D object used by the example, and the camera to view the world through. */
-	void setUp3DScene(const ParticleSystemAssets& assets)
+	void setUp3DScene(const Assets& assets)
 	{
 		/************************************************************************/
 		/* 									RENDERABLE                  		*/
@@ -202,7 +202,7 @@ int main()
 	ExampleFramework::setupInputConfig();
 
 	// Load a model and textures, create materials
-	ParticleSystemAssets assets = loadParticleSystemAssets();
+	Assets assets = loadAssets();
 
 	// Set up the scene with an object to render and a camera
 	setUp3DScene(assets);

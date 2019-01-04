@@ -48,8 +48,6 @@ namespace bs
 	UINT32 windowResWidth = 1280;
 	UINT32 windowResHeight = 720;
 
-	SPtr<ParticleSystem> particleSystem;
-
 	// Set up a helper component that makes the object its attached to orbit a point. This is used by the 3D particle
 	// system for moving its light.
 	class LightOrbit : public Component

@@ -42,14 +42,14 @@ namespace bs
 	UINT32 windowResHeight = 720;
 
 	/** Container for all resources used by the example. */
-	struct ParticleSystemAssets
+	struct Assets
 	{
-		HMesh exampleModel;
+		HMesh sphere;
 		HTexture exampleAlbedoTex;
 		HTexture exampleNormalsTex;
 		HTexture exampleRoughnessTex;
 		HTexture exampleMetalnessTex;
-		HTexture exampleSkyCubemap;
+		HTexture skyTex;
 
 		HMaterial standardMaterial;
 		HMaterial vertexMaterial;
@@ -59,10 +59,10 @@ namespace bs
 		HShader deferredLightingShader;
 	};
 
-	ParticleSystemAssets gAssets;
+	Assets gAssets;
 
 	/** Helper method that creates a material from the provided shader, and assigns the relevant PBR textures. */
-	HMaterial createPBRMaterial(const HShader& shader, const ParticleSystemAssets& assets)
+	HMaterial createPBRMaterial(const HShader& shader, const Assets& assets)
 	{
 		HMaterial material = Material::create(shader);
 
@@ -75,12 +75,12 @@ namespace bs
 	}
 
 	/** Load the resources we'll be using throughout the example. */
-	ParticleSystemAssets loadParticleSystemAssets()
+	Assets loadAssets()
 	{
-		ParticleSystemAssets assets;
+		Assets assets;
 
 		// Load a 3D model
-		assets.exampleModel = ExampleFramework::loadMesh(ExampleMesh::Pistol, 10.0f);
+		assets.sphere = ExampleFramework::loadMesh(ExampleMesh::Pistol, 10.0f);
 
 		// Load PBR textures for the 3D model
 		assets.exampleAlbedoTex = ExampleFramework::loadTexture(ExampleTexture::PistolAlbedo);
@@ -118,7 +118,7 @@ namespace bs
 		assets.forwardMaterial = createPBRMaterial(forwardSurfaceAndLighting, assets);
 
 		// Load an environment map
-		assets.exampleSkyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentPaperMill, false, true, true);
+		assets.skyTex = ExampleFramework::loadTexture(ExampleTexture::EnvironmentPaperMill, false, true, true);
 
 		return assets;
 	}
@@ -128,7 +128,7 @@ namespace bs
 	UINT32 gMaterialIdx = 0;
 
 	/** Set up the 3D object used by the example, and the camera to view the world through. */
-	void setUp3DScene(const ParticleSystemAssets& assets)
+	void setUp3DScene(const Assets& assets)
 	{
 		/************************************************************************/
 		/* 									RENDERABLE                  		*/
@@ -143,7 +143,7 @@ namespace bs
 		
 		// Attach the Renderable component and hook up the mesh we loaded, and the material we created.
 		gRenderable = pistolSO->addComponent<CRenderable>();
-		gRenderable->setMesh(assets.exampleModel);
+		gRenderable->setMesh(assets.sphere);
 		gRenderable->setMaterial(assets.standardMaterial);
 
 		// Add a rotator component so we can rotate the object during runtime
@@ -169,7 +169,7 @@ namespace bs
 		HSceneObject skyboxSO = SceneObject::create("Skybox");
 
 		HSkybox skybox = skyboxSO->addComponent<CSkybox>();
-		skybox->setTexture(assets.exampleSkyCubemap);
+		skybox->setTexture(assets.skyTex);
 
 		/************************************************************************/
 		/* 									CAMERA	                     		*/
@@ -347,7 +347,7 @@ int main()
 	setupInput();
 
 	// Load a model and textures, create materials
-	gAssets = loadParticleSystemAssets();
+	gAssets = loadAssets();
 
 	// Set up the scene with an object to render and a camera
 	setUp3DScene(gAssets);
