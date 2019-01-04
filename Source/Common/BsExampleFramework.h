@@ -46,7 +46,9 @@ namespace bs
 		CerberusNormal,
 		CerberusRoughness,
 		CerberusMetalness,
-		ParticleSmoke
+		ParticleSmoke,
+		DecalAlbedo,
+		DecalNormal
 	};
 
 	/** A list of shader assets provided with the example projects. */
@@ -215,6 +217,8 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus_R.tga",
 				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus_M.tga",
 				Path(EXAMPLE_DATA_PATH) + "Particles/Smoke.png",
+				Path(EXAMPLE_DATA_PATH) + "Decal/DecalAlbedo.png",
+				Path(EXAMPLE_DATA_PATH) + "Decal/DecalNormal.png",
 			};
 
 			const Path& srcAssetPath = assetPaths[(UINT32)type];
