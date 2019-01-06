@@ -199,9 +199,6 @@ namespace bs
 		// Set aspect ratio depending on the current resolution
 		sceneCamera->setAspectRatio(windowResWidth / (float)windowResHeight);
 
-		// Enable multi-sample anti-aliasing for better quality
-		sceneCamera->setMSAACount(4);
-
 		// Add a CameraFlyer component that allows us to move the camera. See CameraFlyer for more information.
 		sceneCameraSO->addComponent<CameraFlyer>();
 

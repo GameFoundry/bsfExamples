@@ -131,9 +131,6 @@ namespace bs
 		// Set aspect ratio depending on the current resolution
 		sceneCamera->setAspectRatio(windowResWidth / (float)windowResHeight);
 
-		// Enable multi-sample anti-aliasing for better quality
-		sceneCamera->setMSAACount(4);
-
 		// Position and orient the camera scene object
 		sceneCameraSO->setPosition(Vector3(0.2f, 0.05f, 1.4f));
 		sceneCameraSO->lookAt(Vector3(0.2f, 0.05f, 0.0f));

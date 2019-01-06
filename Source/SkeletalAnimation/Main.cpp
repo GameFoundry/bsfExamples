@@ -160,9 +160,6 @@ namespace bs
 		// Set aspect ratio depending on the current resolution
 		sceneCamera->setAspectRatio(windowResWidth / (float)windowResHeight);
 
-		// Enable multi-sample anti-aliasing for better quality
-		sceneCamera->setMSAACount(4);
-
 		// Enable indirect lighting so we get accurate diffuse lighting from the skybox environment map
 		const SPtr<RenderSettings>& renderSettings = sceneCamera->getRenderSettings();
 		renderSettings->enableIndirectLighting = true;

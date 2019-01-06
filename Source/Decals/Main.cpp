@@ -150,9 +150,6 @@ namespace bs
 		// Set aspect ratio depending on the current resolution
 		sceneCamera->setAspectRatio(windowResWidth / (float)windowResHeight);
 
-		// Enable multi-sample anti-aliasing for better quality
-		sceneCamera->setMSAACount(4);
-
 		// Add a component that allows the camera to be rotated using the mouse
 		sceneCameraSO->setRotation(Quaternion(Degree(-10.0f), Degree(0.0f), Degree(0.0f)));
 		HFPSCamera fpsCamera = sceneCameraSO->addComponent<FPSCamera>();
