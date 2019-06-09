@@ -307,7 +307,7 @@ void CreateGeospheres(Mesh *outMesh, unsigned int subdivLevelCount, unsigned int
 void CreateUVMap(Mesh* outMesh) {
     std::vector<Vector2> uvs(outMesh->vertices.size());
     auto size = outMesh->vertices.size();
-    for (uint i = 0; i < size; ++i) {
+    for (unsigned int i = 0; i < size; ++i) {
         uvs[i] = {outMesh->vertices[i].x, outMesh->vertices[i].y};
     }
     std::swap(outMesh->uv, uvs);
@@ -414,8 +414,8 @@ void CalculateTangents(SPtr<MeshData> meshData) {
     UINT32 numIndices = meshData->getNumIndices();
     UINT32 vertexStride = desc->getVertexStride();
 
-    uint vertexOffset = 0;
-    uint indexOffset = 0;
+    unsigned int vertexOffset = 0;
+    unsigned int indexOffset = 0;
     UINT8* uvData = meshData->getElementData(VES_TEXCOORD);
     UINT8* tangentData = meshData->getElementData(VES_TANGENT);
     generateTangents(positionData, normalData, uvData, indexData, numVertices, numIndices,
@@ -429,7 +429,7 @@ void makeMeshes(unsigned int meshInstanceCount, unsigned int subdivCount, std::v
     unsigned int mSubdivCount(subdivCount);
     unsigned int mVertexCountPerMesh{0};
     demo::Mesh _meshes; // one big mesh with lots of sub-meshes...
-    uint rng = 100;
+    unsigned int rng = 100;
     demo::CreateAsteroidsFromGeospheres(&_meshes, mSubdivCount, meshInstanceCount, rng, mIndexOffsets.data(), &mVertexCountPerMesh);
     assert(_meshes.vertices.size() == _meshes.normals.size());
 
@@ -448,11 +448,11 @@ void makeMeshes(unsigned int meshInstanceCount, unsigned int subdivCount, std::v
     vertexDesc->addVertElem(VET_FLOAT3, VES_TANGENT);
     vertexDesc->addVertElem(VET_FLOAT2, VES_TEXCOORD);
 
-    for (uint i = 0; i < meshInstanceCount; ++i) {
+    for (unsigned int i = 0; i < meshInstanceCount; ++i) {
         MESH_DESC meshDesc;
 
-        uint j = subdivCount;
-        uint vertexOffset = i * mVertexCountPerMesh;
+        unsigned int j = subdivCount;
+        unsigned int vertexOffset = i * mVertexCountPerMesh;
         meshDesc.vertexDesc = vertexDesc;
         meshDesc.numVertices = mVertexCountPerMesh;
         meshDesc.numIndices = mIndexOffsets[j + 1] - mIndexOffsets[j];

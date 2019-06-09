@@ -123,8 +123,8 @@ namespace bs
   void addAsteroids() {
 
     // make asteroid meshes.
-    uint meshCount = 100;
-    uint subdivCount = 3;
+    unsigned int meshCount = 100;
+    unsigned int subdivCount = 3;
 
     HShader shader = gBuiltinResources().getBuiltinShader(BuiltinShader::Standard);
     HMaterial asteroidMaterial = Material::create(shader);
@@ -135,7 +135,7 @@ namespace bs
 
     Random rand;
 
-    for (uint i = 0; i < meshes.size(); ++i) {
+    for (unsigned int i = 0; i < meshes.size(); ++i) {
       auto mesh = meshes[i];
       HSceneObject ast = SceneObject::create("Ast");
       HRenderable boxRenderable = ast->addComponent<CRenderable>();
@@ -147,8 +147,8 @@ namespace bs
       ast->setPosition(Vector3(i * 3, 1.2f, -10.5f));
     }
 
-    uint numInstances = 1000; // 10,000
-    for (uint i = 0; i < numInstances; ++i) {
+    unsigned int numInstances = 1000; // 10,000
+    for (unsigned int i = 0; i < numInstances; ++i) {
       auto mesh = meshes[i % meshCount];
       HSceneObject ast = SceneObject::create("RevolvingAst");
       HRenderable boxRenderable = ast->addComponent<CRenderable>();
