@@ -21,8 +21,10 @@
 #include "BsExampleFramework.h"
 #include "BsFPSWalker.h"
 #include "BsFPSCamera.h"
+#include "Math/BsRandom.h"
 
 #include "./mesh.h"
+#include "./CSpinner.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This example sets up a simple environment consisting of a floor and cube, and a decal projecting on both surfaces. The
 // example demonstrates how to set up decals, how decals are not shown on surfaces perpendicular to the decal direction,
@@ -131,16 +133,36 @@ namespace bs
     makeMeshes(meshCount, subdivCount, meshes);
     assert(meshes.size() == meshCount);
 
-    HSceneObject ast = SceneObject::create("Ast");
-    HRenderable boxRenderable = ast->addComponent<CRenderable>();
+    Random rand;
 
+    for (uint i = 0; i < meshes.size(); ++i) {
+      auto mesh = meshes[i];
+      HSceneObject ast = SceneObject::create("Ast");
+      HRenderable boxRenderable = ast->addComponent<CRenderable>();
+      ast->addComponent<CSpinner>(&rand);
 
-    // HMesh mesh = gBuiltinResources().getMesh(BuiltinMesh::Box);
-    boxRenderable->setMesh(meshes[0]);
-    boxRenderable->setMaterial(asteroidMaterial);
+      boxRenderable->setMesh(mesh);
+      boxRenderable->setMaterial(asteroidMaterial);
 
-    ast->setPosition(Vector3(0.0f, 0.5f, 0.5f));
+      ast->setPosition(Vector3(i * 3, 1.2f, -10.5f));
+    }
 
+    uint numInstances = 1000; // 10,000
+    for (uint i = 0; i < numInstances; ++i) {
+      auto mesh = meshes[i % meshCount];
+      HSceneObject ast = SceneObject::create("RevolvingAst");
+      HRenderable boxRenderable = ast->addComponent<CRenderable>();
+      ast->addComponent<CSpinner>(&rand);
+      ast->addComponent<COrbiter>(&rand);
+
+      boxRenderable->setMesh(mesh);
+      boxRenderable->setMaterial(asteroidMaterial);
+
+      float shellThickness = 0.5; // 10% outer sphere.
+      Vector3 point = rand.getPointInSphereShell(shellThickness);
+      point *= 100;
+      ast->setPosition(point);
+    }
 
   }
 
@@ -186,7 +208,7 @@ namespace bs
     /************************************************************************/
 
     // Load a skybox texture
-    HTexture skyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentDaytime, false, true, true);
+    HTexture skyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentRathaus, false, true, true);
 
     // Add a skybox texture for sky reflections
     HSceneObject skyboxSO = SceneObject::create("Skybox");

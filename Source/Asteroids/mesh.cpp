@@ -22,11 +22,15 @@
 
 #include "Mesh/BsMesh.h"
 #include "RenderAPI/BsVertexDataDesc.h"
+#include "Math/BsVector2.h"
+#include "Mesh/BsMeshUtility.h"
 
 typedef bs::UINT32 IndexType;
 
 typedef bs::Vector3 Vertex;
 typedef bs::Vector3 Normal;
+
+using bs::Vector2;
 
 namespace demo {
 
@@ -60,6 +64,7 @@ struct Mesh
     std::vector<Vertex> vertices;
     std::vector<Normal> normals;
     std::vector<IndexType> indices;
+    std::vector<Vector2> uv;
 };
 
 
@@ -71,6 +76,8 @@ void SubdivideInPlace(Mesh *outMesh);
 void SpherifyInPlace(Mesh *outMesh, float radius = 1.0f);
 
 void ComputeAvgNormalsInPlace(Mesh *outMesh);
+
+void CreateUVMap(Mesh *outMesh);
 
 // subdivIndexOffset array should be [subdivLevels+2] in size
 void CreateGeospheres(Mesh *outMesh, unsigned int subdivLevelCount, unsigned int* outSubdivIndexOffsets);
@@ -297,6 +304,18 @@ void CreateGeospheres(Mesh *outMesh, unsigned int subdivLevelCount, unsigned int
 }
 
 
+void CreateUVMap(Mesh* outMesh) {
+    std::vector<Vector2> uvs(outMesh->vertices.size());
+    auto size = outMesh->vertices.size();
+    for (uint i = 0; i < size; ++i) {
+        uvs[i] = {outMesh->vertices[i].x, outMesh->vertices[i].y};
+    }
+    std::swap(outMesh->uv, uvs);
+
+    // make tangents as well
+
+}
+
 void CreateAsteroidsFromGeospheres(Mesh *outMesh,
                                    unsigned int subdivLevelCount, unsigned int meshInstanceCount,
                                    unsigned int rngSeed,
@@ -346,11 +365,62 @@ void CreateAsteroidsFromGeospheres(Mesh *outMesh,
     std::swap(outMesh->indices, baseMesh.indices);
     std::swap(outMesh->vertices, vertices);
     std::swap(outMesh->normals, normals);
+
+    // Quick hack to create UV map.
+    CreateUVMap(outMesh);
 }
 
 } // namespace demo
 
 namespace bs {
+
+void generateTangents(UINT8* positions, UINT8* normals, UINT8* uv, UINT32* indices,
+    UINT32 numVertices, UINT32 numIndices, UINT32 vertexOffset, UINT32 indexOffset, UINT32 vertexStride, UINT8* tangents)
+{
+    Vector3* tempTangents = bs_stack_alloc<Vector3>(numVertices);
+    Vector3* tempBitangents = bs_stack_alloc<Vector3>(numVertices);
+
+    MeshUtility::calculateTangents(
+        (Vector3*)(positions + vertexOffset * vertexStride),
+        (Vector3*)(normals + vertexOffset * vertexStride),
+        (Vector2*)(uv + vertexOffset * vertexStride),
+        (UINT8*)(indices + indexOffset),
+        numVertices, numIndices, tempTangents, tempBitangents, 4, vertexStride);
+
+    for (UINT32 i = 0; i < (UINT32)numVertices; i++)
+    {
+        Vector3 normal = *(Vector3*)&normals[(vertexOffset + i) * vertexStride];
+        Vector3 tangent = tempTangents[i];
+        Vector3 bitangent = tempBitangents[i];
+
+        Vector3 engineBitangent = Vector3::cross(normal, tangent);
+        float sign = Vector3::dot(engineBitangent, bitangent);
+
+        Vector4 packedTangent(tangent.x, tangent.y, tangent.z, sign > 0 ? 1.0f : -1.0f);
+        memcpy(tangents + (vertexOffset + i) * vertexStride, &packedTangent, sizeof(Vector4));
+    }
+
+    bs_stack_free(tempBitangents);
+    bs_stack_free(tempTangents);
+}
+
+void CalculateTangents(SPtr<MeshData> meshData) {
+    const SPtr<VertexDataDesc>& desc = meshData->getVertexDesc();
+    UINT32* indexData = meshData->getIndices32();
+    UINT8* positionData = meshData->getElementData(VES_POSITION);
+    UINT8* normalData = meshData->getElementData(VES_NORMAL);
+
+    UINT32 numVertices = meshData->getNumVertices();
+    UINT32 numIndices = meshData->getNumIndices();
+    UINT32 vertexStride = desc->getVertexStride();
+
+    uint vertexOffset = 0;
+    uint indexOffset = 0;
+    UINT8* uvData = meshData->getElementData(VES_TEXCOORD);
+    UINT8* tangentData = meshData->getElementData(VES_TANGENT);
+    generateTangents(positionData, normalData, uvData, indexData, numVertices, numIndices,
+        vertexOffset, indexOffset, vertexStride, tangentData);
+}
 
 void makeMeshes(unsigned int meshInstanceCount, unsigned int subdivCount, std::vector<HMesh>& meshes) {
 
@@ -375,28 +445,41 @@ void makeMeshes(unsigned int meshInstanceCount, unsigned int subdivCount, std::v
     SPtr<VertexDataDesc> vertexDesc = VertexDataDesc::create();
     vertexDesc->addVertElem(VET_FLOAT3, VES_POSITION);
     vertexDesc->addVertElem(VET_FLOAT3, VES_NORMAL);
+    vertexDesc->addVertElem(VET_FLOAT3, VES_TANGENT);
+    vertexDesc->addVertElem(VET_FLOAT2, VES_TEXCOORD);
 
     for (uint i = 0; i < meshInstanceCount; ++i) {
         MESH_DESC meshDesc;
+
+        uint j = subdivCount;
+        uint vertexOffset = i * mVertexCountPerMesh;
         meshDesc.vertexDesc = vertexDesc;
         meshDesc.numVertices = mVertexCountPerMesh;
-        meshDesc.numIndices = mIndexOffsets[1];
+        meshDesc.numIndices = mIndexOffsets[j + 1] - mIndexOffsets[j];
 
-        HMesh mesh = Mesh::create(meshDesc);
         SPtr<MeshData> meshData = MeshData::create(meshDesc.numVertices, meshDesc.numIndices, vertexDesc);
         // Write the vertices
-        meshData->setVertexData(VES_POSITION, &_meshes.vertices[0], sizeof(Vertex) * meshDesc.numVertices);
-        meshData->setVertexData(VES_NORMAL, &_meshes.normals[0], sizeof(Vertex) * meshDesc.numVertices);
-        // meshData->setIndexData(VES_NORMAL, _meshes.indices[0], sizeof(IndexType) * meshDesc.numIndices);
-        memcpy(meshData->getIndices32(), &_meshes.indices[0], sizeof(IndexType) * meshDesc.numIndices);
+        meshData->setVertexData(VES_POSITION, &_meshes.vertices[vertexOffset], sizeof(Vertex) * meshDesc.numVertices);
+        meshData->setVertexData(VES_NORMAL, &_meshes.normals[vertexOffset], sizeof(Vertex) * meshDesc.numVertices);
+        meshData->setVertexData(VES_TEXCOORD, &_meshes.uv[vertexOffset], sizeof(Vector2) * meshDesc.numVertices);
 
-        bool discard = false;
-        mesh->writeData(meshData, discard);
+        // meshData->setIndexData(VES_NORMAL, _meshes.indices[0], sizeof(IndexType) * meshDesc.numIndices);
+        memcpy(meshData->getIndices32(), &_meshes.indices[mIndexOffsets[j]], sizeof(IndexType) * meshDesc.numIndices);
+
+        CalculateTangents(meshData);
+        // auto bounds = meshData->calculateBounds();
+
+        // THIS DOESN'T WORK? IS THIS A DOCS ISSUE??
+        // bool discard = false;
+        // worth investigating....
+        // HMesh mesh = Mesh::create(meshDesc);
+        // mesh->writeData(meshData, discard);
+        // but initializing with meshData does work...
+        HMesh mesh = Mesh::create(meshData);
 
         meshes.push_back(mesh);
     }
     // std::cout << "FINISH " << std::endl;
-
 }
 
 }
