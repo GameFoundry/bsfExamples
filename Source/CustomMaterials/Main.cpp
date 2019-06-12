@@ -16,6 +16,7 @@
 #include "Scene/BsSceneObject.h"
 #include "Renderer/BsRenderer.h"
 #include "Material/BsShader.h"
+#include "Material/BsShaderManager.h"
 
 // Example includes
 #include "BsCameraFlyer.h"
@@ -78,6 +79,9 @@ namespace bs
 	Assets loadAssets()
 	{
 		Assets assets;
+
+		// Set up an include search path for our custom shaders
+		ShaderManager::instance().addSearchPath(Path(EXAMPLE_DATA_PATH) + "Shaders/");
 
 		// Load a 3D model
 		assets.sphere = ExampleFramework::loadMesh(ExampleMesh::Pistol, 10.0f);

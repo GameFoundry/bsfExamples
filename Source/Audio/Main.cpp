@@ -77,9 +77,9 @@ namespace bs
 		// performance. Also since it's a longer audio clip, use streaming to avoid loading the entire clip into memory,
 		// at the additional cost of performance and IO overhead.
 		SPtr<AudioClipImportOptions> musicImportOptions = AudioClipImportOptions::create();
-		musicImportOptions->setFormat(AudioFormat::VORBIS);
-		musicImportOptions->setReadMode(AudioReadMode::Stream);
-		musicImportOptions->setIs3D(false);
+		musicImportOptions->format = AudioFormat::VORBIS;
+		musicImportOptions->readMode = AudioReadMode::Stream;
+		musicImportOptions->is3D = false;
 
 		HAudioClip musicClip = gImporter().import<AudioClip>(musicClipPath, musicImportOptions);
 
@@ -88,16 +88,16 @@ namespace bs
 		// load the compressed data and just uncompress on the fly. This saves on IO overhead at the cost of little
 		// extra memory.
 		SPtr<AudioClipImportOptions> environmentImportOptions = AudioClipImportOptions::create();
-		environmentImportOptions->setFormat(AudioFormat::VORBIS);
-		environmentImportOptions->setReadMode(AudioReadMode::LoadCompressed);
-		environmentImportOptions->setIs3D(true);
+		environmentImportOptions->format = AudioFormat::VORBIS;
+		environmentImportOptions->readMode = AudioReadMode::LoadCompressed;
+		environmentImportOptions->is3D = true;
 
 		HAudioClip environmentClip = gImporter().import<AudioClip>(environmentClipPath, environmentImportOptions);
 
 		// Import a short audio cue. Use the uncompressed PCM audio format for fast playback, at the cost of memory.
 		SPtr<AudioClipImportOptions> cueImportOptions = AudioClipImportOptions::create();
-		cueImportOptions->setFormat(AudioFormat::PCM);
-		cueImportOptions->setIs3D(true);
+		cueImportOptions->format = AudioFormat::PCM;
+		cueImportOptions->is3D = true;
 
 		HAudioClip cueClip = gImporter().import<AudioClip>(cueClipPath, cueImportOptions);
 

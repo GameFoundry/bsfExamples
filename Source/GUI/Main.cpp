@@ -13,6 +13,7 @@
 #include "GUI/BsGUIInputBox.h"
 #include "GUI/BsGUIListBox.h"
 #include "GUI/BsGUIToggle.h"
+#include "GUI/BsGUITexture.h"
 #include "GUI/BsGUIScrollArea.h"
 #include "GUI/BsGUISpace.h"
 #include "RenderAPI/BsRenderAPI.h"
@@ -155,6 +156,19 @@ namespace bs
 		iconButton->setPosition(10, 170);
 		iconButton->setSize(70, 70);
 
+		// Add an animated image
+		HTexture spriteSheetTex = ExampleFramework::loadTexture(ExampleTexture::GUISpinner, false, false, false, false);
+		HSpriteTexture spriteTexture = SpriteTexture::create(spriteSheetTex);
+		spriteTexture->setTexture(spriteSheetTex);
+
+		SpriteSheetGridAnimation gridAnim(3, 10, 29, 29);
+		spriteTexture->setAnimation(gridAnim);
+		spriteTexture->setAnimationPlayback(SpriteAnimationPlayback::Loop);
+
+		GUITexture* animatedImage = mainPanel->addNewElement<GUITexture>(spriteTexture);
+		animatedImage->setPosition(10, 250);
+		animatedImage->setSize(50, 50);
+
 		/////////////////////////// Header label /////////////////////////////////
 		// Create a custom style for a label we'll used for headers. Then add a header
 		// for the controls we added in the previous section.
@@ -178,7 +192,7 @@ namespace bs
 		GUILabel* basicControlsLbl = mainPanel->addNewElement<GUILabel>(HString("Basic controls"), "HeaderLabelStyle");
 		basicControlsLbl->setPosition(10, 10);
 
-		///////////////////////////  vertical layout /////////////////////////
+		/////////////////////////// Vertical layout /////////////////////////
 		// Use a vertical layout to automatically position GUI elements. This is unlike above where we position and
 		// sized all elements manually.
 		GUILayoutY* vertLayout = mainPanel->addNewElement<GUILayoutY>();

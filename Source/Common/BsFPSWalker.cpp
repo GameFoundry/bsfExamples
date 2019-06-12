@@ -7,6 +7,7 @@
 #include "BsApplication.h"
 #include "Physics/BsPhysics.h"
 #include "Utility/BsTime.h"
+#include "Scene/BsSceneManager.h"
 
 namespace bs
 {
@@ -89,7 +90,7 @@ namespace bs
 			velocity = direction * mCurrentSpeed;
 
 		// Note: Gravity is acceleration, but since the walker doesn't support falling, just apply it as a velocity
-		Vector3 gravity = gPhysics().getGravity();
+		Vector3 gravity = SO()->getScene()->getPhysicsScene()->getGravity();
 		mController->move((velocity + gravity) * frameDelta);
 	}
 }

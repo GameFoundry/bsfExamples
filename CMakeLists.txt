@@ -34,7 +34,7 @@ include(${BSF_SOURCE_DIR}/CMake/HelperMethods.cmake)
 
 add_subdirectory(${BSF_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/bsf)
 
-set(BS_EXAMPLES_BUILTIN_ASSETS_VERSION 9)
+set(BS_EXAMPLES_BUILTIN_ASSETS_VERSION 10)
 
 # Generate config file
 configure_file("${PROJECT_SOURCE_DIR}/Source/CMake/BsExampleConfig.h.in" "${PROJECT_SOURCE_DIR}/Source/Common/BsExampleConfig.h")

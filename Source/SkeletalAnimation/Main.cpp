@@ -58,13 +58,13 @@ namespace bs
 		// Set up mesh import options so that we import information about the skeleton and the skin, as well as any
 		// animation clips the model might have.
 		SPtr<MeshImportOptions> meshImportOptions = MeshImportOptions::create();
-		meshImportOptions->setImportSkin(true);
-		meshImportOptions->setImportAnimation(true);
+		meshImportOptions->importSkin = true;
+		meshImportOptions->importAnimation = true;
 
 		// The FBX file contains multiple resources (a mesh and an animation clip), therefore we use importAll() method,
 		// which imports all resources in a file.
-		Vector<SubResource> modelResources = gImporter().importAll(modelPath, meshImportOptions);
-		for(auto& entry : modelResources)
+		SPtr<MultiResource> modelResources = gImporter().importAll(modelPath, meshImportOptions);
+		for(auto& entry : modelResources->entries)
 		{
 			if(rtti_is_of_type<Mesh>(entry.value.get()))
 				assets.exampleModel = static_resource_cast<Mesh>(entry.value);
