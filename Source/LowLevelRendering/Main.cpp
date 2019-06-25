@@ -1,4 +1,4 @@
-#include "BsApplication.h"
+#include "BsEntry.h"
 #include "Material/BsMaterial.h"
 #include "CoreThread/BsCoreThread.h"
 #include "RenderAPI/BsRenderAPI.h"
@@ -99,18 +99,7 @@ namespace bs
 }
 
 // Main entry point into the application
-#if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
-
-int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-)
-#else
-int main()
-#endif
+int bs_main(int argc, char* argv[])
 {
 	using namespace bs;
 
