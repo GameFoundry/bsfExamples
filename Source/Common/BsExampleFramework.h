@@ -163,7 +163,7 @@ namespace bs
 				{
 					MeshImportOptions* importOptions = static_cast<MeshImportOptions*>(meshImportOptions.get());
 
-					importOptions->setImportScale(scale);
+					importOptions->importScale = scale;
 				}
 
 				model = gImporter().import<Mesh>(srcAssetPath, meshImportOptions);
@@ -240,23 +240,23 @@ namespace bs
 					TextureImportOptions* importOptions = static_cast<TextureImportOptions*>(textureImportOptions.get());
 
 					// We want maximum number of mipmaps to be generated
-					importOptions->setGenerateMipmaps(mips);
+					importOptions->generateMips = mips;
 
 					// If the texture is in sRGB space the system needs to know about it
-					importOptions->setSRGB(isSRGB);
+					importOptions->sRGB = isSRGB;
 
 					// Ensures we can save the texture contents
-					importOptions->setCPUCached(true);
+					importOptions->cpuCached = true;
 
 					// Import as cubemap if needed
-					importOptions->setIsCubemap(isCubemap);
+					importOptions->cubemap = isCubemap;
 
 					// If importing as cubemap, assume source is a panorama
-					importOptions->setCubemapSourceType(CubemapSourceType::Cylindrical);
+					importOptions->cubemapSourceType = CubemapSourceType::Cylindrical;
 
 					// Importing using a HDR format if requested
 					if (isHDR)
-						importOptions->setFormat(PF_RG11B10F);
+						importOptions->format = PF_RG11B10F;
 				}
 
 				// Import texture with specified import options
@@ -339,7 +339,7 @@ namespace bs
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
 				SPtr<FontImportOptions> fontImportOptions = FontImportOptions::create();
-				fontImportOptions->setFontSizes(fontSizes);
+				fontImportOptions->fontSizes = fontSizes;
 
 				font = gImporter().import<Font>(srcAssetPath, fontImportOptions);
 

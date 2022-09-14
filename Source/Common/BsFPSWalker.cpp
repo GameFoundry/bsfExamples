@@ -6,6 +6,7 @@
 #include "Components/BsCCharacterController.h"
 #include "BsApplication.h"
 #include "Physics/BsPhysics.h"
+#include "Scene/BsSceneManager.h"
 #include "Utility/BsTime.h"
 
 namespace bs
@@ -88,8 +89,14 @@ namespace bs
 		if (mCurrentSpeed > tooSmall)
 			velocity = direction * mCurrentSpeed;
 
+
+		const SPtr<SceneInstance> sceneInstance = SceneManager::instance().getMainScene();
+		BS_ASSERT(sceneInstance != nullptr);
+
+		const SPtr<PhysicsScene> physicsScene = sceneInstance->getPhysicsScene();
+
 		// Note: Gravity is acceleration, but since the walker doesn't support falling, just apply it as a velocity
-		Vector3 gravity = gPhysics().getGravity();
+		Vector3 gravity = physicsScene->getGravity();
 		mController->move((velocity + gravity) * frameDelta);
 	}
 }

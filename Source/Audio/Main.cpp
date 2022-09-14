@@ -77,9 +77,9 @@ namespace bs
 		// performance. Also since it's a longer audio clip, use streaming to avoid loading the entire clip into memory,
 		// at the additional cost of performance and IO overhead.
 		SPtr<AudioClipImportOptions> musicImportOptions = AudioClipImportOptions::create();
-		musicImportOptions->setFormat(AudioFormat::VORBIS);
-		musicImportOptions->setReadMode(AudioReadMode::Stream);
-		musicImportOptions->setIs3D(false);
+		musicImportOptions->format = AudioFormat::VORBIS;
+		musicImportOptions->readMode = AudioReadMode::Stream;
+		musicImportOptions->is3D = false;
 
 		HAudioClip musicClip = gImporter().import<AudioClip>(musicClipPath, musicImportOptions);
 
