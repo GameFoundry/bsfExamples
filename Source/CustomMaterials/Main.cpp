@@ -83,42 +83,42 @@ namespace bs
 		assets.sphere = ExampleFramework::loadMesh(ExampleMesh::Pistol, 10.0f);
 
 		// Load PBR textures for the 3D model
-		assets.exampleAlbedoTex = ExampleFramework::loadTexture(ExampleTexture::PistolAlbedo);
-		assets.exampleNormalsTex = ExampleFramework::loadTexture(ExampleTexture::PistolNormal, false);
-		assets.exampleRoughnessTex = ExampleFramework::loadTexture(ExampleTexture::PistolRoughness, false);
-		assets.exampleMetalnessTex = ExampleFramework::loadTexture(ExampleTexture::PistolMetalness, false);
+		assets.exampleAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::PistolAlbedo);
+		assets.exampleNormalsTex = ExampleFramework::LoadTexture(ExampleTexture::PistolNormal, false);
+		assets.exampleRoughnessTex = ExampleFramework::LoadTexture(ExampleTexture::PistolRoughness, false);
+		assets.exampleMetalnessTex = ExampleFramework::LoadTexture(ExampleTexture::PistolMetalness, false);
 
 		// Create a set of materials we'll be using for rendering the object
 		//// Create a standard PBR material
-		HShader standardShader = gBuiltinResources().getBuiltinShader(BuiltinShader::Standard);
+		HShader standardShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
 		assets.standardMaterial = createPBRMaterial(standardShader, assets);
 
 		//// Create a material that overrides the vertex transform of the rendered model. This creates a wobble in the model
 		//// geometry, but doesn't otherwise change the lighting properties (i.e. it still uses the PBR lighting model).
-		HShader vertexShader = ExampleFramework::loadShader(ExampleShader::CustomVertex);
+		HShader vertexShader = ExampleFramework::LoadShader(ExampleShader::CustomVertex);
 		assets.vertexMaterial = createPBRMaterial(vertexShader, assets);
 
 		//// Create a material that overrides the surface data that gets used by the lighting evaluation. The material
 		//// ignores the albedo texture provided, and instead uses a noise function to generate the albedo values.
-		HShader deferredSurfaceShader = ExampleFramework::loadShader(ExampleShader::CustomDeferredSurface);
+		HShader deferredSurfaceShader = ExampleFramework::LoadShader(ExampleShader::CustomDeferredSurface);
 		assets.deferredSurfaceMaterial = createPBRMaterial(deferredSurfaceShader, assets);
 
 		//// Create a material that overrides the lighting calculation by implementing a custom BRDF function, in this case
 		//// using a basic Lambert BRDF. Note that lighting calculations for the deferred pipeline are done globally, so
 		//// this material is created and used differently than others in this example. Instead of being assigned to 
 		//// Renderable it is instead applied globally and will affect all objects using the deferred pipeline.
-		assets.deferredLightingShader = ExampleFramework::loadShader(ExampleShader::CustomDeferredLighting);
+		assets.deferredLightingShader = ExampleFramework::LoadShader(ExampleShader::CustomDeferredLighting);
 
 		//// Creates a material that uses the forward rendering pipeline, while all previous materials have used the
 		//// deferred rendering pipeline. Forward rendering is required when the shader is used for rendering transparent
 		//// geometry, as this is not supported by the deferred pipeline. Forward rendering shader contains both the surface
 		//// and lighting portions in a single shader (unlike with deferred). This custom shader overrides both, using a
 		//// noise function for generating the surface albedo, and overriding the PBR BRDF with a basic Lambert BRDF.
-		HShader forwardSurfaceAndLighting = ExampleFramework::loadShader(ExampleShader::CustomForward);
+		HShader forwardSurfaceAndLighting = ExampleFramework::LoadShader(ExampleShader::CustomForward);
 		assets.forwardMaterial = createPBRMaterial(forwardSurfaceAndLighting, assets);
 
 		// Load an environment map
-		assets.skyTex = ExampleFramework::loadTexture(ExampleTexture::EnvironmentPaperMill, false, true, true);
+		assets.skyTex = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentPaperMill, false, true, true);
 
 		return assets;
 	}
@@ -303,7 +303,7 @@ namespace bs
 	void setupInput()
 	{
 		// Registers a default set of input controls
-		ExampleFramework::setupInputConfig();
+		ExampleFramework::SetupInputConfig();
 	
 		static VirtualButton SwitchMaterialButton("SwitchMaterial");
 

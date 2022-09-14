@@ -12,10 +12,10 @@ namespace bs
 	/** Wraps an angle so it always stays in [0, 360) range. */
 	Degree wrapAngle2(Degree angle)
 	{
-		if (angle.valueDegrees() < -360.0f)
+		if (angle.ValueDegrees() < -360.0f)
 			angle += Degree(360.0f);
 
-		if (angle.valueDegrees() > 360.0f)
+		if (angle.ValueDegrees() > 360.0f)
 			angle -= Degree(360.0f);
 
 		return angle;
@@ -25,7 +25,7 @@ namespace bs
 		:Component(parent), mPitch(0.0f), mYaw(0.0f), mLastButtonState(false)
 	{
 		// Set a name for the component, so we can find it later if needed
-		setName("ObjectRotator");
+		SetName("ObjectRotator");
 
 		// Get handles for key bindings. Actual keys attached to these bindings will be registered during app start-up.
 		mRotateObj = VirtualButton("RotateObj");
@@ -33,27 +33,27 @@ namespace bs
 		mVerticalAxis = VirtualAxis("Vertical");
 
 		// Determine initial yaw and pitch
-		Quaternion rotation = SO()->getTransform().getRotation();
+		Quaternion rotation = SO()->GetTransform().GetRotation();
 
 		Radian pitch, yaw, roll;
-		(void)rotation.toEulerAngles(pitch, yaw, roll);
+		(void)rotation.ToEulerAngles(pitch, yaw, roll);
 
 		mPitch = pitch;
 		mYaw = yaw;
 	}
 
-	void ObjectRotator::update()
+	void ObjectRotator::Update()
 	{
 		// Check if any movement or rotation keys are being held
-		bool isRotating = gVirtualInput().isButtonHeld(mRotateObj);
+		bool isRotating = gVirtualInput().IsButtonHeld(mRotateObj);
 
 		// If switch to or from rotation mode, hide or show the cursor
 		if (isRotating != mLastButtonState)
 		{
 			if (isRotating)
-				Cursor::instance().hide();
+				Cursor::Instance().Hide();
 			else
-				Cursor::instance().show();
+				Cursor::Instance().Show();
 
 			mLastButtonState = isRotating;
 		}
@@ -62,7 +62,7 @@ namespace bs
 		// vertical/horizontal axes.
 		if (isRotating)
 		{
-			mYaw -= Degree(gVirtualInput().getAxisValue(mHorizontalAxis) * ROTATION_SPEED);
+			mYaw -= Degree(gVirtualInput().GetAxisValue(mHorizontalAxis) * ROTATION_SPEED);
 			mPitch -= Degree(gVirtualInput().getAxisValue(mVerticalAxis) * ROTATION_SPEED);
 
 			mYaw = wrapAngle2(mYaw);

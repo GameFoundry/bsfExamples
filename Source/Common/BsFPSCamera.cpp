@@ -31,20 +31,20 @@ namespace bs
 		mPitch = pitch;
 		mYaw = yaw;
 
-		applyAngles();
+		ApplyAngles();
 	}
 
-	void FPSCamera::update()
+	void FPSCamera::Update()
 	{
 		// If camera is rotating, apply new pitch/yaw rotation values depending on the amount of rotation from the
 		// vertical/horizontal axes.
 		mYaw += Degree(gVirtualInput().getAxisValue(mHorizontalAxis) * ROTATION_SPEED);
 		mPitch += Degree(gVirtualInput().getAxisValue(mVerticalAxis) * ROTATION_SPEED);
 
-		applyAngles();
+		ApplyAngles();
 	}
 
-	void FPSCamera::applyAngles()
+	void FPSCamera::ApplyAngles()
 	{
 		mYaw.wrap();
 		mPitch.wrap();

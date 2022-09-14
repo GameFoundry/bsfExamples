@@ -14,7 +14,7 @@ namespace bs
 		CameraFlyer(const HSceneObject& parent);
 
 		/** Triggered once per frame. Allows the component to handle input and move. */
-		void update() override;
+		void Update() ;
 
 	private:
 		float mCurrentSpeed; /**< Current speed of the camera. */

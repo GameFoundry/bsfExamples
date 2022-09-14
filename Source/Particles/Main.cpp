@@ -57,12 +57,12 @@ namespace bs
 			:Component(parent), mRadius(radius)
 		{ }
 
-		void onInitialized() override
+		void OnInitialized() override
 		{
 			mCenter = SO()->getTransform().getPosition();
 		}
 
-		void update() override
+		void Update() override
 		{
 			Vector3 position = mCenter + mRadius * Vector3(Math::cos(mAngle), 0.0f, Math::sin(mAngle));
 

@@ -40,14 +40,14 @@ namespace bs
 		mFastMove = VirtualButton("FastMove");
 	}
 
-	void FPSWalker::fixedUpdate()
+	void FPSWalker::FixedUpdate()
 	{
 		// Check if any movement keys are being held
-		bool goingForward = gVirtualInput().isButtonHeld(mMoveForward);
-		bool goingBack = gVirtualInput().isButtonHeld(mMoveBack);
-		bool goingLeft = gVirtualInput().isButtonHeld(mMoveLeft);
-		bool goingRight = gVirtualInput().isButtonHeld(mMoveRight);
-		bool fastMove = gVirtualInput().isButtonHeld(mFastMove);
+		bool goingForward = gVirtualInput().IsButtonHeld(mMoveForward);
+		bool goingBack = gVirtualInput().IsButtonHeld(mMoveBack);
+		bool goingLeft = gVirtualInput().IsButtonHeld(mMoveLeft);
+		bool goingRight = gVirtualInput().IsButtonHeld(mMoveRight);
+		bool fastMove = gVirtualInput().IsButtonHeld(mFastMove);
 
 		const Transform& tfrm = SO()->getTransform();
 
@@ -90,13 +90,13 @@ namespace bs
 			velocity = direction * mCurrentSpeed;
 
 
-		const SPtr<SceneInstance> sceneInstance = SceneManager::instance().getMainScene();
+		const SPtr<SceneInstance> sceneInstance = SceneManager::Instance().getMainScene();
 		BS_ASSERT(sceneInstance != nullptr);
 
 		const SPtr<PhysicsScene> physicsScene = sceneInstance->getPhysicsScene();
 
 		// Note: Gravity is acceleration, but since the walker doesn't support falling, just apply it as a velocity
 		Vector3 gravity = physicsScene->getGravity();
-		mController->move((velocity + gravity) * frameDelta);
+		mController->Move((velocity + gravity) * frameDelta);
 	}
 }

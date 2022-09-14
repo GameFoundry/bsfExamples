@@ -20,14 +20,14 @@ namespace bs
 		 * Sets the character scene object to manipulate during rotations. When set, all yaw rotations will be applied to
 		 * the provided scene object, otherwise they will be applied to the current object.
 		 */
-		void setCharacter(const HSceneObject& characterSO) { mCharacterSO = characterSO; }
+		void SetCharacter(const HSceneObject& characterSO) { mCharacterSO = characterSO; }
 
 		/** Triggered once per frame. Allows the component to handle input and move. */
-		void update() override;
+		void Update() ;
 
 	private:
 		/** Applies the current yaw and pitch angles, rotating the object. Also wraps and clamps the angles as necessary. */
-		void applyAngles();
+		void ApplyAngles();
 
 		HSceneObject mCharacterSO; /**< Optional parent object to manipulate. */
 

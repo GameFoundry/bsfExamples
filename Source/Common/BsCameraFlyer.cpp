@@ -43,7 +43,7 @@ namespace bs
 		mVerticalAxis = VirtualAxis("Vertical");
 	}
 
-	void CameraFlyer::update()
+	void CameraFlyer::Update()
 	{
 		// Check if any movement or rotation keys are being held
 		bool goingForward = gVirtualInput().isButtonHeld(mMoveForward);
@@ -57,9 +57,9 @@ namespace bs
 		if (camRotating != mLastButtonState)
 		{
 			if (camRotating)
-				Cursor::instance().hide();
+				Cursor::Instance().hide();
 			else
-				Cursor::instance().show();
+				Cursor::Instance().show();
 
 			mLastButtonState = camRotating;
 		}

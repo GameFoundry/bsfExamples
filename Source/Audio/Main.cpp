@@ -47,7 +47,7 @@ namespace bs
 		{ }
 
 		/** Triggered once per frame. */
-		void update() override
+		void Update() override
 		{
 			const float time = gTime().getTime();
 
@@ -197,7 +197,7 @@ namespace bs
 		GUIPanel* mainPanel = gui->getPanel();
 
 		// Create a vertical GUI layout to align the labels one below each other
-		GUILayoutY* vertLayout = GUILayoutY::create();
+		GUILayoutY* vertLayout = GUILayoutY::Create();
 
 		// Create the GUI labels displaying the available input commands
 		HString musicString(u8"Press 1 to play music");
@@ -209,7 +209,7 @@ namespace bs
 		vertLayout->addNewElement<GUILabel>(cueString);
 
 		// Register the layout with the main GUI panel, placing the layout in top left corner of the screen by default
-		mainPanel->addElement(vertLayout);
+		mainPanel->AddElement(vertLayout);
 	}
 }
 

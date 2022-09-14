@@ -78,7 +78,7 @@ namespace bs
 	{
 	public:
 		/** Loads a manifest of all resources that were previously saved using this class. */
-		static void loadResourceManifest()
+		static void LoadResourceManifest()
 		{
 			const Path dataPath = EXAMPLE_DATA_PATH;
 			const Path manifestPath = dataPath + "ResourceManifest.asset";
@@ -86,13 +86,13 @@ namespace bs
 			if (FileSystem::exists(manifestPath))
 				manifest = ResourceManifest::load(manifestPath, dataPath);
 			else
-				manifest = ResourceManifest::create("ExampleAssets");
+				manifest = ResourceManifest::Create("ExampleAssets");
 
 			gResources().registerResourceManifest(manifest);
 		}
 
 		/** Saves the current resource manifest. */
-		static void saveResourceManifest()
+		static void SaveResourceManifest()
 		{
 			const Path dataPath = EXAMPLE_DATA_PATH;
 			const Path manifestPath = dataPath + "ResourceManifest.asset";
@@ -102,7 +102,7 @@ namespace bs
 		}
 
 		/** Registers a common set of keys/buttons that are used for controlling the examples. */
-		static void setupInputConfig()
+		static void SetupInputConfig()
 		{
 			// Register input configuration
 			// bsf allows you to use VirtualInput system which will map input device buttons and axes to arbitrary names,
@@ -136,7 +136,7 @@ namespace bs
 		 * Use the 'scale' parameter to control the size of the mesh. Note this option is only relevant when a mesh is
 		 * being imported (i.e. when the asset file is missing).
 		 */
-		static HMesh loadMesh(ExampleMesh type, float scale = 1.0f)
+		static HMesh LoadMesh(ExampleMesh type, float scale = 1.0f)
 		{
 			// Map from the enum to the actual file path
 			static Path assetPaths[] =
@@ -155,7 +155,7 @@ namespace bs
 			if (model == nullptr) // Mesh file doesn't exist, import from the source file.
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
-				SPtr<ImportOptions> meshImportOptions = Importer::instance().createImportOptions(srcAssetPath);
+				SPtr<ImportOptions> meshImportOptions = Importer::Instance().createImportOptions(srcAssetPath);
 
 				// rtti_is_of_type checks if the import options are of valid type, in case the provided path is pointing to a
 				// non-mesh resource. This is similar to dynamic_cast but uses Banshee internal RTTI system for type checking.
@@ -189,7 +189,7 @@ namespace bs
 		 * in a floating point format, specify 'isHDR' to true. Note these options are only relevant when a texture is
 		 * being imported (i.e. when asset file is missing). If 'mips' is true, mip-map levels will be generated.
 		 */
-		static HTexture loadTexture(ExampleTexture type, bool isSRGB = true, bool isCubemap = false, bool isHDR = false, 
+		static HTexture LoadTexture(ExampleTexture type, bool isSRGB = true, bool isCubemap = false, bool isHDR = false, 
 			bool mips = true)
 		{
 			// Map from the enum to the actual file path
@@ -231,7 +231,7 @@ namespace bs
 			if (texture == nullptr) // Texture file doesn't exist, import from the source file.
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
-				SPtr<ImportOptions> textureImportOptions = Importer::instance().createImportOptions(srcAssetPath);
+				SPtr<ImportOptions> textureImportOptions = Importer::Instance().createImportOptions(srcAssetPath);
 
 				// rtti_is_of_type checks if the import options are of valid type, in case the provided path is pointing to a 
 				// non-texture resource. This is similar to dynamic_cast but uses Banshee internal RTTI system for type checking.
@@ -278,7 +278,7 @@ namespace bs
 		 * Loads one of the builtin shader assets. If the asset doesn't exist, the shader will be re-imported from the 
 		 * source file, and then saved so it can be loaded on the next call to this method. 
 		 */
-		static HShader loadShader(ExampleShader type)
+		static HShader LoadShader(ExampleShader type)
 		{
 			// Map from the enum to the actual file path
 			static Path assetPaths[] =
@@ -319,7 +319,7 @@ namespace bs
 		 * Use the 'fontSizes' parameter to determine which sizes of this font should be imported. Note this option is only
 		 * relevant when a font is being imported (i.e. when the asset file is missing).
 		 */
-		static HFont loadFont(ExampleFont type, Vector<UINT32> fontSizes)
+		static HFont LoadFont(ExampleFont type, Vector<UINT32> fontSizes)
 		{
 			// Map from the enum to the actual file path
 			static Path assetPaths[] =
@@ -338,7 +338,7 @@ namespace bs
 			if (font == nullptr) // Font file doesn't exist, import from the source file.
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
-				SPtr<FontImportOptions> fontImportOptions = FontImportOptions::create();
+				SPtr<FontImportOptions> fontImportOptions = FontImportOptions::Create();
 				fontImportOptions->fontSizes = fontSizes;
 
 				font = gImporter().import<Font>(srcAssetPath, fontImportOptions);
@@ -383,7 +383,7 @@ namespace bs
 		 * source file, and then saved so it can be loaded on the next call to this method. 
 		 */
 		template<class T>
-		static ResourceHandle<T> loadResource(ExampleResource type)
+		static ResourceHandle<T> LoadResource(ExampleResource type)
 		{
 			// Map from the enum to the actual file path
 			static Path assetPaths[] =

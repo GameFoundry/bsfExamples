@@ -16,7 +16,7 @@ namespace bs
 		FPSWalker(const HSceneObject& parent);
 
 		/** Triggered once per frame. Allows the component to handle input and move. */
-		void fixedUpdate() override;
+		void FixedUpdate() ;
 
 	private:
 		HCharacterController mController;

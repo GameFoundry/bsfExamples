@@ -59,7 +59,7 @@ namespace bs
 
 	private:
 		// Called when the engine is first started up
-		void onStartUp() override
+		void OnStartUp() override
 		{
 			// Ensure all parent systems are initialized first
 			Application::onStartUp();
@@ -77,7 +77,7 @@ namespace bs
 		}
 
 		// Called when the engine is about to be shut down
-		void onShutDown() override
+		void OnShutDown() override
 		{
 			// Queue the method for execution on the core thread
 			gCoreThread().queueCommand(&ct::shutdown);
@@ -87,7 +87,7 @@ namespace bs
 		}
 
 		// Called every frame, before any other engine system (optionally use postUpdate())
-		void preUpdate() override
+		void PreUpdate() override
 		{
 			// Queue the method for execution on the core thread
 			gCoreThread().queueCommand(&ct::render);
