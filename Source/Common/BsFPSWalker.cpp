@@ -27,10 +27,10 @@ namespace bs
 		:Component(parent)
 	{
 		// Set a name for the component, so we can find it later if needed
-		setName("FPSWalker");
+		SetName("FPSWalker");
 
 		// Find the CharacterController we'll be using for movement
-		mController = SO()->getComponent<CCharacterController>();
+		mController = SO()->GetComponent<CCharacterController>();
 
 		// Get handles for key bindings. Actual keys attached to these bindings will be registered during app start-up.
 		mMoveForward = VirtualButton("Forward");
@@ -49,7 +49,7 @@ namespace bs
 		bool goingRight = gVirtualInput().IsButtonHeld(mMoveRight);
 		bool fastMove = gVirtualInput().IsButtonHeld(mFastMove);
 
-		const Transform& tfrm = SO()->getTransform();
+		const Transform& tfrm = SO()->GetTransform();
 
 		// If the movement button is pressed, determine direction to move in
 		Vector3 direction = Vector3::ZERO;
@@ -75,7 +75,7 @@ namespace bs
 				multiplier = FAST_MODE_MULTIPLIER;
 
 			// Calculate current speed of the camera
-			mCurrentSpeed = Math::clamp(mCurrentSpeed + ACCELERATION * frameDelta, START_SPEED, TOP_SPEED);
+			mCurrentSpeed = Math::Clamp(mCurrentSpeed + ACCELERATION * frameDelta, START_SPEED, TOP_SPEED);
 			mCurrentSpeed *= multiplier;
 		}
 		else
@@ -93,10 +93,10 @@ namespace bs
 		const SPtr<SceneInstance> sceneInstance = SceneManager::Instance().getMainScene();
 		BS_ASSERT(sceneInstance != nullptr);
 
-		const SPtr<PhysicsScene> physicsScene = sceneInstance->getPhysicsScene();
+		const SPtr<PhysicsScene> physicsScene = sceneInstance->GetPhysicsScene();
 
 		// Note: Gravity is acceleration, but since the walker doesn't support falling, just apply it as a velocity
-		Vector3 gravity = physicsScene->getGravity();
+		Vector3 gravity = physicsScene->GetGravity();
 		mController->Move((velocity + gravity) * frameDelta);
 	}
 }

@@ -83,7 +83,7 @@ namespace bs
 			const Path dataPath = EXAMPLE_DATA_PATH;
 			const Path manifestPath = dataPath + "ResourceManifest.asset";
 
-			if (FileSystem::exists(manifestPath))
+			if (FileSystem::Exists(manifestPath))
 				manifest = ResourceManifest::load(manifestPath, dataPath);
 			else
 				manifest = ResourceManifest::Create("ExampleAssets");
@@ -355,7 +355,7 @@ namespace bs
 					// Font has child resources, which also need to be registered
 					for (auto& size : fontSizes)
 					{
-						SPtr<const FontBitmap> fontData = font->getBitmap(size);
+						SPtr<const FontBitmap> fontData = font->GetBitmap(size);
 
 						Path texPageOutputPath = Path(EXAMPLE_DATA_PATH) + "GUI/";
 

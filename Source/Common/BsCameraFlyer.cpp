@@ -30,7 +30,7 @@ namespace bs
 		:Component(parent)
 	{
 		// Set a name for the component, so we can find it later if needed
-		setName("CameraFlyer");
+		SetName("CameraFlyer");
 
 		// Get handles for key bindings. Actual keys attached to these bindings will be registered during app start-up.
 		mMoveForward = VirtualButton("Forward");
@@ -84,10 +84,10 @@ namespace bs
 			Quaternion camRot = yRot * xRot;
 			camRot.normalize();
 
-			SO()->setRotation(camRot);
+			SO()->SetRotation(camRot);
 		}
 
-		const Transform& tfrm = SO()->getTransform();
+		const Transform& tfrm = SO()->GetTransform();
 
 		// If the movement button is pressed, determine direction to move in
 		Vector3 direction = Vector3::ZERO;
@@ -107,7 +107,7 @@ namespace bs
 				multiplier = FAST_MODE_MULTIPLIER;
 
 			// Calculate current speed of the camera
-			mCurrentSpeed = Math::clamp(mCurrentSpeed + ACCELERATION * frameDelta, START_SPEED, TOP_SPEED);
+			mCurrentSpeed = Math::Clamp(mCurrentSpeed + ACCELERATION * frameDelta, START_SPEED, TOP_SPEED);
 			mCurrentSpeed *= multiplier;
 		}
 		else

@@ -77,7 +77,7 @@ namespace bs
 			Quaternion camRot = yRot * xRot;
 			camRot.normalize();
 
-			SO()->setRotation(camRot);
+			SO()->SetRotation(camRot);
 		}
 	}
 }

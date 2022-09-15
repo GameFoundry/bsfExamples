@@ -16,14 +16,14 @@ namespace bs
 		:Component(parent)
 	{
 		// Set a name for the component, so we can find it later if needed
-		setName("FPSCamera");
+		SetName("FPSCamera");
 
 		// Get handles for key bindings. Actual keys attached to these bindings will be registered during app start-up.
 		mHorizontalAxis = VirtualAxis("Horizontal");
 		mVerticalAxis = VirtualAxis("Vertical");
 
 		// Determine initial yaw and pitch
-		Quaternion rotation = SO()->getTransform().getRotation();
+		Quaternion rotation = SO()->GetTransform().GetRotation();
 
 		Radian pitch, yaw, roll;
 		(void)rotation.toEulerAngles(pitch, yaw, roll);
@@ -68,12 +68,12 @@ namespace bs
 			Quaternion camRot = yRot * xRot;
 			camRot.normalize();
 
-			SO()->setRotation(camRot);
+			SO()->SetRotation(camRot);
 		}
 		else
 		{
-			mCharacterSO->setRotation(yRot);
-			SO()->setRotation(xRot);
+			mCharacterSO->SetRotation(yRot);
+			SO()->SetRotation(xRot);
 		}
 	}
 
