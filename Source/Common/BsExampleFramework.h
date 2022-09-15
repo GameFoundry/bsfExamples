@@ -174,7 +174,7 @@ namespace bs
 				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
-					manifest->registerResource(model.getUUID(), assetPath);
+					manifest->registerResource(model.GetUuid(), assetPath);
 			}
 
 			return model;
@@ -268,7 +268,7 @@ namespace bs
 				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
-					manifest->registerResource(texture.getUUID(), assetPath);
+					manifest->registerResource(texture.GetUuid(), assetPath);
 			}
 
 			return texture;
@@ -306,7 +306,7 @@ namespace bs
 				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
-					manifest->registerResource(shader.getUUID(), assetPath);
+					manifest->registerResource(shader.GetUuid(), assetPath);
 			}
 
 			return shader;
@@ -350,7 +350,7 @@ namespace bs
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
 				{
-					manifest->registerResource(font.getUUID(), assetPath);
+					manifest->registerResource(font.GetUuid(), assetPath);
 
 					// Font has child resources, which also need to be registered
 					for (auto& size : fontSizes)
@@ -367,7 +367,7 @@ namespace bs
 								toString(pageIdx) + ".asset");
 
 							gResources().save(tex, texPageOutputPath, true);
-							manifest->registerResource(tex.getUUID(), texPageOutputPath);
+							manifest->registerResource(tex.GetUuid(), texPageOutputPath);
 
 							pageIdx++;
 						}
@@ -408,7 +408,7 @@ namespace bs
 				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
-					manifest->registerResource(resource.getUUID(), assetPath);
+					manifest->registerResource(resource.GetUuid(), assetPath);
 			}
 
 			return resource;
