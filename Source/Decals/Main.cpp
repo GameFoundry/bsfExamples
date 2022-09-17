@@ -54,73 +54,73 @@ namespace bs
 		// Prepare all the resources we'll be using throughout this example
 
 		// Grab a couple of test textures that we'll apply to the rendered objects
-		HTexture gridPattern = ExampleFramework::loadTexture(ExampleTexture::GridPattern);
-		HTexture gridPattern2 = ExampleFramework::loadTexture(ExampleTexture::GridPattern2);
+		HTexture gridPattern = ExampleFramework::LoadTexture(ExampleTexture::GridPattern);
+		HTexture gridPattern2 = ExampleFramework::LoadTexture(ExampleTexture::GridPattern2);
 
 		// Grab the default PBR shader
-		HShader shader = gBuiltinResources().getBuiltinShader(BuiltinShader::Standard);
+		HShader shader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
 		
 		// Create a set of materials to apply to renderables used
-		HMaterial planeMaterial = Material::create(shader);
-		planeMaterial->setTexture("gAlbedoTex", gridPattern2);
+		HMaterial planeMaterial = Material::Create(shader);
+		planeMaterial->SetTexture("gAlbedoTex", gridPattern2);
 
 		// Tile the texture so every tile covers a 2x2m area
-		planeMaterial->setVec2("gUVTile", Vector2::ONE * GROUND_PLANE_SCALE * 0.5f);
+		planeMaterial->SetVec2("gUVTile", Vector2::ONE * GROUND_PLANE_SCALE * 0.5f);
 
 		// Load meshes we'll used for our rendered objects
-		HMesh planeMesh = gBuiltinResources().getMesh(BuiltinMesh::Quad);
+		HMesh planeMesh = gBuiltinResources().GetMesh(BuiltinMesh::Quad);
 
 		/************************************************************************/
 		/* 									FLOOR	                    		*/
 		/************************************************************************/
 
 		// Set up renderable geometry for the floor plane
-		HSceneObject floorSO = SceneObject::create("Floor");
-		HRenderable floorRenderable = floorSO->addComponent<CRenderable>();
-		floorRenderable->setMesh(planeMesh);
-		floorRenderable->setMaterial(planeMaterial);
+		HSceneObject floorSO = SceneObject::Create("Floor");
+		HRenderable floorRenderable = floorSO->AddComponent<CRenderable>();
+		floorRenderable->SetMesh(planeMesh);
+		floorRenderable->SetMaterial(planeMaterial);
 
-		floorSO->setScale(Vector3(GROUND_PLANE_SCALE, 1.0f, GROUND_PLANE_SCALE));
+		floorSO->SetScale(Vector3(GROUND_PLANE_SCALE, 1.0f, GROUND_PLANE_SCALE));
 
 		// Add a plane collider that will prevent physical objects going through the floor
-		HPlaneCollider planeCollider = floorSO->addComponent<CPlaneCollider>();
+		HPlaneCollider planeCollider = floorSO->AddComponent<CPlaneCollider>();
 
-		HMaterial boxMaterial = Material::create(shader);
-		boxMaterial->setTexture("gAlbedoTex", gridPattern);
+		HMaterial boxMaterial = Material::Create(shader);
+		boxMaterial->SetTexture("gAlbedoTex", gridPattern);
 
-		HMaterial sphereMaterial = Material::create(shader);
+		HMaterial sphereMaterial = Material::Create(shader);
 
 		// Load meshes we'll used for our rendered objects
-		HMesh boxMesh = gBuiltinResources().getMesh(BuiltinMesh::Box);
-		HSceneObject boxSO = SceneObject::create("Box");
+		HMesh boxMesh = gBuiltinResources().GetMesh(BuiltinMesh::Box);
+		HSceneObject boxSO = SceneObject::Create("Box");
 
-		HRenderable boxRenderable = boxSO->addComponent<CRenderable>();
-		boxRenderable->setMesh(boxMesh);
-		boxRenderable->setMaterial(boxMaterial);
+		HRenderable boxRenderable = boxSO->AddComponent<CRenderable>();
+		boxRenderable->SetMesh(boxMesh);
+		boxRenderable->SetMaterial(boxMaterial);
 
 		// Set a non-default layer for the box, so we can use it for masking on which surfaces should the decal be 
 		// projected onto
-		boxRenderable->setLayer(1 << 1);
+		boxRenderable->SetLayer(1 << 1);
 
-		boxSO->setPosition(Vector3(0.0f, 0.5f, 0.5f));
+		boxSO->SetPosition(Vector3(0.0f, 0.5f, 0.5f));
 
 		/************************************************************************/
 		/* 									CHARACTER                    		*/
 		/************************************************************************/
 
 		// Add physics geometry and components for character movement and physics interaction
-		HSceneObject characterSO = SceneObject::create("Character");
-		characterSO->setPosition(Vector3(0.0f, 1.0f, 5.0f));
+		HSceneObject characterSO = SceneObject::Create("Character");
+		characterSO->SetPosition(Vector3(0.0f, 1.0f, 5.0f));
 
 		// Add a character controller, representing the physical geometry of the character
-		HCharacterController charController = characterSO->addComponent<CCharacterController>();
+		HCharacterController charController = characterSO->AddComponent<CCharacterController>();
 
 		// Make the character about 1.8m high, with 0.4m radius (controller represents a capsule)
-		charController->setHeight(1.0f); // + 0.4 * 2 radius = 1.8m height
-		charController->setRadius(0.4f);
+		charController->SetHeight(1.0f); // + 0.4 * 2 radius = 1.8m height
+		charController->SetRadius(0.4f);
 
 		// FPS walker uses default input controls to move the character controller attached to the same object
-		characterSO->addComponent<FPSWalker>();
+		characterSO->AddComponent<FPSWalker>();
 
 		/************************************************************************/
 		/* 									CAMERA	                     		*/
@@ -129,66 +129,66 @@ namespace bs
 		// In order something to render on screen we need at least one camera.
 
 		// Like before, we create a new scene object at (0, 0, 0).
-		HSceneObject sceneCameraSO = SceneObject::create("SceneCamera");
+		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
 		// Get the primary render window we need for creating the camera. 
-		SPtr<RenderWindow> window = gApplication().getPrimaryWindow();
+		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
 		// Add a Camera component that will output whatever it sees into that window 
 		// (You could also use a render texture or another window you created).
-		HCamera sceneCamera = sceneCameraSO->addComponent<CCamera>();
-		sceneCamera->getViewport()->setTarget(window);
+		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
+		sceneCamera->GetViewport()->SetTarget(window);
 
 		// Set up camera component properties
 
 		// Set closest distance that is visible. Anything below that is clipped.
-		sceneCamera->setNearClipDistance(0.005f);
+		sceneCamera->SetNearClipDistance(0.005f);
 
 		// Set farthest distance that is visible. Anything above that is clipped.
-		sceneCamera->setFarClipDistance(1000);
+		sceneCamera->SetFarClipDistance(1000);
 
 		// Set aspect ratio depending on the current resolution
-		sceneCamera->setAspectRatio(windowResWidth / (float)windowResHeight);
+		sceneCamera->SetAspectRatio(windowResWidth / (float)windowResHeight);
 
 		// Add a component that allows the camera to be rotated using the mouse
-		sceneCameraSO->setRotation(Quaternion(Degree(-10.0f), Degree(0.0f), Degree(0.0f)));
-		HFPSCamera fpsCamera = sceneCameraSO->addComponent<FPSCamera>();
+		sceneCameraSO->SetRotation(Quaternion(Degree(-10.0f), Degree(0.0f), Degree(0.0f)));
+		HFPSCamera fpsCamera = sceneCameraSO->AddComponent<FPSCamera>();
 
 		// Set the character controller on the FPS camera, so the component can apply yaw rotation to it
-		fpsCamera->setCharacter(characterSO);
+		fpsCamera->SetCharacter(characterSO);
 
 		// Make the camera a child of the character scene object, and position it roughly at eye level
-		sceneCameraSO->setParent(characterSO);
-		sceneCameraSO->setPosition(Vector3(0.0f, 1.8f * 0.5f - 0.1f, -2.0f));
+		sceneCameraSO->SetParent(characterSO);
+		sceneCameraSO->SetPosition(Vector3(0.0f, 1.8f * 0.5f - 0.1f, -2.0f));
 
 		/************************************************************************/
 		/* 									SKYBOX                       		*/
 		/************************************************************************/
 
 		// Load a skybox texture
-		HTexture skyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentDaytime, false, true, true);
+		HTexture skyCubemap = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentDaytime, false, true, true);
 
 		// Add a skybox texture for sky reflections
-		HSceneObject skyboxSO = SceneObject::create("Skybox");
+		HSceneObject skyboxSO = SceneObject::Create("Skybox");
 
-		HSkybox skybox = skyboxSO->addComponent<CSkybox>();
-		skybox->setTexture(skyCubemap);
+		HSkybox skybox = skyboxSO->AddComponent<CSkybox>();
+		skybox->SetTexture(skyCubemap);
 
 		/************************************************************************/
 		/* 									DECAL                       		*/
 		/************************************************************************/
 
 		// Load the decal textures
-		HTexture decalAlbedoTex = ExampleFramework::loadTexture(ExampleTexture::DecalAlbedo);
-		HTexture decalNormalTex = ExampleFramework::loadTexture(ExampleTexture::DecalNormal, false);
+		HTexture decalAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::DecalAlbedo);
+		HTexture decalNormalTex = ExampleFramework::LoadTexture(ExampleTexture::DecalNormal, false);
 
 		// Create a material using the built-in decal shader and assign the textures
-		HShader decalShader = gBuiltinResources().getBuiltinShader(BuiltinShader::Decal);
-		HMaterial decalMaterial = Material::create(decalShader);
-		decalMaterial->setTexture("gAlbedoTex", decalAlbedoTex);
-		decalMaterial->setTexture("gNormalTex", decalNormalTex);
+		HShader decalShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Decal);
+		HMaterial decalMaterial = Material::Create(decalShader);
+		decalMaterial->SetTexture("gAlbedoTex", decalAlbedoTex);
+		decalMaterial->SetTexture("gNormalTex", decalNormalTex);
 
-		decalMaterial->setVariation(ShaderVariation(
+		decalMaterial->SetVariation(ShaderVariation(
 			{
 				// Use the default, transparent blend mode that uses traditional PBR textures to project. Normally no need
 				// to set the default explicitly but it's done here for example purposes. See the manual for all available 
@@ -198,13 +198,13 @@ namespace bs
 		);
 
 		// Create the decal scene object, position and orient it, facing down
-		HSceneObject decalSO = SceneObject::create("Decal");
-		decalSO->setPosition(Vector3(0.0f, 6.0f, 1.0f));
-		decalSO->lookAt(Vector3(0.0f, 0.0f, 1.0f));
+		HSceneObject decalSO = SceneObject::Create("Decal");
+		decalSO->SetPosition(Vector3(0.0f, 6.0f, 1.0f));
+		decalSO->LookAt(Vector3(0.0f, 0.0f, 1.0f));
 
 		// Set the material to project
-		HDecal decal = decalSO->addComponent<CDecal>();
-		decal->setMaterial(decalMaterial);
+		HDecal decal = decalSO->AddComponent<CDecal>();
+		decal->SetMaterial(decalMaterial);
 
 		// Optionally set a mask to only project onto elements with layer 1 set (in this case this is the floor since we
 		// changed the default layer for the box)
@@ -215,12 +215,12 @@ namespace bs
 		/************************************************************************/
 
 		// Hook up input that launches a sphere when user clicks the mouse, and Esc key to quit
-		gInput().onButtonUp.connect([=](const ButtonEvent& ev)
+		gInput().onButtonUp.Connect([=](const ButtonEvent& ev)
 		{
 			if(ev.buttonCode == BC_ESCAPE)
 			{
 				// Quit the application when Escape key is pressed
-				gApplication().quitRequested();
+				gApplication().QuitRequested();
 			}
 		});
 
@@ -245,20 +245,20 @@ int main()
 
 	// Initializes the application and creates a window with the specified properties
 	VideoMode videoMode(windowResWidth, windowResHeight);
-	Application::startUp(videoMode, "Example", false);
+	Application::StartUp(videoMode, "Example", false);
 
 	// Registers a default set of input controls
-	ExampleFramework::setupInputConfig();
+	ExampleFramework::SetupInputConfig();
 
 	// Set up the scene with an object to render and a camera
 	setUpScene();
 
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
-	Application::instance().runMainLoop();
+	Application::Instance().RunMainLoop();
 
 	// When done, clean up
-	Application::shutDown();
+	Application::ShutDown();
 
 	return 0;
 }

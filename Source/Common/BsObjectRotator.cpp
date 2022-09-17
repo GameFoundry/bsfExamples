@@ -63,19 +63,19 @@ namespace bs
 		if (isRotating)
 		{
 			mYaw -= Degree(gVirtualInput().GetAxisValue(mHorizontalAxis) * ROTATION_SPEED);
-			mPitch -= Degree(gVirtualInput().getAxisValue(mVerticalAxis) * ROTATION_SPEED);
+			mPitch -= Degree(gVirtualInput().GetAxisValue(mVerticalAxis) * ROTATION_SPEED);
 
 			mYaw = wrapAngle2(mYaw);
 			mPitch = wrapAngle2(mPitch);
 
 			Quaternion yRot;
-			yRot.fromAxisAngle(Vector3::UNIT_Y, Radian(mYaw));
+			yRot.FromAxisAngle(Vector3::UNIT_Y, Radian(mYaw));
 
 			Quaternion xRot;
-			xRot.fromAxisAngle(Vector3::UNIT_X, Radian(mPitch));
+			xRot.FromAxisAngle(Vector3::UNIT_X, Radian(mPitch));
 
 			Quaternion camRot = yRot * xRot;
-			camRot.normalize();
+			camRot.Normalize();
 
 			SO()->SetRotation(camRot);
 		}

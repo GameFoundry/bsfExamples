@@ -53,21 +53,21 @@ namespace bs
 
 		// If the movement button is pressed, determine direction to move in
 		Vector3 direction = Vector3::ZERO;
-		if (goingForward) direction += tfrm.getForward();
-		if (goingBack) direction -= tfrm.getForward();
-		if (goingRight) direction += tfrm.getRight();
-		if (goingLeft) direction -= tfrm.getRight();
+		if (goingForward) direction += tfrm.GetForward();
+		if (goingBack) direction -= tfrm.GetForward();
+		if (goingRight) direction += tfrm.GetRight();
+		if (goingLeft) direction -= tfrm.GetRight();
 
 		// Eliminate vertical movement
 		direction.y = 0.0f;
-		direction.normalize();
+		direction.Normalize();
 
-		const float frameDelta = gTime().getFixedFrameDelta();
+		const float frameDelta = gTime().GetFixedFrameDelta();
 
 		// If a direction is chosen, normalize it to determine final direction.
-		if (direction.squaredLength() != 0)
+		if (direction.SquaredLength() != 0)
 		{
-			direction.normalize();
+			direction.Normalize();
 
 			// Apply fast move multiplier if the fast move button is held.
 			float multiplier = 1.0f;
@@ -90,7 +90,7 @@ namespace bs
 			velocity = direction * mCurrentSpeed;
 
 
-		const SPtr<SceneInstance> sceneInstance = SceneManager::Instance().getMainScene();
+		const SPtr<SceneInstance> sceneInstance = SceneManager::Instance().GetMainScene();
 		BS_ASSERT(sceneInstance != nullptr);
 
 		const SPtr<PhysicsScene> physicsScene = sceneInstance->GetPhysicsScene();

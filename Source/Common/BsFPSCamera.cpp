@@ -26,7 +26,7 @@ namespace bs
 		Quaternion rotation = SO()->GetTransform().GetRotation();
 
 		Radian pitch, yaw, roll;
-		(void)rotation.toEulerAngles(pitch, yaw, roll);
+		(void)rotation.ToEulerAngles(pitch, yaw, roll);
 
 		mPitch = pitch;
 		mYaw = yaw;
@@ -38,16 +38,16 @@ namespace bs
 	{
 		// If camera is rotating, apply new pitch/yaw rotation values depending on the amount of rotation from the
 		// vertical/horizontal axes.
-		mYaw += Degree(gVirtualInput().getAxisValue(mHorizontalAxis) * ROTATION_SPEED);
-		mPitch += Degree(gVirtualInput().getAxisValue(mVerticalAxis) * ROTATION_SPEED);
+		mYaw += Degree(gVirtualInput().GetAxisValue(mHorizontalAxis) * ROTATION_SPEED);
+		mPitch += Degree(gVirtualInput().GetAxisValue(mVerticalAxis) * ROTATION_SPEED);
 
 		ApplyAngles();
 	}
 
 	void FPSCamera::ApplyAngles()
 	{
-		mYaw.wrap();
-		mPitch.wrap();
+		mYaw.Wrap();
+		mPitch.Wrap();
 
 		const Degree pitchMax = PITCH_RANGE;
 		const Degree pitchMin = Degree(360.0f) - PITCH_RANGE;
@@ -66,7 +66,7 @@ namespace bs
 		if(!mCharacterSO)
 		{
 			Quaternion camRot = yRot * xRot;
-			camRot.normalize();
+			camRot.Normalize();
 
 			SO()->SetRotation(camRot);
 		}

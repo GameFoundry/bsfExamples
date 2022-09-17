@@ -84,11 +84,11 @@ namespace bs
 			const Path manifestPath = dataPath + "ResourceManifest.asset";
 
 			if (FileSystem::Exists(manifestPath))
-				manifest = ResourceManifest::load(manifestPath, dataPath);
+				manifest = ResourceManifest::Load(manifestPath, dataPath);
 			else
 				manifest = ResourceManifest::Create("ExampleAssets");
 
-			gResources().registerResourceManifest(manifest);
+			gResources().RegisterResourceManifest(manifest);
 		}
 
 		/** Saves the current resource manifest. */
@@ -98,7 +98,7 @@ namespace bs
 			const Path manifestPath = dataPath + "ResourceManifest.asset";
 
 			if(manifest)
-				ResourceManifest::save(manifest, manifestPath, dataPath);
+				ResourceManifest::Save(manifest, manifestPath, dataPath);
 		}
 
 		/** Registers a common set of keys/buttons that are used for controlling the examples. */
@@ -108,25 +108,25 @@ namespace bs
 			// bsf allows you to use VirtualInput system which will map input device buttons and axes to arbitrary names,
 			// which allows you to change input buttons without affecting the code that uses it, since the code is only
 			// aware of the virtual names.  If you want more direct input, see Input class.
-			auto inputConfig = gVirtualInput().getConfiguration();
+			auto inputConfig = gVirtualInput().GetConfiguration();
 
 			// Camera controls for buttons (digital 0-1 input, e.g. keyboard or gamepad button)
-			inputConfig->registerButton("Forward", BC_W);
-			inputConfig->registerButton("Back", BC_S);
-			inputConfig->registerButton("Left", BC_A);
-			inputConfig->registerButton("Right", BC_D);
-			inputConfig->registerButton("Forward", BC_UP);
-			inputConfig->registerButton("Back", BC_DOWN);
-			inputConfig->registerButton("Left", BC_LEFT);
-			inputConfig->registerButton("Right", BC_RIGHT);
-			inputConfig->registerButton("FastMove", BC_LSHIFT);
-			inputConfig->registerButton("RotateObj", BC_MOUSE_LEFT);
-			inputConfig->registerButton("RotateCam", BC_MOUSE_RIGHT);
+			inputConfig->RegisterButton("Forward", BC_W);
+			inputConfig->RegisterButton("Back", BC_S);
+			inputConfig->RegisterButton("Left", BC_A);
+			inputConfig->RegisterButton("Right", BC_D);
+			inputConfig->RegisterButton("Forward", BC_UP);
+			inputConfig->RegisterButton("Back", BC_DOWN);
+			inputConfig->RegisterButton("Left", BC_LEFT);
+			inputConfig->RegisterButton("Right", BC_RIGHT);
+			inputConfig->RegisterButton("FastMove", BC_LSHIFT);
+			inputConfig->RegisterButton("RotateObj", BC_MOUSE_LEFT);
+			inputConfig->RegisterButton("RotateCam", BC_MOUSE_RIGHT);
 
 			// Camera controls for axes (analog input, e.g. mouse or gamepad thumbstick)
 			// These return values in [-1.0, 1.0] range.
-			inputConfig->registerAxis("Horizontal", VIRTUAL_AXIS_DESC((UINT32)InputAxis::MouseX));
-			inputConfig->registerAxis("Vertical", VIRTUAL_AXIS_DESC((UINT32)InputAxis::MouseY));
+			inputConfig->RegisterAxis("Horizontal", VIRTUAL_AXIS_DESC((UINT32)InputAxis::MouseX));
+			inputConfig->RegisterAxis("Vertical", VIRTUAL_AXIS_DESC((UINT32)InputAxis::MouseY));
 		}
 
 		/** 
@@ -149,13 +149,13 @@ namespace bs
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
-			assetPath.setExtension(srcAssetPath.getExtension() + ".asset");
+			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
-			HMesh model = gResources().load<Mesh>(assetPath);
+			HMesh model = gResources().Load<Mesh>(assetPath);
 			if (model == nullptr) // Mesh file doesn't exist, import from the source file.
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
-				SPtr<ImportOptions> meshImportOptions = Importer::Instance().createImportOptions(srcAssetPath);
+				SPtr<ImportOptions> meshImportOptions = Importer::Instance().CreateImportOptions(srcAssetPath);
 
 				// rtti_is_of_type checks if the import options are of valid type, in case the provided path is pointing to a
 				// non-mesh resource. This is similar to dynamic_cast but uses Banshee internal RTTI system for type checking.
@@ -166,15 +166,15 @@ namespace bs
 					importOptions->importScale = scale;
 				}
 
-				model = gImporter().import<Mesh>(srcAssetPath, meshImportOptions);
+				model = gImporter().Import<Mesh>(srcAssetPath, meshImportOptions);
 
 				// Save for later use, so we don't have to import on the next run.
-				gResources().save(model, assetPath, true);
+				gResources().Save(model, assetPath, true);
 
 				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
-					manifest->registerResource(model.GetUuid(), assetPath);
+					manifest->RegisterResource(model.GetUuid(), assetPath);
 			}
 
 			return model;
@@ -225,13 +225,13 @@ namespace bs
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
-			assetPath.setExtension(srcAssetPath.getExtension() + ".asset");
+			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
-			HTexture texture = gResources().load<Texture>(assetPath);
+			HTexture texture = gResources().Load<Texture>(assetPath);
 			if (texture == nullptr) // Texture file doesn't exist, import from the source file.
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
-				SPtr<ImportOptions> textureImportOptions = Importer::Instance().createImportOptions(srcAssetPath);
+				SPtr<ImportOptions> textureImportOptions = Importer::Instance().CreateImportOptions(srcAssetPath);
 
 				// rtti_is_of_type checks if the import options are of valid type, in case the provided path is pointing to a 
 				// non-texture resource. This is similar to dynamic_cast but uses Banshee internal RTTI system for type checking.
@@ -260,15 +260,15 @@ namespace bs
 				}
 
 				// Import texture with specified import options
-				texture = gImporter().import<Texture>(srcAssetPath, textureImportOptions);
+				texture = gImporter().Import<Texture>(srcAssetPath, textureImportOptions);
 
 				// Save for later use, so we don't have to import on the next run.
-				gResources().save(texture, assetPath, true);
+				gResources().Save(texture, assetPath, true);
 
 				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
-					manifest->registerResource(texture.GetUuid(), assetPath);
+					manifest->RegisterResource(texture.GetUuid(), assetPath);
 			}
 
 			return texture;
@@ -293,20 +293,20 @@ namespace bs
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
-			assetPath.setExtension(srcAssetPath.getExtension() + ".asset");
+			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
-			HShader shader = gResources().load<Shader>(assetPath);
+			HShader shader = gResources().Load<Shader>(assetPath);
 			if (shader == nullptr) // Shader file doesn't exist, import from the source file.
 			{
-				shader = gImporter().import<Shader>(srcAssetPath);
+				shader = gImporter().Import<Shader>(srcAssetPath);
 
 				// Save for later use, so we don't have to import on the next run.
-				gResources().save(shader, assetPath, true);
+				gResources().Save(shader, assetPath, true);
 
 				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
-					manifest->registerResource(shader.GetUuid(), assetPath);
+					manifest->RegisterResource(shader.GetUuid(), assetPath);
 			}
 
 			return shader;
@@ -332,25 +332,25 @@ namespace bs
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
-			assetPath.setExtension(srcAssetPath.getExtension() + ".asset");
+			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
-			HFont font = gResources().load<Font>(assetPath);
+			HFont font = gResources().Load<Font>(assetPath);
 			if (font == nullptr) // Font file doesn't exist, import from the source file.
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
 				SPtr<FontImportOptions> fontImportOptions = FontImportOptions::Create();
 				fontImportOptions->fontSizes = fontSizes;
 
-				font = gImporter().import<Font>(srcAssetPath, fontImportOptions);
+				font = gImporter().Import<Font>(srcAssetPath, fontImportOptions);
 
 				// Save for later use, so we don't have to import on the next run.
-				gResources().save(font, assetPath, true);
+				gResources().Save(font, assetPath, true);
 
 				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
 				{
-					manifest->registerResource(font.GetUuid(), assetPath);
+					manifest->RegisterResource(font.GetUuid(), assetPath);
 
 					// Font has child resources, which also need to be registered
 					for (auto& size : fontSizes)
@@ -362,12 +362,12 @@ namespace bs
 						UINT32 pageIdx = 0;
 						for (const auto& tex : fontData->texturePages)
 						{
-							String fontName = srcAssetPath.getFilename(false);
-							texPageOutputPath.setFilename(fontName + "_" + toString(size) + "_texpage_" +
+							String fontName = srcAssetPath.GetFilename(false);
+							texPageOutputPath.SetFilename(fontName + "_" + toString(size) + "_texpage_" +
 								toString(pageIdx) + ".asset");
 
-							gResources().save(tex, texPageOutputPath, true);
-							manifest->registerResource(tex.GetUuid(), texPageOutputPath);
+							gResources().Save(tex, texPageOutputPath, true);
+							manifest->RegisterResource(tex.GetUuid(), texPageOutputPath);
 
 							pageIdx++;
 						}

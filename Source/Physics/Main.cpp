@@ -55,53 +55,53 @@ namespace bs
 		// Prepare all the resources we'll be using throughout this example
 
 		// Grab a couple of test textures that we'll apply to the rendered objects
-		HTexture gridPattern = ExampleFramework::loadTexture(ExampleTexture::GridPattern);
-		HTexture gridPattern2 = ExampleFramework::loadTexture(ExampleTexture::GridPattern2);
+		HTexture gridPattern = ExampleFramework::LoadTexture(ExampleTexture::GridPattern);
+		HTexture gridPattern2 = ExampleFramework::LoadTexture(ExampleTexture::GridPattern2);
 
 		// Grab the default PBR shader
-		HShader shader = gBuiltinResources().getBuiltinShader(BuiltinShader::Standard);
+		HShader shader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
 		
 		// Create a set of materials to apply to renderables used
-		HMaterial planeMaterial = Material::create(shader);
-		planeMaterial->setTexture("gAlbedoTex", gridPattern2);
+		HMaterial planeMaterial = Material::Create(shader);
+		planeMaterial->SetTexture("gAlbedoTex", gridPattern2);
 
 		// Tile the texture so every tile covers a 2x2m area
-		planeMaterial->setVec2("gUVTile", Vector2::ONE * GROUND_PLANE_SCALE * 0.5f);
+		planeMaterial->SetVec2("gUVTile", Vector2::ONE * GROUND_PLANE_SCALE * 0.5f);
 
-		HMaterial boxMaterial = Material::create(shader);
-		boxMaterial->setTexture("gAlbedoTex", gridPattern);
+		HMaterial boxMaterial = Material::Create(shader);
+		boxMaterial->SetTexture("gAlbedoTex", gridPattern);
 
-		HMaterial sphereMaterial = Material::create(shader);
+		HMaterial sphereMaterial = Material::Create(shader);
 
 		// Load meshes we'll used for our rendered objects
-		HMesh boxMesh = gBuiltinResources().getMesh(BuiltinMesh::Box);
-		HMesh planeMesh = gBuiltinResources().getMesh(BuiltinMesh::Quad);
-		HMesh sphereMesh = gBuiltinResources().getMesh(BuiltinMesh::Sphere);
+		HMesh boxMesh = gBuiltinResources().GetMesh(BuiltinMesh::Box);
+		HMesh planeMesh = gBuiltinResources().GetMesh(BuiltinMesh::Quad);
+		HMesh sphereMesh = gBuiltinResources().GetMesh(BuiltinMesh::Sphere);
 
 		// Create a physics material we'll use for the box geometry, as well as the floor. The material has high
 		// static and dynamic friction, with low restitution (low bounciness). Simulates a harder, rough, solid surface.
-		HPhysicsMaterial boxPhysicsMaterial = PhysicsMaterial::create(1.0f, 1.0f, 0.0f);
+		HPhysicsMaterial boxPhysicsMaterial = PhysicsMaterial::Create(1.0f, 1.0f, 0.0f);
 
 		// Create a physics material for the sphere geometry, with higher bounciness. Simulates elasticity.
-		HPhysicsMaterial spherePhysicsMaterial = PhysicsMaterial::create(1.0f, 1.0f, 0.5f);
+		HPhysicsMaterial spherePhysicsMaterial = PhysicsMaterial::Create(1.0f, 1.0f, 0.5f);
 
 		/************************************************************************/
 		/* 									FLOOR	                    		*/
 		/************************************************************************/
 
 		// Set up renderable geometry for the floor plane
-		HSceneObject floorSO = SceneObject::create("Floor");
-		HRenderable floorRenderable = floorSO->addComponent<CRenderable>();
-		floorRenderable->setMesh(planeMesh);
-		floorRenderable->setMaterial(planeMaterial);
+		HSceneObject floorSO = SceneObject::Create("Floor");
+		HRenderable floorRenderable = floorSO->AddComponent<CRenderable>();
+		floorRenderable->SetMesh(planeMesh);
+		floorRenderable->SetMaterial(planeMaterial);
 
-		floorSO->setScale(Vector3(GROUND_PLANE_SCALE, 1.0f, GROUND_PLANE_SCALE));
+		floorSO->SetScale(Vector3(GROUND_PLANE_SCALE, 1.0f, GROUND_PLANE_SCALE));
 
 		// Add a plane collider that will prevent physical objects going through the floor
-		HPlaneCollider planeCollider = floorSO->addComponent<CPlaneCollider>();
+		HPlaneCollider planeCollider = floorSO->AddComponent<CPlaneCollider>();
 
 		// Apply the non-bouncy material
-		planeCollider->setMaterial(boxPhysicsMaterial);
+		planeCollider->SetMaterial(boxPhysicsMaterial);
 
 		/************************************************************************/
 		/* 									BOXES	                    		*/
@@ -114,23 +114,23 @@ namespace bs
 			for (auto& entry : boxSO)
 			{
 				// Create a scene object and a renderable
-				entry = SceneObject::create("Box");
+				entry = SceneObject::Create("Box");
 
-				HRenderable boxRenderable = entry->addComponent<CRenderable>();
-				boxRenderable->setMesh(boxMesh);
-				boxRenderable->setMaterial(boxMaterial);
+				HRenderable boxRenderable = entry->AddComponent<CRenderable>();
+				boxRenderable->SetMesh(boxMesh);
+				boxRenderable->SetMaterial(boxMaterial);
 
 				// Add a plane collider that represent's the physical geometry of the box
-				HBoxCollider boxCollider = entry->addComponent<CBoxCollider>();
+				HBoxCollider boxCollider = entry->AddComponent<CBoxCollider>();
 
 				// Apply the non-bouncy material
-				boxCollider->setMaterial(boxPhysicsMaterial);
+				boxCollider->SetMaterial(boxPhysicsMaterial);
 
 				// Set the mass of a box to 25 kilograms
-				boxCollider->setMass(25.0f);
+				boxCollider->SetMass(25.0f);
 
 				// Add a rigidbody, making the box geometry able to react to interactions with other physical objects
-				HRigidbody boxRigidbody = entry->addComponent<CRigidbody>();
+				HRigidbody boxRigidbody = entry->AddComponent<CRigidbody>();
 			}
 
 			// Stack the boxes in a pyramid
@@ -149,8 +149,8 @@ namespace bs
 
 			for(UINT32 i = 0; i < 6; i++)
 			{
-				Vector3 pos = rotation.rotate(positions[i]) + position;
-				boxSO[i]->setPosition(pos);
+				Vector3 pos = rotation.Rotate(positions[i]) + position;
+				boxSO[i]->SetPosition(pos);
 			}
 		};
 
@@ -163,18 +163,18 @@ namespace bs
 		/************************************************************************/
 
 		// Add physics geometry and components for character movement and physics interaction
-		HSceneObject characterSO = SceneObject::create("Character");
-		characterSO->setPosition(Vector3(0.0f, 1.0f, 5.0f));
+		HSceneObject characterSO = SceneObject::Create("Character");
+		characterSO->SetPosition(Vector3(0.0f, 1.0f, 5.0f));
 
 		// Add a character controller, representing the physical geometry of the character
-		HCharacterController charController = characterSO->addComponent<CCharacterController>();
+		HCharacterController charController = characterSO->AddComponent<CCharacterController>();
 
 		// Make the character about 1.8m high, with 0.4m radius (controller represents a capsule)
-		charController->setHeight(1.0f); // + 0.4 * 2 radius = 1.8m height
-		charController->setRadius(0.4f);
+		charController->SetHeight(1.0f); // + 0.4 * 2 radius = 1.8m height
+		charController->SetRadius(0.4f);
 
 		// FPS walker uses default input controls to move the character controller attached to the same object
-		characterSO->addComponent<FPSWalker>();
+		characterSO->AddComponent<FPSWalker>();
 
 		/************************************************************************/
 		/* 									CAMERA	                     		*/
@@ -183,101 +183,101 @@ namespace bs
 		// In order something to render on screen we need at least one camera.
 
 		// Like before, we create a new scene object at (0, 0, 0).
-		HSceneObject sceneCameraSO = SceneObject::create("SceneCamera");
+		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
 		// Get the primary render window we need for creating the camera. 
-		SPtr<RenderWindow> window = gApplication().getPrimaryWindow();
+		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
 		// Add a Camera component that will output whatever it sees into that window 
 		// (You could also use a render texture or another window you created).
-		HCamera sceneCamera = sceneCameraSO->addComponent<CCamera>();
-		sceneCamera->getViewport()->setTarget(window);
+		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
+		sceneCamera->GetViewport()->SetTarget(window);
 
 		// Set up camera component properties
 
 		// Set closest distance that is visible. Anything below that is clipped.
-		sceneCamera->setNearClipDistance(0.005f);
+		sceneCamera->SetNearClipDistance(0.005f);
 
 		// Set farthest distance that is visible. Anything above that is clipped.
-		sceneCamera->setFarClipDistance(1000);
+		sceneCamera->SetFarClipDistance(1000);
 
 		// Set aspect ratio depending on the current resolution
-		sceneCamera->setAspectRatio(windowResWidth / (float)windowResHeight);
+		sceneCamera->SetAspectRatio(windowResWidth / (float)windowResHeight);
 
 		// Add a component that allows the camera to be rotated using the mouse
-		HFPSCamera fpsCamera = sceneCameraSO->addComponent<FPSCamera>();
+		HFPSCamera fpsCamera = sceneCameraSO->AddComponent<FPSCamera>();
 
 		// Set the character controller on the FPS camera, so the component can apply yaw rotation to it
-		fpsCamera->setCharacter(characterSO);
+		fpsCamera->SetCharacter(characterSO);
 
 		// Make the camera a child of the character scene object, and position it roughly at eye level
-		sceneCameraSO->setParent(characterSO);
-		sceneCameraSO->setPosition(Vector3(0.0f, 1.8f * 0.5f - 0.1f, 0.0f));
+		sceneCameraSO->SetParent(characterSO);
+		sceneCameraSO->SetPosition(Vector3(0.0f, 1.8f * 0.5f - 0.1f, 0.0f));
 
 		/************************************************************************/
 		/* 									SKYBOX                       		*/
 		/************************************************************************/
 
 		// Load a skybox texture
-		HTexture skyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentDaytime, false, true, true);
+		HTexture skyCubemap = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentDaytime, false, true, true);
 
 		// Add a skybox texture for sky reflections
-		HSceneObject skyboxSO = SceneObject::create("Skybox");
+		HSceneObject skyboxSO = SceneObject::Create("Skybox");
 
-		HSkybox skybox = skyboxSO->addComponent<CSkybox>();
-		skybox->setTexture(skyCubemap);
+		HSkybox skybox = skyboxSO->AddComponent<CSkybox>();
+		skybox->SetTexture(skyCubemap);
 
 		/************************************************************************/
 		/* 									CURSOR                       		*/
 		/************************************************************************/
 
 		// Hide and clip the cursor, since we only use the mouse movement for camera rotation
-		Cursor::instance().hide();
-		Cursor::instance().clipToWindow(*window);
+		Cursor::Instance().Hide();
+		Cursor::Instance().ClipToWindow(*window);
 
 		/************************************************************************/
 		/* 									INPUT                       		*/
 		/************************************************************************/
 
 		// Hook up input that launches a sphere when user clicks the mouse, and Esc key to quit
-		gInput().onButtonUp.connect([=](const ButtonEvent& ev)
+		gInput().onButtonUp.Connect([=](const ButtonEvent& ev)
 		{
 			if(ev.buttonCode == BC_MOUSE_LEFT)
 			{
 				// Create the scene object and renderable geometry of the sphere
-				HSceneObject sphereSO = SceneObject::create("Sphere");
+				HSceneObject sphereSO = SceneObject::Create("Sphere");
 
-				HRenderable sphereRenderable = sphereSO->addComponent<CRenderable>();
-				sphereRenderable->setMesh(sphereMesh);
-				sphereRenderable->setMaterial(sphereMaterial);
+				HRenderable sphereRenderable = sphereSO->AddComponent<CRenderable>();
+				sphereRenderable->SetMesh(sphereMesh);
+				sphereRenderable->SetMaterial(sphereMaterial);
 
 				// Create a spherical collider, represting physical geometry
-				HSphereCollider sphereCollider = sphereSO->addComponent<CSphereCollider>();
+				HSphereCollider sphereCollider = sphereSO->AddComponent<CSphereCollider>();
 
 				// Apply the bouncy material
-				sphereCollider->setMaterial(spherePhysicsMaterial);
+				sphereCollider->SetMaterial(spherePhysicsMaterial);
 
 				// Set mass to 25kg
-				sphereCollider->setMass(25.0f);
+				sphereCollider->SetMass(25.0f);
 
 				// Add a rigidbody, making the object interactable
-				HRigidbody sphereRigidbody = sphereSO->addComponent<CRigidbody>();
+				HRigidbody sphereRigidbody = sphereSO->AddComponent<CRigidbody>();
 				
 				// Position the sphere in front of the character, and scale it down a bit
-				Vector3 spawnPos = characterSO->getTransform().getPosition();
-				spawnPos += sceneCameraSO->getTransform().getForward() * 0.5f;
+				Vector3 spawnPos = characterSO->GetTransform().GetPosition();
+				spawnPos += sceneCameraSO->GetTransform().GetForward() * 0.5f;
 				spawnPos.y += 0.5f;
 
-				sphereSO->setPosition(spawnPos);
-				sphereSO->setScale(Vector3(0.3f, 0.3f, 0.3f));
+				sphereSO->SetPosition(spawnPos);
+				sphereSO->SetScale(Vector3(0.3f, 0.3f, 0.3f));
 
 				// Apply force to the sphere, launching it forward in the camera's view direction
-				sphereRigidbody->addForce(sceneCameraSO->getTransform().getForward() * 40.0f, ForceMode::Velocity);
+				sphereRigidbody->AddForce(sceneCameraSO->GetTransform().GetForward() * 40.0f, ForceMode::Velocity);
 			}
 			else if(ev.buttonCode == BC_ESCAPE)
 			{
 				// Quit the application when Escape key is pressed
-				gApplication().quitRequested();
+				gApplication().QuitRequested();
 			}
 		});
 
@@ -288,24 +288,24 @@ namespace bs
 		// Display GUI elements indicating to the user which input keys are available
 
 		// Add a GUIWidget component we will use for rendering the GUI
-		HSceneObject guiSO = SceneObject::create("GUI");
-		HGUIWidget gui = guiSO->addComponent<CGUIWidget>(sceneCamera);
+		HSceneObject guiSO = SceneObject::Create("GUI");
+		HGUIWidget gui = guiSO->AddComponent<CGUIWidget>(sceneCamera);
 
 		// Grab the main panel onto which to attach the GUI elements to
-		GUIPanel* mainPanel = gui->getPanel();
+		GUIPanel* mainPanel = gui->GetPanel();
 
 		// Create a vertical GUI layout to align the labels one below each other
-		GUILayoutY* vertLayout = GUILayoutY::create();
+		GUILayoutY* vertLayout = GUILayoutY::Create();
 
 		// Create the GUI labels displaying the available input commands
 		HString shootString(u8"Press left mouse button to shoot");
 		HString quitString(u8"Press the Escape key to quit");
 
-		vertLayout->addNewElement<GUILabel>(shootString);
-		vertLayout->addNewElement<GUILabel>(quitString);
+		vertLayout->AddNewElement<GUILabel>(shootString);
+		vertLayout->AddNewElement<GUILabel>(quitString);
 
 		// Register the layout with the main GUI panel, placing the layout in top left corner of the screen by default
-		mainPanel->addElement(vertLayout);
+		mainPanel->AddElement(vertLayout);
 	}
 }
 
@@ -327,20 +327,20 @@ int main()
 
 	// Initializes the application and creates a window with the specified properties
 	VideoMode videoMode(windowResWidth, windowResHeight);
-	Application::startUp(videoMode, "Example", false);
+	Application::StartUp(videoMode, "Example", false);
 
 	// Registers a default set of input controls
-	ExampleFramework::setupInputConfig();
+	ExampleFramework::SetupInputConfig();
 
 	// Set up the scene with an object to render and a camera
 	setUpScene();
 
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
-	Application::instance().runMainLoop();
+	Application::Instance().RunMainLoop();
 
 	// When done, clean up
-	Application::shutDown();
+	Application::ShutDown();
 
 	return 0;
 }

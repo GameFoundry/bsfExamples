@@ -17,10 +17,10 @@ namespace bs
 	/** Wraps an angle so it always stays in [0, 360) range. */
 	Degree wrapAngle(Degree angle)
 	{
-		if (angle.valueDegrees() < -360.0f)
+		if (angle.ValueDegrees() < -360.0f)
 			angle += Degree(360.0f);
 
-		if (angle.valueDegrees() > 360.0f)
+		if (angle.ValueDegrees() > 360.0f)
 			angle -= Degree(360.0f);
 
 		return angle;
@@ -46,43 +46,43 @@ namespace bs
 	void CameraFlyer::Update()
 	{
 		// Check if any movement or rotation keys are being held
-		bool goingForward = gVirtualInput().isButtonHeld(mMoveForward);
-		bool goingBack = gVirtualInput().isButtonHeld(mMoveBack);
-		bool goingLeft = gVirtualInput().isButtonHeld(mMoveLeft);
-		bool goingRight = gVirtualInput().isButtonHeld(mMoveRight);
-		bool fastMove = gVirtualInput().isButtonHeld(mFastMove);
-		bool camRotating = gVirtualInput().isButtonHeld(mRotateCam);
+		bool goingForward = gVirtualInput().IsButtonHeld(mMoveForward);
+		bool goingBack = gVirtualInput().IsButtonHeld(mMoveBack);
+		bool goingLeft = gVirtualInput().IsButtonHeld(mMoveLeft);
+		bool goingRight = gVirtualInput().IsButtonHeld(mMoveRight);
+		bool fastMove = gVirtualInput().IsButtonHeld(mFastMove);
+		bool camRotating = gVirtualInput().IsButtonHeld(mRotateCam);
 
 		// If switch to or from rotation mode, hide or show the cursor
 		if (camRotating != mLastButtonState)
 		{
 			if (camRotating)
-				Cursor::Instance().hide();
+				Cursor::Instance().Hide();
 			else
-				Cursor::Instance().show();
+				Cursor::Instance().Show();
 
 			mLastButtonState = camRotating;
 		}
 
 		// If camera is rotating, apply new pitch/yaw rotation values depending on the amount of rotation from the
 		// vertical/horizontal axes.
-		float frameDelta = gTime().getFrameDelta();
+		float frameDelta = gTime().GetFrameDelta();
 		if (camRotating)
 		{
-			mYaw += Degree(gVirtualInput().getAxisValue(mHorizontalAxis) * ROTATION_SPEED);
-			mPitch += Degree(gVirtualInput().getAxisValue(mVerticalAxis) * ROTATION_SPEED);
+			mYaw += Degree(gVirtualInput().GetAxisValue(mHorizontalAxis) * ROTATION_SPEED);
+			mPitch += Degree(gVirtualInput().GetAxisValue(mVerticalAxis) * ROTATION_SPEED);
 
 			mYaw = wrapAngle(mYaw);
 			mPitch = wrapAngle(mPitch);
 
 			Quaternion yRot;
-			yRot.fromAxisAngle(Vector3::UNIT_Y, Radian(mYaw));
+			yRot.FromAxisAngle(Vector3::UNIT_Y, Radian(mYaw));
 
 			Quaternion xRot;
-			xRot.fromAxisAngle(Vector3::UNIT_X, Radian(mPitch));
+			xRot.FromAxisAngle(Vector3::UNIT_X, Radian(mPitch));
 
 			Quaternion camRot = yRot * xRot;
-			camRot.normalize();
+			camRot.Normalize();
 
 			SO()->SetRotation(camRot);
 		}
@@ -91,15 +91,15 @@ namespace bs
 
 		// If the movement button is pressed, determine direction to move in
 		Vector3 direction = Vector3::ZERO;
-		if (goingForward) direction += tfrm.getForward();
-		if (goingBack) direction -= tfrm.getForward();
-		if (goingRight) direction += tfrm.getRight();
-		if (goingLeft) direction -= tfrm.getRight();
+		if (goingForward) direction += tfrm.GetForward();
+		if (goingBack) direction -= tfrm.GetForward();
+		if (goingRight) direction += tfrm.GetRight();
+		if (goingLeft) direction -= tfrm.GetRight();
 
 		// If a direction is chosen, normalize it to determine final direction.
-		if (direction.squaredLength() != 0)
+		if (direction.SquaredLength() != 0)
 		{
-			direction.normalize();
+			direction.Normalize();
 
 			// Apply fast move multiplier if the fast move button is held.
 			float multiplier = 1.0f;
@@ -120,7 +120,7 @@ namespace bs
 		if (mCurrentSpeed > tooSmall)
 		{
 			Vector3 velocity = direction * mCurrentSpeed;
-			SO()->move(velocity * frameDelta);
+			SO()->Move(velocity * frameDelta);
 		}
 	}
 }

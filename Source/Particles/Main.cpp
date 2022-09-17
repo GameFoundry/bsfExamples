@@ -59,16 +59,16 @@ namespace bs
 
 		void OnInitialized() override
 		{
-			mCenter = SO()->getTransform().getPosition();
+			mCenter = SO()->GetTransform().GetPosition();
 		}
 
 		void Update() override
 		{
-			Vector3 position = mCenter + mRadius * Vector3(Math::cos(mAngle), 0.0f, Math::sin(mAngle));
+			Vector3 position = mCenter + mRadius * Vector3(Math::Cos(mAngle), 0.0f, Math::Sin(mAngle));
 
-			mAngle += Degree(gTime().getFrameDelta() * 90.0f);
+			mAngle += Degree(gTime().GetFrameDelta() * 90.0f);
 
-			SO()->setWorldPosition(position);
+			SO()->SetWorldPosition(position);
 		}
 
 	private:
@@ -101,49 +101,49 @@ namespace bs
 
 		// Smoke particle system assets
 		//// Import the texture and set up a sprite texture so we can animate it
-		HTexture smokeTex = ExampleFramework::loadTexture(ExampleTexture::ParticleSmoke);
-		assets.smokeTex = SpriteTexture::create(smokeTex);
+		HTexture smokeTex = ExampleFramework::LoadTexture(ExampleTexture::ParticleSmoke);
+		assets.smokeTex = SpriteTexture::Create(smokeTex);
 
 		//// Set up sprite sheet animation on the sprite texture
 		SpriteSheetGridAnimation smokeGridAnim(5, 6, 30, 30);
-		assets.smokeTex->setAnimation(smokeGridAnim);
-		assets.smokeTex->setAnimationPlayback(SpriteAnimationPlayback::None);
+		assets.smokeTex->SetAnimation(smokeGridAnim);
+		assets.smokeTex->SetAnimationPlayback(SpriteAnimationPlayback::None);
 
 		//// Set up a shader without lighting and enable soft particle rendering
-		HShader particleUnlitShader = gBuiltinResources().getBuiltinShader(BuiltinShader::ParticlesUnlit);
-		assets.smokeMat = Material::create(particleUnlitShader);
-		assets.smokeMat->setVariation(ShaderVariation(
+		HShader particleUnlitShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::ParticlesUnlit);
+		assets.smokeMat = Material::Create(particleUnlitShader);
+		assets.smokeMat->SetVariation(ShaderVariation(
 			{
 				ShaderVariation::Param("SOFT", true)
 			})
 		);
 
 		//// Fade over the range of 2m (used for soft particle blending)
-		assets.smokeMat->setFloat("gInvDepthRange", 1.0f / 2.0f);
-		assets.smokeMat->setSpriteTexture("gTexture", assets.smokeTex);
+		assets.smokeMat->SetFloat("gInvDepthRange", 1.0f / 2.0f);
+		assets.smokeMat->SetSpriteTexture("gTexture", assets.smokeTex);
 
 		// Set up an emissive material used in the GPU vector field example
-		HShader particleLitShader = gBuiltinResources().getBuiltinShader(BuiltinShader::ParticlesLitOpaque);
-		assets.litParticleEmissiveMat = Material::create(particleLitShader);
-		assets.litParticleEmissiveMat->setTexture("gEmissiveMaskTex", gBuiltinResources().getTexture(BuiltinTexture::White));
-		assets.litParticleEmissiveMat->setColor("gEmissiveColor", Color::White * 10.0f);
+		HShader particleLitShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::ParticlesLitOpaque);
+		assets.litParticleEmissiveMat = Material::Create(particleLitShader);
+		assets.litParticleEmissiveMat->SetTexture("gEmissiveMaskTex", gBuiltinResources().GetTexture(BuiltinTexture::White));
+		assets.litParticleEmissiveMat->SetColor("gEmissiveColor", Color::White * 10.0f);
 
 		// 3D particle system assets
 		//// Create another lit material using a plain white albedo texture
-		assets.particles3DMat = Material::create(particleLitShader);
-		assets.particles3DMat->setTexture("gAlbedoTex", gBuiltinResources().getTexture(BuiltinTexture::White));
+		assets.particles3DMat = Material::Create(particleLitShader);
+		assets.particles3DMat->SetTexture("gAlbedoTex", gBuiltinResources().GetTexture(BuiltinTexture::White));
 
 		//// Create a material used for rendering the light sphere itself
-		HShader standardShader = gBuiltinResources().getBuiltinShader(BuiltinShader::Standard);
-		assets.lightMat = Material::create(standardShader);
-		assets.lightMat->setTexture("gEmissiveMaskTex", gBuiltinResources().getTexture(BuiltinTexture::White));
-		assets.lightMat->setColor("gEmissiveColor", Color::Red * 5.0f);
+		HShader standardShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
+		assets.lightMat = Material::Create(standardShader);
+		assets.lightMat->SetTexture("gEmissiveMaskTex", gBuiltinResources().GetTexture(BuiltinTexture::White));
+		assets.lightMat->SetColor("gEmissiveColor", Color::Red * 5.0f);
 
 		//// Import a vector field used in the GPU simulation
-		assets.vectorField = ExampleFramework::loadResource<VectorField>(ExampleResource::VectorField);
+		assets.vectorField = ExampleFramework::LoadResource<VectorField>(ExampleResource::VectorField);
 
 		//// Import a sphere mesh used for the 3D particles and the light sphere
-		assets.sphereMesh = gBuiltinResources().getMesh(BuiltinMesh::Sphere);
+		assets.sphereMesh = gBuiltinResources().GetMesh(BuiltinMesh::Sphere);
 
 		return assets;
 	}
@@ -162,20 +162,20 @@ namespace bs
 		// Prepare the assets required for the scene and background
 
 		// Grab a texture used for rendering the ground
-		HTexture gridPattern = ExampleFramework::loadTexture(ExampleTexture::GridPattern2);
+		HTexture gridPattern = ExampleFramework::LoadTexture(ExampleTexture::GridPattern2);
 
 		// Grab the default PBR shader
-		HShader shader = gBuiltinResources().getBuiltinShader(BuiltinShader::Standard);
+		HShader shader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
 		
 		// Create a material for rendering the ground and apply the ground texture
-		HMaterial planeMaterial = Material::create(shader);
-		planeMaterial->setTexture("gAlbedoTex", gridPattern);
+		HMaterial planeMaterial = Material::Create(shader);
+		planeMaterial->SetTexture("gAlbedoTex", gridPattern);
 
 		// Tile the texture so every tile covers a 2x2m area
-		planeMaterial->setVec2("gUVTile", Vector2::ONE * GROUND_PLANE_SCALE * 0.5f);
+		planeMaterial->SetVec2("gUVTile", Vector2::ONE * GROUND_PLANE_SCALE * 0.5f);
 
 		// Load the floor mesh
-		HMesh planeMesh = gBuiltinResources().getMesh(BuiltinMesh::Quad);
+		HMesh planeMesh = gBuiltinResources().GetMesh(BuiltinMesh::Quad);
 
 		// Load assets used by the particle systems
 		ParticleSystemAssets assets = loadParticleSystemAssets();
@@ -185,33 +185,33 @@ namespace bs
 		/************************************************************************/
 
 		// Set up renderable geometry for the floor plane
-		HSceneObject floorSO = SceneObject::create("Floor");
-		HRenderable floorRenderable = floorSO->addComponent<CRenderable>();
-		floorRenderable->setMesh(planeMesh);
-		floorRenderable->setMaterial(planeMaterial);
+		HSceneObject floorSO = SceneObject::Create("Floor");
+		HRenderable floorRenderable = floorSO->AddComponent<CRenderable>();
+		floorRenderable->SetMesh(planeMesh);
+		floorRenderable->SetMaterial(planeMaterial);
 
-		floorSO->setScale(Vector3(GROUND_PLANE_SCALE, 1.0f, GROUND_PLANE_SCALE));
+		floorSO->SetScale(Vector3(GROUND_PLANE_SCALE, 1.0f, GROUND_PLANE_SCALE));
 
 		// Add a plane collider that will prevent physical objects going through the floor
-		HPlaneCollider planeCollider = floorSO->addComponent<CPlaneCollider>();
+		HPlaneCollider planeCollider = floorSO->AddComponent<CPlaneCollider>();
 
 		/************************************************************************/
 		/* 									CHARACTER                    		*/
 		/************************************************************************/
 
 		// Add physics geometry and components for character movement and physics interaction
-		HSceneObject characterSO = SceneObject::create("Character");
-		characterSO->setPosition(Vector3(0.0f, 1.0f, 5.0f));
+		HSceneObject characterSO = SceneObject::Create("Character");
+		characterSO->SetPosition(Vector3(0.0f, 1.0f, 5.0f));
 
 		// Add a character controller, representing the physical geometry of the character
-		HCharacterController charController = characterSO->addComponent<CCharacterController>();
+		HCharacterController charController = characterSO->AddComponent<CCharacterController>();
 
 		// Make the character about 1.8m high, with 0.4m radius (controller represents a capsule)
-		charController->setHeight(1.0f); // + 0.4 * 2 radius = 1.8m height
-		charController->setRadius(0.4f);
+		charController->SetHeight(1.0f); // + 0.4 * 2 radius = 1.8m height
+		charController->SetRadius(0.4f);
 
 		// FPS walker uses default input controls to move the character controller attached to the same object
-		characterSO->addComponent<FPSWalker>();
+		characterSO->AddComponent<FPSWalker>();
 
 		/************************************************************************/
 		/* 									CAMERA	                     		*/
@@ -220,59 +220,59 @@ namespace bs
 		// In order something to render on screen we need at least one camera.
 
 		// Like before, we create a new scene object at (0, 0, 0).
-		HSceneObject sceneCameraSO = SceneObject::create("SceneCamera");
+		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
 		// Get the primary render window we need for creating the camera. 
-		SPtr<RenderWindow> window = gApplication().getPrimaryWindow();
+		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
 		// Add a Camera component that will output whatever it sees into that window 
 		// (You could also use a render texture or another window you created).
-		HCamera sceneCamera = sceneCameraSO->addComponent<CCamera>();
-		sceneCamera->getViewport()->setTarget(window);
+		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
+		sceneCamera->GetViewport()->SetTarget(window);
 
 		// Set up camera component properties
 
 		// Set closest distance that is visible. Anything below that is clipped.
-		sceneCamera->setNearClipDistance(0.005f);
+		sceneCamera->SetNearClipDistance(0.005f);
 
 		// Set farthest distance that is visible. Anything above that is clipped.
-		sceneCamera->setFarClipDistance(1000);
+		sceneCamera->SetFarClipDistance(1000);
 
 		// Set aspect ratio depending on the current resolution
-		sceneCamera->setAspectRatio(windowResWidth / (float)windowResHeight);
+		sceneCamera->SetAspectRatio(windowResWidth / (float)windowResHeight);
 
 		// Add a component that allows the camera to be rotated using the mouse
-		sceneCameraSO->setRotation(Quaternion(Degree(-10.0f), Degree(0.0f), Degree(0.0f)));
-		HFPSCamera fpsCamera = sceneCameraSO->addComponent<FPSCamera>();
+		sceneCameraSO->SetRotation(Quaternion(Degree(-10.0f), Degree(0.0f), Degree(0.0f)));
+		HFPSCamera fpsCamera = sceneCameraSO->AddComponent<FPSCamera>();
 
 		// Set the character controller on the FPS camera, so the component can apply yaw rotation to it
-		fpsCamera->setCharacter(characterSO);
+		fpsCamera->SetCharacter(characterSO);
 
 		// Make the camera a child of the character scene object, and position it roughly at eye level
-		sceneCameraSO->setParent(characterSO);
-		sceneCameraSO->setPosition(Vector3(0.0f, 1.8f * 0.5f - 0.1f, -2.0f));
+		sceneCameraSO->SetParent(characterSO);
+		sceneCameraSO->SetPosition(Vector3(0.0f, 1.8f * 0.5f - 0.1f, -2.0f));
 
 		// Enable Bloom effect so that emissive materials look better
-		auto rs = sceneCamera->getRenderSettings();
+		auto rs = sceneCamera->GetRenderSettings();
 		rs->bloom.enabled = true;
 		rs->bloom.intensity = 0.1f;
 		rs->bloom.threshold = 5.0f;
 		rs->bloom.quality = 3;
 
-		sceneCamera->setRenderSettings(rs);
+		sceneCamera->SetRenderSettings(rs);
 
 		/************************************************************************/
 		/* 									SKYBOX                       		*/
 		/************************************************************************/
 
 		// Load a skybox texture
-		HTexture skyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentDaytime, false, true, true);
+		HTexture skyCubemap = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentDaytime, false, true, true);
 
 		// Add a skybox texture for sky reflections
-		HSceneObject skyboxSO = SceneObject::create("Skybox");
+		HSceneObject skyboxSO = SceneObject::Create("Skybox");
 
-		HSkybox skybox = skyboxSO->addComponent<CSkybox>();
-		skybox->setTexture(skyCubemap);
+		HSkybox skybox = skyboxSO->AddComponent<CSkybox>();
+		skybox->SetTexture(skyCubemap);
 
 		/************************************************************************/
 		/* 								PARTICLES                       		*/
@@ -288,20 +288,20 @@ namespace bs
 		/************************************************************************/
 
 		// Hide and clip the cursor, since we only use the mouse movement for camera rotation
-		Cursor::instance().hide();
-		Cursor::instance().clipToWindow(*window);
+		Cursor::Instance().Hide();
+		Cursor::Instance().ClipToWindow(*window);
 
 		/************************************************************************/
 		/* 									INPUT                       		*/
 		/************************************************************************/
 
 		// Hook up Esc key to quit
-		gInput().onButtonUp.connect([=](const ButtonEvent& ev)
+		gInput().onButtonUp.Connect([=](const ButtonEvent& ev)
 		{
 			if(ev.buttonCode == BC_ESCAPE)
 			{
 				// Quit the application when Escape key is pressed
-				gApplication().quitRequested();
+				gApplication().QuitRequested();
 			}
 		});
 	}
@@ -314,30 +314,30 @@ namespace bs
 	void setupSmokeEffect(const Vector3& pos, const ParticleSystemAssets& assets)
 	{
 		// Create the particle system scene object and position/orient it
-		HSceneObject particleSystemSO = SceneObject::create("Smoke");
-		particleSystemSO->setPosition(pos);
-		particleSystemSO->setRotation(Quaternion(Degree(0), Degree(90), Degree(90)));
+		HSceneObject particleSystemSO = SceneObject::Create("Smoke");
+		particleSystemSO->SetPosition(pos);
+		particleSystemSO->SetRotation(Quaternion(Degree(0), Degree(90), Degree(90)));
 
 		// Add a particle system component
-		HParticleSystem particleSystem = particleSystemSO->addComponent<CParticleSystem>();
+		HParticleSystem particleSystem = particleSystemSO->AddComponent<CParticleSystem>();
 
 		// Set up the emitter
 		SPtr<ParticleEmitter> emitter = bs_shared_ptr_new<ParticleEmitter>();
 
 		// All newly spawned particles will have the size of 1m
-		emitter->setInitialSize(1.0f);
+		emitter->SetInitialSize(1.0f);
 
 		// 20 particles will be emitted per second
-		emitter->setEmissionRate(20.0f);
+		emitter->SetEmissionRate(20.0f);
 
 		// Particles will initially move at a rate of 1m/s
-		emitter->setInitialSpeed(1.0f);
+		emitter->SetInitialSpeed(1.0f);
 
 		// Particles will live for exactly 5 seconds
-		emitter->setInitialLifetime(5.0f);
+		emitter->SetInitialLifetime(5.0f);
 
 		// Particles will initially have no tint
-		emitter->setInitialColor(Color::White);
+		emitter->SetInitialColor(Color::White);
 
 		// Set up a shape that determines the position and initial travel direction of newly spawned particles. In this
 		// case we're using a cone shape.
@@ -350,10 +350,10 @@ namespace bs
 		coneShape.angle = Degree(10.0f);
 
 		// Assign the shape to the emitter
-		emitter->setShape(ParticleEmitterConeShape::create(coneShape));
+		emitter->SetShape(ParticleEmitterConeShape::Create(coneShape));
 
 		// Assign the emitter to the particle system
-		particleSystem->setEmitters({emitter});
+		particleSystem->SetEmitters({emitter});
 
 		// Set up evolvers that will modify the particle systems over its lifetime
 		Vector<SPtr<ParticleEvolver>> evolvers;
@@ -409,7 +409,7 @@ namespace bs
 		evolvers.push_back(forceEvolver);
 
 		// Register all the evolvers with the particle system
-		particleSystem->setEvolvers(evolvers);
+		particleSystem->SetEvolvers(evolvers);
 
 		// Set up general particle system settings
 		ParticleSystemSettings psSettings;
@@ -427,7 +427,7 @@ namespace bs
 		psSettings.material = assets.smokeMat;
 
 		// And actually apply the settings
-		particleSystem->setSettings(psSettings);
+		particleSystem->SetSettings(psSettings);
 	}
 
 	/** 
@@ -438,27 +438,27 @@ namespace bs
 	void setup3DParticleEffect(const Vector3& pos, const ParticleSystemAssets& assets)
 	{
 		// Create the particle system scene object and position/orient it
-		HSceneObject particleSystemSO = SceneObject::create("3D particles");
-		particleSystemSO->setPosition(pos);
-		particleSystemSO->setRotation(Quaternion(Degree(0), Degree(90), Degree(0)));
+		HSceneObject particleSystemSO = SceneObject::Create("3D particles");
+		particleSystemSO->SetPosition(pos);
+		particleSystemSO->SetRotation(Quaternion(Degree(0), Degree(90), Degree(0)));
 
 		// Add a particle system component
-		HParticleSystem particleSystem = particleSystemSO->addComponent<CParticleSystem>();
+		HParticleSystem particleSystem = particleSystemSO->AddComponent<CParticleSystem>();
 
 		// Set up the emitter
 		SPtr<ParticleEmitter> emitter = bs_shared_ptr_new<ParticleEmitter>();
 
 		// All newly spawned particles will have the size of 2cm
-		emitter->setInitialSize(0.02f);
+		emitter->SetInitialSize(0.02f);
 
 		// 50 particles will be emitted per second
-		emitter->setEmissionRate(50.0f);
+		emitter->SetEmissionRate(50.0f);
 
 		// Particles will initially move at a rate of 1m/s
-		emitter->setInitialSpeed(1.0f);
+		emitter->SetInitialSpeed(1.0f);
 
 		// Particles will live for exactly 5 seconds
-		emitter->setInitialLifetime(5.0f);
+		emitter->SetInitialLifetime(5.0f);
 
 		// Set up a shape that determines the position and initial travel direction of newly spawned particles. In this
 		// case we're using a cone shape.
@@ -471,10 +471,10 @@ namespace bs
 		coneShape.angle = Degree(45.0f);
 
 		// Assign the shape to the emitter
-		emitter->setShape(ParticleEmitterConeShape::create(coneShape));
+		emitter->SetShape(ParticleEmitterConeShape::Create(coneShape));
 
 		// Assign the emitter to the particle system
-		particleSystem->setEmitters({emitter});
+		particleSystem->SetEmitters({emitter});
 
 		// Set up evolvers that will modify the particle systems over its lifetime
 		Vector<SPtr<ParticleEvolver>> evolvers;
@@ -502,13 +502,13 @@ namespace bs
 		SPtr<ParticleCollisions> collisionEvolver = bs_shared_ptr_new<ParticleCollisions>(collisionsDesc);
 
 		// Assign the plane the particles will collide with
-		collisionEvolver->setPlanes( { Plane(Vector3::UNIT_Y, 0.0f)});
+		collisionEvolver->SetPlanes( { Plane(Vector3::UNIT_Y, 0.0f)});
 
 		// Register the collision evolver
 		evolvers.push_back(collisionEvolver);
 
 		// Register all evolvers with the particle system
-		particleSystem->setEvolvers(evolvers);
+		particleSystem->SetEvolvers(evolvers);
 
 		// Set up general particle system settings
 		ParticleSystemSettings psSettings;
@@ -523,28 +523,28 @@ namespace bs
 		psSettings.material = assets.particles3DMat;
 
 		// And actually apply the settings
-		particleSystem->setSettings(psSettings);
+		particleSystem->SetSettings(psSettings);
 
 		// Set up an orbiting light
 		//// Create the scene object, position and scale it
-		HSceneObject lightSO = SceneObject::create("Radial light");
-		lightSO->setPosition(pos - Vector3(0.0f, 0.8f, 0.0f));
-		lightSO->setScale(Vector3::ONE * 0.02f);
+		HSceneObject lightSO = SceneObject::Create("Radial light");
+		lightSO->SetPosition(pos - Vector3(0.0f, 0.8f, 0.0f));
+		lightSO->SetScale(Vector3::ONE * 0.02f);
 
 		//// Add the light component, emitting a red light
-		HLight light = lightSO->addComponent<CLight>();
-		light->setIntensity(30.0f);
-		light->setColor(Color::Red);
-		light->setUseAutoAttenuation(false);
-		light->setAttenuationRadius(20.0f);
+		HLight light = lightSO->AddComponent<CLight>();
+		light->SetIntensity(30.0f);
+		light->SetColor(Color::Red);
+		light->SetUseAutoAttenuation(false);
+		light->SetAttenuationRadius(20.0f);
 
 		//// Add a sphere using an emissive material to represent the light
-		HRenderable lightSphere = lightSO->addComponent<CRenderable>();
-		lightSphere->setMesh(assets.sphereMesh);
-		lightSphere->setMaterial(assets.lightMat);
+		HRenderable lightSphere = lightSO->AddComponent<CRenderable>();
+		lightSphere->SetMesh(assets.sphereMesh);
+		lightSphere->SetMaterial(assets.lightMat);
 
 		//// Add a component that orbits the light at 1m of its original position
-		lightSO->addComponent<LightOrbit>(1.0f);
+		lightSO->AddComponent<LightOrbit>(1.0f);
 	}
 
 	/** 
@@ -554,26 +554,26 @@ namespace bs
 	void setupGPUParticleEffect(const Vector3& pos, const ParticleSystemAssets& assets)
 	{
 		// Create the particle system scene object and position/orient it
-		HSceneObject particleSystemSO = SceneObject::create("Vector field");
-		particleSystemSO->setPosition(pos);
+		HSceneObject particleSystemSO = SceneObject::Create("Vector field");
+		particleSystemSO->SetPosition(pos);
 
 		// Add a particle system component
-		HParticleSystem particleSystem = particleSystemSO->addComponent<CParticleSystem>();
+		HParticleSystem particleSystem = particleSystemSO->AddComponent<CParticleSystem>();
 
 		// Set up the emitter
 		SPtr<ParticleEmitter> emitter = bs_shared_ptr_new<ParticleEmitter>();
 
 		// All newly spawned particles will have the size of 1cm
-		emitter->setInitialSize(0.01f);
+		emitter->SetInitialSize(0.01f);
 
 		// 400 particles will be emitted per second
-		emitter->setEmissionRate(400.0f);
+		emitter->SetEmissionRate(400.0f);
 
 		// No initial speed, we'll rely purely on the vector field force to move the particles
-		emitter->setInitialSpeed(0.0f);
+		emitter->SetInitialSpeed(0.0f);
 
 		// Particles will live for exactly 5 seconds
-		emitter->setInitialLifetime(5.0f);
+		emitter->SetInitialLifetime(5.0f);
 
 		// Set up a shape that determines the position of newly spawned particles. In this case spawn particles randomly
 		// on a surface of a sphere.
@@ -583,10 +583,10 @@ namespace bs
 		sphereShape.radius = 0.3f;
 
 		// Assign the shape to the emitter
-		emitter->setShape(ParticleEmitterSphereShape::create(sphereShape));
+		emitter->SetShape(ParticleEmitterSphereShape::Create(sphereShape));
 
 		// Assign the emitter to the particle system
-		particleSystem->setEmitters({emitter});
+		particleSystem->SetEmitters({emitter});
 
 		// Set up general particle system settings
 		ParticleSystemSettings psSettings;
@@ -610,7 +610,7 @@ namespace bs
 		psSettings.maxParticles = 10000;
 
 		// And actually apply the general settings
-		particleSystem->setSettings(psSettings);
+		particleSystem->SetSettings(psSettings);
 
 		// Set up settings specific to the GPU simulation
 		ParticleGpuSimulationSettings gpuSimSettings;
@@ -625,7 +625,7 @@ namespace bs
 		gpuSimSettings.vectorField.tightness = 0.0f;
 
 		// And actually apply the GPU simulation settings
-		particleSystem->setGpuSimulationSettings(gpuSimSettings);
+		particleSystem->SetGpuSimulationSettings(gpuSimSettings);
 	}
 }
 
@@ -647,20 +647,20 @@ int main()
 
 	// Initializes the application and creates a window with the specified properties
 	VideoMode videoMode(windowResWidth, windowResHeight);
-	Application::startUp(videoMode, "Example", false);
+	Application::StartUp(videoMode, "Example", false);
 
 	// Registers a default set of input controls
-	ExampleFramework::setupInputConfig();
+	ExampleFramework::SetupInputConfig();
 
 	// Set up the scene with an object to render and a camera
 	setUpScene();
 
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
-	Application::instance().runMainLoop();
+	Application::Instance().RunMainLoop();
 
 	// When done, clean up
-	Application::shutDown();
+	Application::ShutDown();
 
 	return 0;
 }

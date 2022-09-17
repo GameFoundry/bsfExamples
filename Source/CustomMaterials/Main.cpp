@@ -64,12 +64,12 @@ namespace bs
 	/** Helper method that creates a material from the provided shader, and assigns the relevant PBR textures. */
 	HMaterial createPBRMaterial(const HShader& shader, const Assets& assets)
 	{
-		HMaterial material = Material::create(shader);
+		HMaterial material = Material::Create(shader);
 
-		material->setTexture("gAlbedoTex", assets.exampleAlbedoTex);
-		material->setTexture("gNormalTex", assets.exampleNormalsTex);
-		material->setTexture("gRoughnessTex", assets.exampleRoughnessTex);
-		material->setTexture("gMetalnessTex", assets.exampleMetalnessTex);
+		material->SetTexture("gAlbedoTex", assets.exampleAlbedoTex);
+		material->SetTexture("gNormalTex", assets.exampleNormalsTex);
+		material->SetTexture("gRoughnessTex", assets.exampleRoughnessTex);
+		material->SetTexture("gMetalnessTex", assets.exampleMetalnessTex);
 
 		return material;
 	}
@@ -80,7 +80,7 @@ namespace bs
 		Assets assets;
 
 		// Load a 3D model
-		assets.sphere = ExampleFramework::loadMesh(ExampleMesh::Pistol, 10.0f);
+		assets.sphere = ExampleFramework::LoadMesh(ExampleMesh::Pistol, 10.0f);
 
 		// Load PBR textures for the 3D model
 		assets.exampleAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::PistolAlbedo);
@@ -139,37 +139,37 @@ namespace bs
 		// mesh at the position of the scene object with the provided material.
 
 		// Create new scene object at (0, 0, 0)
-		HSceneObject pistolSO = SceneObject::create("Pistol");
+		HSceneObject pistolSO = SceneObject::Create("Pistol");
 		
 		// Attach the Renderable component and hook up the mesh we loaded, and the material we created.
-		gRenderable = pistolSO->addComponent<CRenderable>();
-		gRenderable->setMesh(assets.sphere);
-		gRenderable->setMaterial(assets.standardMaterial);
+		gRenderable = pistolSO->AddComponent<CRenderable>();
+		gRenderable->SetMesh(assets.sphere);
+		gRenderable->SetMaterial(assets.standardMaterial);
 
 		// Add a rotator component so we can rotate the object during runtime
-		pistolSO->addComponent<ObjectRotator>();
+		pistolSO->AddComponent<ObjectRotator>();
 
 		/************************************************************************/
 		/* 									LIGHT		                  		*/
 		/************************************************************************/
 
 		// Add a light so we can actually see the object
-		HSceneObject lightSO = SceneObject::create("Light");
+		HSceneObject lightSO = SceneObject::Create("Light");
 
-		HLight light = lightSO->addComponent<CLight>();
-		light->setIntensity(100.0f);
+		HLight light = lightSO->AddComponent<CLight>();
+		light->SetIntensity(100.0f);
 
-		lightSO->setPosition(Vector3(1.0f, 0.5f, 0.0f));
+		lightSO->SetPosition(Vector3(1.0f, 0.5f, 0.0f));
 
 		/************************************************************************/
 		/* 									SKYBOX                       		*/
 		/************************************************************************/
 
 		// Add a skybox texture for sky reflections
-		HSceneObject skyboxSO = SceneObject::create("Skybox");
+		HSceneObject skyboxSO = SceneObject::Create("Skybox");
 
-		HSkybox skybox = skyboxSO->addComponent<CSkybox>();
-		skybox->setTexture(assets.skyTex);
+		HSkybox skybox = skyboxSO->AddComponent<CSkybox>();
+		skybox->SetTexture(assets.skyTex);
 
 		/************************************************************************/
 		/* 									CAMERA	                     		*/
@@ -178,50 +178,50 @@ namespace bs
 		// In order something to render on screen we need at least one camera.
 
 		// Like before, we create a new scene object at (0, 0, 0).
-		HSceneObject sceneCameraSO = SceneObject::create("SceneCamera");
+		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
 		// Get the primary render window we need for creating the camera. 
-		SPtr<RenderWindow> window = gApplication().getPrimaryWindow();
+		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
 		// Add a Camera component that will output whatever it sees into that window 
 		// (You could also use a render texture or another window you created).
-		HCamera sceneCamera = sceneCameraSO->addComponent<CCamera>();
-		sceneCamera->getViewport()->setTarget(window);
+		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
+		sceneCamera->GetViewport()->SetTarget(window);
 
 		// Set up camera component properties
 
 		// Set closest distance that is visible. Anything below that is clipped.
-		sceneCamera->setNearClipDistance(0.005f);
+		sceneCamera->SetNearClipDistance(0.005f);
 
 		// Set farthest distance that is visible. Anything above that is clipped.
-		sceneCamera->setFarClipDistance(1000);
+		sceneCamera->SetFarClipDistance(1000);
 
 		// Set aspect ratio depending on the current resolution
-		sceneCamera->setAspectRatio(windowResWidth / (float)windowResHeight);
+		sceneCamera->SetAspectRatio(windowResWidth / (float)windowResHeight);
 
 		// Add a CameraFlyer component that allows us to move the camera. See CameraFlyer for more information.
-		sceneCameraSO->addComponent<CameraFlyer>();
+		sceneCameraSO->AddComponent<CameraFlyer>();
 
 		// Position and orient the camera scene object
-		sceneCameraSO->setPosition(Vector3(2.0f, 1.0f, 2.0f));
-		sceneCameraSO->lookAt(Vector3(-0.4f, 0, 0));
+		sceneCameraSO->SetPosition(Vector3(2.0f, 1.0f, 2.0f));
+		sceneCameraSO->LookAt(Vector3(-0.4f, 0, 0));
 
 		/************************************************************************/
 		/* 									GUI		                     		*/
 		/************************************************************************/
 
 		// Add a GUIWidget component we will use for rendering the GUI
-		HSceneObject guiSO = SceneObject::create("GUI");
-		gGUI = guiSO->addComponent<CGUIWidget>(sceneCamera);
+		HSceneObject guiSO = SceneObject::Create("GUI");
+		gGUI = guiSO->AddComponent<CGUIWidget>(sceneCamera);
 	}
 	
 	/** Sets up or rebuilds any GUI elements used by the example. */
 	void updateGUI()
 	{
-		GUIPanel* mainPanel = gGUI->getPanel();
+		GUIPanel* mainPanel = gGUI->GetPanel();
 
 		// Clear any existing elements, in case this is not the first time we're calling this function
-		mainPanel->clear();
+		mainPanel->Clear();
 
 		// Set up strings to display
 		String materialNameLookup[] =
@@ -236,17 +236,17 @@ namespace bs
 		HString toggleString("Press Q to toggle between materials");
 		HString currentMaterialString("Current material: {0}");
 
-		currentMaterialString.setParameter(0, materialNameLookup[gMaterialIdx]);
+		currentMaterialString.SetParameter(0, materialNameLookup[gMaterialIdx]);
 
 		// Create a vertical GUI layout to align the two labels one below each other
-		GUILayoutY* vertLayout = GUILayoutY::create();
+		GUILayoutY* vertLayout = GUILayoutY::Create();
 
 		// Create a couple of GUI labels displaying the two strings we created above
-		vertLayout->addNewElement<GUILabel>(toggleString);
-		vertLayout->addNewElement<GUILabel>(currentMaterialString);
+		vertLayout->AddNewElement<GUILabel>(toggleString);
+		vertLayout->AddNewElement<GUILabel>(currentMaterialString);
 
 		// Register the layout with the main GUI panel, placing the layout in top left corner of the screen by default
-		mainPanel->addElement(vertLayout);
+		mainPanel->AddElement(vertLayout);
 	}
 
 	/** Switches the material used for rendering the renderable object. */
@@ -267,30 +267,30 @@ namespace bs
 		{
 		case 0:
 			// Standard material, simply apply to renderable
-			gRenderable->setMaterial(gAssets.standardMaterial);
+			gRenderable->SetMaterial(gAssets.standardMaterial);
 			break;
 		case 1:
 			// Deferred vertex material, simply apply to renderable
-			gRenderable->setMaterial(gAssets.vertexMaterial);
+			gRenderable->SetMaterial(gAssets.vertexMaterial);
 			break;
 		case 2:
 			// Deferred surface material, simply apply to renderable
-			gRenderable->setMaterial(gAssets.deferredSurfaceMaterial);
+			gRenderable->SetMaterial(gAssets.deferredSurfaceMaterial);
 			break;
 		case 3:
 			// Deferred lighting material. Apply it globally and reset the surface material back to standard.
-			gRenderable->setMaterial(gAssets.standardMaterial);
-			ct::gRenderer()->setGlobalShaderOverride(gAssets.deferredLightingShader.getInternalPtr());
+			gRenderable->SetMaterial(gAssets.standardMaterial);
+			ct::gRenderer()->SetGlobalShaderOverride(gAssets.deferredLightingShader.GetInternalPtr());
 			break;
 		case 4:
 			// Forward surface/lighting material. Simply apply to renderable. Also clear the deferred lighting material
 			// override from the last material.
-			gRenderable->setMaterial(gAssets.forwardMaterial);
+			gRenderable->SetMaterial(gAssets.forwardMaterial);
 
 			// Clear previous overrides
-			const Vector<SubShader>& subShaders = gAssets.deferredLightingShader->getSubShaders();
+			const Vector<SubShader>& subShaders = gAssets.deferredLightingShader->GetSubShaders();
 			for(auto& entry : subShaders)
-				ct::gRenderer()->setGlobalShaderOverride(entry.name, nullptr);
+				ct::gRenderer()->SetGlobalShaderOverride(entry.name, nullptr);
 
 			break;
 		}
@@ -308,10 +308,10 @@ namespace bs
 		static VirtualButton SwitchMaterialButton("SwitchMaterial");
 
 		// Register a key for toggling between different materials
-		auto inputConfig = gVirtualInput().getConfiguration();
-		inputConfig->registerButton("SwitchMaterial", BC_Q);
+		auto inputConfig = gVirtualInput().GetConfiguration();
+		inputConfig->RegisterButton("SwitchMaterial", BC_Q);
 
-		gVirtualInput().onButtonUp.connect(
+		gVirtualInput().onButtonUp.Connect(
 			[](const VirtualButton& btn, UINT32 deviceIdx)
 		{
 			if(btn == SwitchMaterialButton)
@@ -338,7 +338,7 @@ int main()
 
 	// Initializes the application and creates a window with the specified properties
 	VideoMode videoMode(windowResWidth, windowResHeight);
-	Application::startUp(videoMode, "Example", false);
+	Application::StartUp(videoMode, "Example", false);
 
 	// Register buttons for controlling the example 
 	setupInput();
@@ -354,10 +354,10 @@ int main()
 	
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
-	Application::instance().runMainLoop();
+	Application::Instance().RunMainLoop();
 
 	// When done, clean up
-	Application::shutDown();
+	Application::ShutDown();
 
 	return 0;
 }

@@ -62,38 +62,38 @@ namespace bs
 		void OnStartUp() override
 		{
 			// Ensure all parent systems are initialized first
-			Application::onStartUp();
+			Application::OnStartUp();
 
 			// Get the primary window that was created during start-up. This will be the final destination for all our
 			// rendering.
-			SPtr<RenderWindow> renderWindow = getPrimaryWindow();
+			SPtr<RenderWindow> renderWindow = GetPrimaryWindow();
 
 			// Get the version of the render window usable on the core thread, and send it along to setup()
-			SPtr<ct::RenderWindow> renderWindowCore = renderWindow->getCore();
+			SPtr<ct::RenderWindow> renderWindowCore = renderWindow->GetCore();
 
 			// Initialize all the resources we need for rendering. Since we do rendering on a separate thread (the "core
 			// thread"), we don't call the method directly, but rather queue it for execution using the CoreThread class.
-			gCoreThread().queueCommand(std::bind(&ct::setup, renderWindowCore));
+			gCoreThread().QueueCommand(std::bind(&ct::setup, renderWindowCore));
 		}
 
 		// Called when the engine is about to be shut down
 		void OnShutDown() override
 		{
 			// Queue the method for execution on the core thread
-			gCoreThread().queueCommand(&ct::shutdown);
+			gCoreThread().QueueCommand(&ct::shutdown);
 
 			// Shut-down engine components
-			Application::onShutDown();
+			Application::OnShutDown();
 		}
 
 		// Called every frame, before any other engine system (optionally use postUpdate())
 		void PreUpdate() override
 		{
 			// Queue the method for execution on the core thread
-			gCoreThread().queueCommand(&ct::render);
+			gCoreThread().QueueCommand(&ct::render);
 
 			// Call the default version of this method to handle normal functionality
-			Application::preUpdate();
+			Application::PreUpdate();
 		}
 	};
 }
@@ -119,14 +119,14 @@ int main()
 
 	// Start-up the engine using our custom MyApplication class. This will also create the primary rendering window.
 	// We provide the initial resolution of the window, its title and fullscreen state.
-	Application::startUp<MyApplication>(videoMode, "bsf Example App", false);
+	Application::StartUp<MyApplication>(videoMode, "bsf Example App", false);
 
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
-	Application::instance().runMainLoop();
+	Application::Instance().RunMainLoop();
 
 	// Clean up when done
-	Application::shutDown();
+	Application::ShutDown();
 
 	return 0;
 }
@@ -183,7 +183,7 @@ namespace bs { namespace ct
 		vertProgDesc.language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl" : "glsl4_1";
 		vertProgDesc.source = vertProgSrc;
 
-		SPtr<GpuProgram> vertProg = GpuProgram::create(vertProgDesc);
+		SPtr<GpuProgram> vertProg = GpuProgram::Create(vertProgDesc);
 
 		// Create a fragment GPU program
 		const char* fragProgSrc = getFragmentProgSource();
@@ -194,7 +194,7 @@ namespace bs { namespace ct
 		fragProgDesc.language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl" : "glsl4_1";
 		fragProgDesc.source = fragProgSrc;
 
-		SPtr<GpuProgram> fragProg = GpuProgram::create(fragProgDesc);
+		SPtr<GpuProgram> fragProg = GpuProgram::Create(fragProgDesc);
 
 		// Create a graphics pipeline state
 		BLEND_STATE_DESC blendDesc;
@@ -209,67 +209,67 @@ namespace bs { namespace ct
 		depthStencilDesc.depthReadEnable = false;
 
 		PIPELINE_STATE_DESC pipelineDesc;
-		pipelineDesc.blendState = BlendState::create(blendDesc);
-		pipelineDesc.depthStencilState = DepthStencilState::create(depthStencilDesc);
+		pipelineDesc.blendState = BlendState::Create(blendDesc);
+		pipelineDesc.depthStencilState = DepthStencilState::Create(depthStencilDesc);
 		pipelineDesc.vertexProgram = vertProg;
 		pipelineDesc.fragmentProgram = fragProg;
 
-		gPipelineState = GraphicsPipelineState::create(pipelineDesc);
+		gPipelineState = GraphicsPipelineState::Create(pipelineDesc);
 
 		// Create an object containing GPU program parameters
-		gGpuParams = GpuParams::create(gPipelineState);
+		gGpuParams = GpuParams::Create(gPipelineState);
 
 		// Create a vertex declaration for shader inputs
-		SPtr<VertexDataDesc> vertexDesc = VertexDataDesc::create();
-		vertexDesc->addVertElem(VET_FLOAT3, VES_POSITION);
-		vertexDesc->addVertElem(VET_FLOAT2, VES_TEXCOORD);
+		SPtr<VertexDataDesc> vertexDesc = VertexDataDesc::Create();
+		vertexDesc->AddVertElem(VET_FLOAT3, VES_POSITION);
+		vertexDesc->AddVertElem(VET_FLOAT2, VES_TEXCOORD);
 
-		gVertexDecl = VertexDeclaration::create(vertexDesc);
+		gVertexDecl = VertexDeclaration::Create(vertexDesc);
 
 		// Create & fill the vertex buffer for a box mesh
-		UINT32 vertexStride = vertexDesc->getVertexStride();
+		UINT32 vertexStride = vertexDesc->GetVertexStride();
 
 		VERTEX_BUFFER_DESC vbDesc;
 		vbDesc.numVerts = NUM_VERTICES;
 		vbDesc.vertexSize = vertexStride;
 
-		gVertexBuffer = VertexBuffer::create(vbDesc);
+		gVertexBuffer = VertexBuffer::Create(vbDesc);
 
-		UINT8* vbData = (UINT8*)gVertexBuffer->lock(0, vertexStride * NUM_VERTICES, GBL_WRITE_ONLY_DISCARD);
-		UINT8* positions = vbData + vertexDesc->getElementOffsetFromStream(VES_POSITION);
-		UINT8* uvs = vbData + vertexDesc->getElementOffsetFromStream(VES_TEXCOORD);
+		UINT8* vbData = (UINT8*)gVertexBuffer->Lock(0, vertexStride * NUM_VERTICES, GBL_WRITE_ONLY_DISCARD);
+		UINT8* positions = vbData + vertexDesc->GetElementOffsetFromStream(VES_POSITION);
+		UINT8* uvs = vbData + vertexDesc->GetElementOffsetFromStream(VES_TEXCOORD);
 
 		AABox box(Vector3::ONE * -10.0f, Vector3::ONE * 10.0f);
 		writeBoxVertices(box, positions, uvs, vertexStride);
 
-		gVertexBuffer->unlock();
+		gVertexBuffer->Unlock();
 
 		// Create & fill the index buffer for a box mesh
 		INDEX_BUFFER_DESC ibDesc;
 		ibDesc.numIndices = NUM_INDICES;
 		ibDesc.indexType = IT_32BIT;
 
-		gIndexBuffer = IndexBuffer::create(ibDesc);
-		UINT32* ibData = (UINT32*)gIndexBuffer->lock(0, NUM_INDICES * sizeof(UINT32), GBL_WRITE_ONLY_DISCARD);
+		gIndexBuffer = IndexBuffer::Create(ibDesc);
+		UINT32* ibData = (UINT32*)gIndexBuffer->Lock(0, NUM_INDICES * sizeof(UINT32), GBL_WRITE_ONLY_DISCARD);
 		writeBoxIndices(ibData);
 
-		gIndexBuffer->unlock();
+		gIndexBuffer->Unlock();
 
 		// Create a simple 2x2 checkerboard texture to map to the object we're about to render
-		SPtr<PixelData> pixelData = PixelData::create(2, 2, 1, PF_RGBA8);
-		pixelData->setColorAt(Color::White, 0, 0);
-		pixelData->setColorAt(Color::Black, 1, 0);
-		pixelData->setColorAt(Color::White, 1, 1);
-		pixelData->setColorAt(Color::Black, 0, 1);
+		SPtr<PixelData> pixelData = PixelData::Create(2, 2, 1, PF_RGBA8);
+		pixelData->SetColorAt(Color::White, 0, 0);
+		pixelData->SetColorAt(Color::Black, 1, 0);
+		pixelData->SetColorAt(Color::White, 1, 1);
+		pixelData->SetColorAt(Color::Black, 0, 1);
 
-		gSurfaceTex = Texture::create(pixelData);
+		gSurfaceTex = Texture::Create(pixelData);
 
 		// Create a sampler state for the texture above
 		SAMPLER_STATE_DESC samplerDesc;
 		samplerDesc.minFilter = FO_POINT;
 		samplerDesc.magFilter = FO_POINT;
 
-		gSurfaceSampler = SamplerState::create(samplerDesc);
+		gSurfaceSampler = SamplerState::Create(samplerDesc);
 
 		// Create a color attachment texture for the render surface
 		TEXTURE_DESC colorAttDesc;
@@ -278,7 +278,7 @@ namespace bs { namespace ct
 		colorAttDesc.format = PF_RGBA8;
 		colorAttDesc.usage = TU_RENDERTARGET;
 
-		SPtr<Texture> colorAtt = Texture::create(colorAttDesc);
+		SPtr<Texture> colorAtt = Texture::Create(colorAttDesc);
 
 		// Create a depth attachment texture for the render surface
 		TEXTURE_DESC depthAttDesc;
@@ -287,14 +287,14 @@ namespace bs { namespace ct
 		depthAttDesc.format = PF_D32;
 		depthAttDesc.usage = TU_DEPTHSTENCIL;
 
-		SPtr<Texture> depthAtt = Texture::create(depthAttDesc);
+		SPtr<Texture> depthAtt = Texture::Create(depthAttDesc);
 
 		// Create the render surface
 		RENDER_TEXTURE_DESC desc;
 		desc.colorSurfaces[0].texture = colorAtt;
 		desc.depthStencilSurface.texture = depthAtt;
 
-		gRenderTarget = RenderTexture::create(desc);
+		gRenderTarget = RenderTexture::Create(desc);
 	}
 
 	// Render the box, called every frame
@@ -306,61 +306,61 @@ namespace bs { namespace ct
 		uniformBlock.gTint = Color(1.0f, 1.0f, 1.0f, 0.5f);
 
 		// Create a uniform block buffer for holding the uniform variables
-		SPtr<GpuParamBlockBuffer> uniformBuffer = GpuParamBlockBuffer::create(sizeof(UniformBlock));
-		uniformBuffer->write(0, &uniformBlock, sizeof(uniformBlock));
+		SPtr<GpuParamBlockBuffer> uniformBuffer = GpuParamBlockBuffer::Create(sizeof(UniformBlock));
+		uniformBuffer->Write(0, &uniformBlock, sizeof(uniformBlock));
 
 		// Assign the uniform buffer & texture
-		gGpuParams->setParamBlockBuffer(GPT_FRAGMENT_PROGRAM, "Params", uniformBuffer);
-		gGpuParams->setParamBlockBuffer(GPT_VERTEX_PROGRAM, "Params", uniformBuffer);
+		gGpuParams->SetParamBlockBuffer(GPT_FRAGMENT_PROGRAM, "Params", uniformBuffer);
+		gGpuParams->SetParamBlockBuffer(GPT_VERTEX_PROGRAM, "Params", uniformBuffer);
 
-		gGpuParams->setTexture(GPT_FRAGMENT_PROGRAM, "gMainTexture", gSurfaceTex);
+		gGpuParams->SetTexture(GPT_FRAGMENT_PROGRAM, "gMainTexture", gSurfaceTex);
 
 		// HLSL uses separate sampler states, so we need to use a different name for the sampler
 		if(gUseHLSL)
-			gGpuParams->setSamplerState(GPT_FRAGMENT_PROGRAM, "gMainTexSamp", gSurfaceSampler);
+			gGpuParams->SetSamplerState(GPT_FRAGMENT_PROGRAM, "gMainTexSamp", gSurfaceSampler);
 		else
-			gGpuParams->setSamplerState(GPT_FRAGMENT_PROGRAM, "gMainTexture", gSurfaceSampler);
+			gGpuParams->SetSamplerState(GPT_FRAGMENT_PROGRAM, "gMainTexture", gSurfaceSampler);
 
 		// Create a command buffer
-		SPtr<CommandBuffer> cmds = CommandBuffer::create(GQT_GRAPHICS);
+		SPtr<CommandBuffer> cmds = CommandBuffer::Create(GQT_GRAPHICS);
 
 		// Get the primary render API access point
-		RenderAPI& rapi = RenderAPI::instance();
+		RenderAPI& rapi = RenderAPI::Instance();
 
 		// Bind render surface & clear it
-		rapi.setRenderTarget(gRenderTarget, 0, RT_NONE, cmds);
-		rapi.clearRenderTarget(FBT_COLOR | FBT_DEPTH, Color::Blue, 1, 0, 0xFF, cmds);
+		rapi.SetRenderTarget(gRenderTarget, 0, RT_NONE, cmds);
+		rapi.ClearRenderTarget(FBT_COLOR | FBT_DEPTH, Color::Blue, 1, 0, 0xFF, cmds);
 
 		// Bind the pipeline state
-		rapi.setGraphicsPipeline(gPipelineState, cmds);
+		rapi.SetGraphicsPipeline(gPipelineState, cmds);
 
 		// Set the vertex & index buffers, as well as vertex declaration and draw type
-		rapi.setVertexBuffers(0, &gVertexBuffer, 1, cmds);
-		rapi.setIndexBuffer(gIndexBuffer, cmds);
-		rapi.setVertexDeclaration(gVertexDecl, cmds);
-		rapi.setDrawOperation(DOT_TRIANGLE_LIST, cmds);
+		rapi.SetVertexBuffers(0, &gVertexBuffer, 1, cmds);
+		rapi.SetIndexBuffer(gIndexBuffer, cmds);
+		rapi.SetVertexDeclaration(gVertexDecl, cmds);
+		rapi.SetDrawOperation(DOT_TRIANGLE_LIST, cmds);
 
 		// Bind the GPU program parameters (i.e. resource descriptors)
-		rapi.setGpuParams(gGpuParams, cmds);
+		rapi.SetGpuParams(gGpuParams, cmds);
 
 		// Draw
-		rapi.drawIndexed(0, NUM_INDICES, 0, NUM_VERTICES, 1, cmds);
+		rapi.DrawIndexed(0, NUM_INDICES, 0, NUM_VERTICES, 1, cmds);
 
 		// Submit the command buffer
-		rapi.submitCommandBuffer(cmds);
+		rapi.SubmitCommandBuffer(cmds);
 
 		// Blit the image from the render texture, to the render window
-		rapi.setRenderTarget(gRenderWindow);
+		rapi.SetRenderTarget(gRenderWindow);
 
 		// Get the color attachment
-		SPtr<Texture> colorTexture = gRenderTarget->getColorTexture(0);
+		SPtr<Texture> colorTexture = gRenderTarget->GetColorTexture(0);
 
 		// Use the helper RendererUtility to draw a full-screen quad of the provided texture and output it to the currently
 		// bound render target. Internally this uses the same calls we used above, just with a different pipeline and mesh.
-		gRendererUtility().blit(colorTexture);
+		gRendererUtility().Blit(colorTexture);
 
 		// Present the rendered image to the user
-		rapi.swapBuffers(gRenderWindow);
+		rapi.SwapBuffers(gRenderWindow);
 	}
 
 	// Clean up any resources
@@ -394,7 +394,7 @@ namespace bs { namespace ct
 
 		for (auto& entry : vertOrder)
 		{
-			Vector3 pos = box.getCorner(entry);
+			Vector3 pos = box.GetCorner(entry);
 			memcpy(positions, &pos, sizeof(pos));
 
 			positions += stride;
@@ -591,25 +591,25 @@ void main()
 
 	Matrix4 createWorldViewProjectionMatrix()
 	{
-		Matrix4 proj = Matrix4::projectionPerspective(Degree(75.0f), 16.0f / 9.0f, 0.05f, 1000.0f);
-		bs::RenderAPI::convertProjectionMatrix(proj, proj);
+		Matrix4 proj = Matrix4::ProjectionPerspective(Degree(75.0f), 16.0f / 9.0f, 0.05f, 1000.0f);
+		bs::RenderAPI::ConvertProjectionMatrix(proj, proj);
 
 		Vector3 cameraPos = Vector3(0.0f, -20.0f, 50.0f);
-		Vector3 lookDir = -Vector3::normalize(cameraPos);
+		Vector3 lookDir = -Vector3::Normalize(cameraPos);
 
 		Quaternion cameraRot(BsIdentity);
-		cameraRot.lookRotation(lookDir);
+		cameraRot.LookRotation(lookDir);
 
-		Matrix4 view = Matrix4::view(cameraPos, cameraRot);
+		Matrix4 view = Matrix4::View(cameraPos, cameraRot);
 
-		Quaternion rotation(Vector3::UNIT_Y, Degree(gTime().getTime() * 90.0f));
+		Quaternion rotation(Vector3::UNIT_Y, Degree(gTime().GetTime() * 90.0f));
 		Matrix4 world = Matrix4::TRS(Vector3::ZERO, rotation, Vector3::ONE);
 
 		Matrix4 viewProj = proj * view * world;
 
 		// GLSL uses column major matrices, so transpose
 		if(!gUseHLSL)
-			viewProj = viewProj.transpose();
+			viewProj = viewProj.Transpose();
 
 		return viewProj;
 	}

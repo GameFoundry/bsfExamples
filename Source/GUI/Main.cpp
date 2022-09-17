@@ -46,83 +46,83 @@ namespace bs
 		// In order something to render on screen we need at least one camera.
 
 		// Like before, we create a new scene object at (0, 0, 0).
-		HSceneObject sceneCameraSO = SceneObject::create("SceneCamera");
+		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
 		// Get the primary render window we need for creating the camera. 
-		SPtr<RenderWindow> window = gApplication().getPrimaryWindow();
+		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
 		// Add a Camera component that will output whatever it sees into that window 
 		// (You could also use a render texture or another window you created).
-		HCamera sceneCamera = sceneCameraSO->addComponent<CCamera>();
-		sceneCamera->getViewport()->setTarget(window);
+		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
+		sceneCamera->GetViewport()->SetTarget(window);
 
 		// Pick a prettier background color
 		Color gray = Color(51/255.0f, 51/255.0f, 51/255.0f);
-		sceneCamera->getViewport()->setClearColorValue(gray);
+		sceneCamera->GetViewport()->SetClearColorValue(gray);
 
 		// Let the camera know it will be used for overlay rendering only. This stops the renderer from running potentially
 		// expensive effects that ultimately don't effect anything. It also allows us to use a linear-space color for the
 		// camera background (normal rendering expects colors in gamma space, which is unintuitive for aspects such as 
 		// GUI).
-		const SPtr<RenderSettings>& renderSettings = sceneCamera->getRenderSettings();
+		const SPtr<RenderSettings>& renderSettings = sceneCamera->GetRenderSettings();
 		renderSettings->overlayOnly = true;
-		sceneCamera->setRenderSettings(renderSettings);
+		sceneCamera->SetRenderSettings(renderSettings);
 
 		/************************************************************************/
 		/* 									GUI		                     		*/
 		/************************************************************************/
 		// Add a GUIWidget component we will use for rendering the GUI
-		HSceneObject guiSO = SceneObject::create("GUI");
-		HGUIWidget gui = guiSO->addComponent<CGUIWidget>(sceneCamera);
+		HSceneObject guiSO = SceneObject::Create("GUI");
+		HGUIWidget gui = guiSO->AddComponent<CGUIWidget>(sceneCamera);
 
 		// Retrieve the primary panel onto which to attach GUI elements to. Panels allow free placement of elements in
 		// them (unlike layouts), and can also have depth, meaning you can overlay multiple panels over one another.
-		GUIPanel* mainPanel = gui->getPanel();
+		GUIPanel* mainPanel = gui->GetPanel();
 
 		////////////////////// Add a variety of GUI controls /////////////////////
 		// Clickable button with a textual label
-		GUIButton* button = mainPanel->addNewElement<GUIButton>(HString("Click me!"));
-		button->onClick.connect([]()
+		GUIButton* button = mainPanel->AddNewElement<GUIButton>(HString("Click me!"));
+		button->onClick.Connect([]()
 		{
 			// Log a message when the user clicks the button
-			LOGDBG("Button clicked!");
+			BS_LOG(Info, Uncategorized, "Button clicked!");
 		});
 
-		button->setPosition(10, 50);
-		button->setSize(100, 30);
+		button->SetPosition(10, 50);
+		button->SetSize(100, 30);
 
 		// Toggleable button
-		GUIToggle* toggle = mainPanel->addNewElement<GUIToggle>(HString(""));
-		toggle->onToggled.connect([](bool enabled)
+		GUIToggle* toggle = mainPanel->AddNewElement<GUIToggle>(HString(""));
+		toggle->onToggled.Connect([](bool enabled)
 		{
 			// Log a message when the user toggles the button
 			if(enabled)
 			{
-				LOGDBG("Toggle turned on");
+				BS_LOG(Info, Uncategorized, "Toggle turned on");
 			}
 			else
 			{
-				LOGDBG("Toggle turned off");
+				BS_LOG(Info, Uncategorized, "Toggle turned off");
 			}
 		});
 
-		toggle->setPosition(10, 90);
+		toggle->SetPosition(10, 90);
 
 		// Add non-interactable label next to the toggle
-		GUILabel* toggleLabel = mainPanel->addNewElement<GUILabel>(HString("Toggle me!"));
-		toggleLabel->setPosition(30, 92);
+		GUILabel* toggleLabel = mainPanel->AddNewElement<GUILabel>(HString("Toggle me!"));
+		toggleLabel->SetPosition(30, 92);
 
 		// Single-line box in which user can input text into
-		GUIInputBox* inputBox = mainPanel->addNewElement<GUIInputBox>();
-		inputBox->onValueChanged.connect([](const String& value)
+		GUIInputBox* inputBox = mainPanel->AddNewElement<GUIInputBox>();
+		inputBox->onValueChanged.Connect([](const String& value)
 		{
 			// Log a message when the user enters new text in the input box
-			LOGDBG("User entered: \"" + value + "\"");
+			BS_LOG(Info, Uncategorized, "User entered: \"" + value + "\"");
 		});
 
-		inputBox->setText("Type in me...");
-		inputBox->setPosition(10, 115);
-		inputBox->setWidth(100);
+		inputBox->SetText("Type in me...");
+		inputBox->SetPosition(10, 115);
+		inputBox->SetWidth(100);
 
 		// List box allowing you to select one of the specified elements
 		Vector<HString> listBoxElements =
@@ -133,27 +133,27 @@ namespace bs
 			HString("Orange")
 		};
 
-		GUIListBox* listBox = mainPanel->addNewElement<GUIListBox>(listBoxElements);
-		listBox->onSelectionToggled.connect([listBoxElements](UINT32 idx, bool enabled)
+		GUIListBox* listBox = mainPanel->AddNewElement<GUIListBox>(listBoxElements);
+		listBox->onSelectionToggled.Connect([listBoxElements](UINT32 idx, bool enabled)
 		{
 			// Log a message when the user selects a new element
-			LOGDBG("User selected element: \"" + listBoxElements[idx].getValue() + "\"");
+			BS_LOG(Info, Uncategorized, "User selected element: \"" + listBoxElements[idx].GetValue() + "\"");
 			
 		});
 
-		listBox->setPosition(10, 140);
-		listBox->setWidth(100);
+		listBox->SetPosition(10, 140);
+		listBox->SetWidth(100);
 
 		// Add a button with an image
-		HTexture icon = ExampleFramework::loadTexture(ExampleTexture::GUIBansheeIcon, false, false, false, false);
-		HSpriteTexture iconSprite = SpriteTexture::create(icon);
+		HTexture icon = ExampleFramework::LoadTexture(ExampleTexture::GUIBansheeIcon, false, false, false, false);
+		HSpriteTexture iconSprite = SpriteTexture::Create(icon);
 
 		// Create a GUI content object that contains an icon to display on the button. Also an optional text and tooltip.
 		GUIContent buttonContent(iconSprite);
-		GUIButton* iconButton = mainPanel->addNewElement<GUIButton>(buttonContent);
+		GUIButton* iconButton = mainPanel->AddNewElement<GUIButton>(buttonContent);
 
-		iconButton->setPosition(10, 170);
-		iconButton->setSize(70, 70);
+		iconButton->SetPosition(10, 170);
+		iconButton->SetSize(70, 70);
 
 		/////////////////////////// Header label /////////////////////////////////
 		// Create a custom style for a label we'll used for headers. Then add a header
@@ -163,7 +163,7 @@ namespace bs
 		GUIElementStyle headerLabelStyle;
 
 		// Make it use a custom font with size 30
-		headerLabelStyle.font = ExampleFramework::loadFont(ExampleFont::SegoeUISemiBold, { 24 });
+		headerLabelStyle.font = ExampleFramework::LoadFont(ExampleFont::SegoeUISemiBold, { 24 });
 		headerLabelStyle.fontSize = 24;
 
 		// Set the default text color
@@ -171,100 +171,100 @@ namespace bs
 
 		// Grab the default GUI skin to which we'll append the new style to. You could also create a new GUI skin and
 		// add the style to it, but that would also require adding default styles for all the GUI element types.
-		HGUISkin skin = gBuiltinResources().getGUISkin();
-		skin->setStyle("HeaderLabelStyle", headerLabelStyle);
+		HGUISkin skin = gBuiltinResources().GetGuiSkin();
+		skin->SetStyle("HeaderLabelStyle", headerLabelStyle);
 
 		// Create and position the label
-		GUILabel* basicControlsLbl = mainPanel->addNewElement<GUILabel>(HString("Basic controls"), "HeaderLabelStyle");
-		basicControlsLbl->setPosition(10, 10);
+		GUILabel* basicControlsLbl = mainPanel->AddNewElement<GUILabel>(HString("Basic controls"), "HeaderLabelStyle");
+		basicControlsLbl->SetPosition(10, 10);
 
 		///////////////////////////  vertical layout /////////////////////////
 		// Use a vertical layout to automatically position GUI elements. This is unlike above where we position and
 		// sized all elements manually.
-		GUILayoutY* vertLayout = mainPanel->addNewElement<GUILayoutY>();
+		GUILayoutY* vertLayout = mainPanel->AddNewElement<GUILayoutY>();
 
 		// Add five buttons to the layout
 		for(UINT32 i = 0; i < 5; i++)
 		{
-			vertLayout->addNewElement<GUIButton>(HString("Click me!"));
+			vertLayout->AddNewElement<GUIButton>(HString("Click me!"));
 
 			// Add a 10 pixel spacing between each button
-			vertLayout->addNewElement<GUIFixedSpace>(10);
+			vertLayout->AddNewElement<GUIFixedSpace>(10);
 		}
 
 		// Add a flexible space ensuring all the elements get pushed to the top of the layout
-		vertLayout->addNewElement<GUIFlexibleSpace>();
+		vertLayout->AddNewElement<GUIFlexibleSpace>();
 
 		// Position the layout relative to the main panel, and limit width to 100 pixels
-		vertLayout->setPosition(350, 50);
-		vertLayout->setWidth(100);
+		vertLayout->SetPosition(350, 50);
+		vertLayout->SetWidth(100);
 
 		// Add a header
-		GUILabel* vertLayoutLbl = mainPanel->addNewElement<GUILabel>(HString("Vertical layout"), "HeaderLabelStyle");
-		vertLayoutLbl->setPosition(300, 10);
+		GUILabel* vertLayoutLbl = mainPanel->AddNewElement<GUILabel>(HString("Vertical layout"), "HeaderLabelStyle");
+		vertLayoutLbl->SetPosition(300, 10);
 
 		////////////////////////// Horizontal layout ///////////////////////
 		// Use a horizontal layout to automatically position GUI elements
-		GUILayoutX* horzLayout = mainPanel->addNewElement<GUILayoutX>();
-		horzLayout->addNewElement<GUIFlexibleSpace>();
+		GUILayoutX* horzLayout = mainPanel->AddNewElement<GUILayoutX>();
+		horzLayout->AddNewElement<GUIFlexibleSpace>();
 
 		// Add vive buttons to the layout
 		for(UINT32 i = 0; i < 5; i++)
 		{
-			horzLayout->addNewElement<GUIButton>(HString("Click me!"));
-			horzLayout->addNewElement<GUIFlexibleSpace>();
+			horzLayout->AddNewElement<GUIButton>(HString("Click me!"));
+			horzLayout->AddNewElement<GUIFlexibleSpace>();
 		}
 
 		// Position the layout relative to the main panel, and limit the height to 30 pixels
-		horzLayout->setPosition(0, 340);
-		horzLayout->setHeight(30);
+		horzLayout->SetPosition(0, 340);
+		horzLayout->SetHeight(30);
 
 		// Add a header
-		GUILabel* horzLayoutLbl = mainPanel->addNewElement<GUILabel>(HString("Horizontal layout"), "HeaderLabelStyle");
-		horzLayoutLbl->setPosition(10, 300);
+		GUILabel* horzLayoutLbl = mainPanel->AddNewElement<GUILabel>(HString("Horizontal layout"), "HeaderLabelStyle");
+		horzLayoutLbl->SetPosition(10, 300);
 
 		//////////////////////////// Scroll area ///////////////////////
 		// Container GUI element that allows scrolling if the number of elements inside the area are larger than the visible
 		// area
-		GUIScrollArea* scrollArea = mainPanel->addNewElement<GUIScrollArea>();
+		GUIScrollArea* scrollArea = mainPanel->AddNewElement<GUIScrollArea>();
 
 		// Scroll areas have a vertical layout we can append elements to, same as with a normal layout
-		GUILayout& scrollLayout = scrollArea->getLayout();
+		GUILayout& scrollLayout = scrollArea->GetLayout();
 
 		for(UINT32 i = 0; i < 15; i++)
-			scrollLayout.addNewElement<GUIButton>(HString("Click me!"));
+			scrollLayout.AddNewElement<GUIButton>(HString("Click me!"));
 
-		scrollArea->setPosition(565, 50);
-		scrollArea->setSize(130, 200);
+		scrollArea->SetPosition(565, 50);
+		scrollArea->SetSize(130, 200);
 
 		// Add a header
-		GUILabel* scrollAreaLbl = mainPanel->addNewElement<GUILabel>(HString("Scroll area"), "HeaderLabelStyle");
-		scrollAreaLbl->setPosition(550, 10);
+		GUILabel* scrollAreaLbl = mainPanel->AddNewElement<GUILabel>(HString("Scroll area"), "HeaderLabelStyle");
+		scrollAreaLbl->SetPosition(550, 10);
 
 		///////////////////////////// Button using a custom style ///////////////////
-		HTexture buttonNormalTex = ExampleFramework::loadTexture(ExampleTexture::GUIExampleButtonNormal, false, false, 
+		HTexture buttonNormalTex = ExampleFramework::LoadTexture(ExampleTexture::GUIExampleButtonNormal, false, false, 
 			false, false);
-		HTexture buttonHoverTex = ExampleFramework::loadTexture(ExampleTexture::GUIExampleButtonHover, false, false,  
+		HTexture buttonHoverTex = ExampleFramework::LoadTexture(ExampleTexture::GUIExampleButtonHover, false, false,  
 			false, false);
-		HTexture buttonActiveTex = ExampleFramework::loadTexture(ExampleTexture::GUIExampleButtonActive, false, false, 
+		HTexture buttonActiveTex = ExampleFramework::LoadTexture(ExampleTexture::GUIExampleButtonActive, false, false, 
 			false, false);
 
 		// Create a new style
 		GUIElementStyle customBtnStyle;
 
 		// Set custom textures for 'normal', 'hover' and 'active' states of the button
-		customBtnStyle.normal.texture = SpriteTexture::create(buttonNormalTex);
-		customBtnStyle.hover.texture = SpriteTexture::create(buttonHoverTex);
-		customBtnStyle.active.texture = SpriteTexture::create(buttonActiveTex);
+		customBtnStyle.normal.texture = SpriteTexture::Create(buttonNormalTex);
+		customBtnStyle.hover.texture = SpriteTexture::Create(buttonHoverTex);
+		customBtnStyle.active.texture = SpriteTexture::Create(buttonActiveTex);
 
 		// Button size is fixed, and should match the size of the texture's we're using
 		customBtnStyle.fixedHeight = true;
 		customBtnStyle.fixedWidth = true;
-		customBtnStyle.width = buttonNormalTex->getProperties().getWidth();
-		customBtnStyle.height = buttonNormalTex->getProperties().getHeight();
+		customBtnStyle.width = buttonNormalTex->GetProperties().GetWidth();
+		customBtnStyle.height = buttonNormalTex->GetProperties().GetHeight();
 
 		// Make the button use a custom font for text
-		customBtnStyle.font = ExampleFramework::loadFont(ExampleFont::SegoeUILight, { 24 });
+		customBtnStyle.font = ExampleFramework::LoadFont(ExampleFont::SegoeUILight, { 24 });
 		customBtnStyle.fontSize = 24;
 
 		// Offset the position of the text within the button, to match the texture
@@ -272,15 +272,15 @@ namespace bs
 		customBtnStyle.contentOffset.left = 15;
 		customBtnStyle.contentOffset.right = 65;
 
-		skin->setStyle("CustomButtonStyle", customBtnStyle);
+		skin->SetStyle("CustomButtonStyle", customBtnStyle);
 
 		// Create the button that uses the custom style
-		GUIButton* customButton = mainPanel->addNewElement<GUIButton>(HString("Click me!"), "CustomButtonStyle");
-		customButton->setPosition(800, 50);
+		GUIButton* customButton = mainPanel->AddNewElement<GUIButton>(HString("Click me!"), "CustomButtonStyle");
+		customButton->SetPosition(800, 50);
 
 		// Add a header
-		GUILabel* customButtonLbl = mainPanel->addNewElement<GUILabel>(HString("Custom button"), "HeaderLabelStyle");
-		customButtonLbl->setPosition(800, 10);
+		GUILabel* customButtonLbl = mainPanel->AddNewElement<GUILabel>(HString("Custom button"), "HeaderLabelStyle");
+		customButtonLbl->SetPosition(800, 10);
 	}
 }
 
@@ -302,23 +302,23 @@ int main()
 
 	// Initializes the application and creates a window with the specified properties
 	VideoMode videoMode(windowResWidth, windowResHeight);
-	Application::startUp(videoMode, "Example", false);
+	Application::StartUp(videoMode, "Example", false);
 
 	// Load a resource manifest so previously saved Fonts can find their child Texture resources
-	ExampleFramework::loadResourceManifest();
+	ExampleFramework::LoadResourceManifest();
 
 	// Set up the GUI elements
 	setUpGUI();
 
 	// Save the manifest, in case we did any asset importing during the setup stage
-	ExampleFramework::saveResourceManifest();
+	ExampleFramework::SaveResourceManifest();
 
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
-	Application::instance().runMainLoop();
+	Application::Instance().RunMainLoop();
 
 	// When done, clean up
-	Application::shutDown();
+	Application::ShutDown();
 
 	return 0;
 }

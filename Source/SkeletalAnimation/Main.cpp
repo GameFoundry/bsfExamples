@@ -57,38 +57,38 @@ namespace bs
 
 		// Set up mesh import options so that we import information about the skeleton and the skin, as well as any
 		// animation clips the model might have.
-		SPtr<MeshImportOptions> meshImportOptions = MeshImportOptions::create();
-		meshImportOptions->setImportSkin(true);
-		meshImportOptions->setImportAnimation(true);
+		SPtr<MeshImportOptions> meshImportOptions = MeshImportOptions::Create();
+		meshImportOptions->importSkin = true;
+		meshImportOptions->importAnimation = true;
 
 		// The FBX file contains multiple resources (a mesh and an animation clip), therefore we use importAll() method,
 		// which imports all resources in a file.
-		Vector<SubResource> modelResources = gImporter().importAll(modelPath, meshImportOptions);
-		for(auto& entry : modelResources)
+		SPtr<MultiResource> modelResources = gImporter().ImportAll(modelPath, meshImportOptions);
+		for(auto& entry : modelResources->entries)
 		{
-			if(rtti_is_of_type<Mesh>(entry.value.get()))
+			if(rtti_is_of_type<Mesh>(entry.value.Get()))
 				assets.exampleModel = static_resource_cast<Mesh>(entry.value);
-			else if(rtti_is_of_type<AnimationClip>(entry.value.get()))
+			else if(rtti_is_of_type<AnimationClip>(entry.value.Get()))
 				assets.exampleAnimClip = static_resource_cast<AnimationClip>(entry.value);
 		}
 
 		// Load PBR textures for the 3D model
-		assets.exampleAlbedoTex = ExampleFramework::loadTexture(ExampleTexture::DroneAlbedo);
-		assets.exampleNormalsTex = ExampleFramework::loadTexture(ExampleTexture::DroneNormal, false);
-		assets.exampleRoughnessTex = ExampleFramework::loadTexture(ExampleTexture::DroneRoughness, false);
-		assets.exampleMetalnessTex = ExampleFramework::loadTexture(ExampleTexture::DroneMetalness, false);
+		assets.exampleAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::DroneAlbedo);
+		assets.exampleNormalsTex = ExampleFramework::LoadTexture(ExampleTexture::DroneNormal, false);
+		assets.exampleRoughnessTex = ExampleFramework::LoadTexture(ExampleTexture::DroneRoughness, false);
+		assets.exampleMetalnessTex = ExampleFramework::LoadTexture(ExampleTexture::DroneMetalness, false);
 
 		// Create a material using the default physically based shader, and apply the PBR textures we just loaded
-		HShader shader = gBuiltinResources().getBuiltinShader(BuiltinShader::Standard);
-		assets.exampleMaterial = Material::create(shader);
+		HShader shader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
+		assets.exampleMaterial = Material::Create(shader);
 
-		assets.exampleMaterial->setTexture("gAlbedoTex", assets.exampleAlbedoTex);
-		assets.exampleMaterial->setTexture("gNormalTex", assets.exampleNormalsTex);
-		assets.exampleMaterial->setTexture("gRoughnessTex", assets.exampleRoughnessTex);
-		assets.exampleMaterial->setTexture("gMetalnessTex", assets.exampleMetalnessTex);
+		assets.exampleMaterial->SetTexture("gAlbedoTex", assets.exampleAlbedoTex);
+		assets.exampleMaterial->SetTexture("gNormalTex", assets.exampleNormalsTex);
+		assets.exampleMaterial->SetTexture("gRoughnessTex", assets.exampleRoughnessTex);
+		assets.exampleMaterial->SetTexture("gMetalnessTex", assets.exampleMetalnessTex);
 
 		// Load an environment map
-		assets.exampleSkyCubemap = ExampleFramework::loadTexture(ExampleTexture::EnvironmentRathaus, false, true, true);
+		assets.exampleSkyCubemap = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentRathaus, false, true, true);
 
 		return assets;
 	}
@@ -105,32 +105,32 @@ namespace bs
 		// mesh at the position of the scene object with the provided material.
 
 		// Create new scene object at (0, 0, 0)
-		HSceneObject droneSO = SceneObject::create("Drone");
+		HSceneObject droneSO = SceneObject::Create("Drone");
 		
 		// Attach the Renderable component and hook up the mesh we loaded, and the material we created.
-		HRenderable renderable = droneSO->addComponent<CRenderable>();
-		renderable->setMesh(assets.exampleModel);
-		renderable->setMaterial(assets.exampleMaterial);
+		HRenderable renderable = droneSO->AddComponent<CRenderable>();
+		renderable->SetMesh(assets.exampleModel);
+		renderable->SetMaterial(assets.exampleMaterial);
 
 		/************************************************************************/
 		/* 									ANIMATION	                  		*/
 		/************************************************************************/
 
 		// Add an animation component to the same scene object we added Renderable to.
-		HAnimation animation = droneSO->addComponent<CAnimation>();
+		HAnimation animation = droneSO->AddComponent<CAnimation>();
 
 		// Start playing the animation clip we imported
-		animation->play(assets.exampleAnimClip);
+		animation->Play(assets.exampleAnimClip);
 
 		/************************************************************************/
 		/* 									SKYBOX                       		*/
 		/************************************************************************/
 
 		// Add a skybox texture for sky reflections
-		HSceneObject skyboxSO = SceneObject::create("Skybox");
+		HSceneObject skyboxSO = SceneObject::Create("Skybox");
 
-		HSkybox skybox = skyboxSO->addComponent<CSkybox>();
-		skybox->setTexture(assets.exampleSkyCubemap);
+		HSkybox skybox = skyboxSO->AddComponent<CSkybox>();
+		skybox->SetTexture(assets.exampleSkyCubemap);
 
 		/************************************************************************/
 		/* 									CAMERA	                     		*/
@@ -139,39 +139,39 @@ namespace bs
 		// In order something to render on screen we need at least one camera.
 
 		// Like before, we create a new scene object at (0, 0, 0).
-		HSceneObject sceneCameraSO = SceneObject::create("SceneCamera");
+		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
 		// Get the primary render window we need for creating the camera. 
-		SPtr<RenderWindow> window = gApplication().getPrimaryWindow();
+		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
 		// Add a Camera component that will output whatever it sees into that window 
 		// (You could also use a render texture or another window you created).
-		HCamera sceneCamera = sceneCameraSO->addComponent<CCamera>();
-		sceneCamera->getViewport()->setTarget(window);
+		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
+		sceneCamera->GetViewport()->SetTarget(window);
 
 		// Set up camera component properties
 
 		// Set closest distance that is visible. Anything below that is clipped.
-		sceneCamera->setNearClipDistance(0.005f);
+		sceneCamera->SetNearClipDistance(0.005f);
 
 		// Set farthest distance that is visible. Anything above that is clipped.
-		sceneCamera->setFarClipDistance(1000);
+		sceneCamera->SetFarClipDistance(1000);
 
 		// Set aspect ratio depending on the current resolution
-		sceneCamera->setAspectRatio(windowResWidth / (float)windowResHeight);
+		sceneCamera->SetAspectRatio(windowResWidth / (float)windowResHeight);
 
 		// Enable indirect lighting so we get accurate diffuse lighting from the skybox environment map
-		const SPtr<RenderSettings>& renderSettings = sceneCamera->getRenderSettings();
+		const SPtr<RenderSettings>& renderSettings = sceneCamera->GetRenderSettings();
 		renderSettings->enableIndirectLighting = true;
 
-		sceneCamera->setRenderSettings(renderSettings);
+		sceneCamera->SetRenderSettings(renderSettings);
 
 		// Add a CameraFlyer component that allows us to move the camera. See CameraFlyer for more information.
-		sceneCameraSO->addComponent<CameraFlyer>();
+		sceneCameraSO->AddComponent<CameraFlyer>();
 
 		// Position and orient the camera scene object
-		sceneCameraSO->setPosition(Vector3(0.0f, 2.5f, -4.0f) * 0.65f);
-		sceneCameraSO->lookAt(Vector3(0, 1.5f, 0));
+		sceneCameraSO->SetPosition(Vector3(0.0f, 2.5f, -4.0f) * 0.65f);
+		sceneCameraSO->LookAt(Vector3(0, 1.5f, 0));
 	}
 }
 
@@ -193,10 +193,10 @@ int main()
 
 	// Initializes the application and creates a window with the specified properties
 	VideoMode videoMode(windowResWidth, windowResHeight);
-	Application::startUp(videoMode, "Example", false);
+	Application::StartUp(videoMode, "Example", false);
 
 	// Registers a default set of input controls
-	ExampleFramework::setupInputConfig();
+	ExampleFramework::SetupInputConfig();
 
 	// Load a model and textures, create materials
 	Assets assets = loadAssets();
@@ -206,10 +206,10 @@ int main()
 	
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
-	Application::instance().runMainLoop();
+	Application::Instance().RunMainLoop();
 
 	// When done, clean up
-	Application::shutDown();
+	Application::ShutDown();
 
 	return 0;
 }
