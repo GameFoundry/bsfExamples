@@ -395,20 +395,20 @@ namespace bs
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
-			assetPath.setExtension(srcAssetPath.getExtension() + ".asset");
+			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
-			ResourceHandle<T> resource = gResources().load<T>(assetPath);
+			ResourceHandle<T> resource = gResources().Load<T>(assetPath);
 			if (resource == nullptr) // Shader file doesn't exist, import from the source file.
 			{
-				resource = gImporter().import<T>(srcAssetPath);
+				resource = gImporter().Import<T>(srcAssetPath);
 
 				// Save for later use, so we don't have to import on the next run.
-				gResources().save(resource, assetPath, true);
+				gResources().Save(resource, assetPath, true);
 
 				// Register with manifest, if one is present. Manifest allows the engine to find the resource even after
 				// the application was restarted, which is important if resource was referenced in some serialized object.
 				if(manifest)
-					manifest->registerResource(resource.GetUuid(), assetPath);
+					manifest->RegisterResource(resource.GetUuid(), assetPath);
 			}
 
 			return resource;
