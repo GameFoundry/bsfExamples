@@ -44,19 +44,19 @@ namespace bs
 	/** Container for all resources used by the example. */
 	struct Assets
 	{
-		HMesh sphere;
-		HTexture exampleAlbedoTex;
-		HTexture exampleNormalsTex;
-		HTexture exampleRoughnessTex;
-		HTexture exampleMetalnessTex;
-		HTexture skyTex;
+		HMesh Sphere;
+		HTexture ExampleAlbedoTex;
+		HTexture ExampleNormalsTex;
+		HTexture ExampleRoughnessTex;
+		HTexture ExampleMetalnessTex;
+		HTexture SkyTex;
 
-		HMaterial standardMaterial;
-		HMaterial vertexMaterial;
-		HMaterial deferredSurfaceMaterial;
-		HMaterial forwardMaterial;
+		HMaterial StandardMaterial;
+		HMaterial VertexMaterial;
+		HMaterial DeferredSurfaceMaterial;
+		HMaterial ForwardMaterial;
 
-		HShader deferredLightingShader;
+		HShader DeferredLightingShader;
 	};
 
 	Assets gAssets;
@@ -66,10 +66,10 @@ namespace bs
 	{
 		HMaterial material = Material::Create(shader);
 
-		material->SetTexture("gAlbedoTex", assets.exampleAlbedoTex);
-		material->SetTexture("gNormalTex", assets.exampleNormalsTex);
-		material->SetTexture("gRoughnessTex", assets.exampleRoughnessTex);
-		material->SetTexture("gMetalnessTex", assets.exampleMetalnessTex);
+		material->SetTexture("gAlbedoTex", assets.ExampleAlbedoTex);
+		material->SetTexture("gNormalTex", assets.ExampleNormalsTex);
+		material->SetTexture("gRoughnessTex", assets.ExampleRoughnessTex);
+		material->SetTexture("gMetalnessTex", assets.ExampleMetalnessTex);
 
 		return material;
 	}
@@ -80,34 +80,34 @@ namespace bs
 		Assets assets;
 
 		// Load a 3D model
-		assets.sphere = ExampleFramework::LoadMesh(ExampleMesh::Pistol, 10.0f);
+		assets.Sphere = ExampleFramework::LoadMesh(ExampleMesh::Pistol, 10.0f);
 
 		// Load PBR textures for the 3D model
-		assets.exampleAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::PistolAlbedo);
-		assets.exampleNormalsTex = ExampleFramework::LoadTexture(ExampleTexture::PistolNormal, false);
-		assets.exampleRoughnessTex = ExampleFramework::LoadTexture(ExampleTexture::PistolRoughness, false);
-		assets.exampleMetalnessTex = ExampleFramework::LoadTexture(ExampleTexture::PistolMetalness, false);
+		assets.ExampleAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::PistolAlbedo);
+		assets.ExampleNormalsTex = ExampleFramework::LoadTexture(ExampleTexture::PistolNormal, false);
+		assets.ExampleRoughnessTex = ExampleFramework::LoadTexture(ExampleTexture::PistolRoughness, false);
+		assets.ExampleMetalnessTex = ExampleFramework::LoadTexture(ExampleTexture::PistolMetalness, false);
 
 		// Create a set of materials we'll be using for rendering the object
 		//// Create a standard PBR material
 		HShader standardShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
-		assets.standardMaterial = createPBRMaterial(standardShader, assets);
+		assets.StandardMaterial = createPBRMaterial(standardShader, assets);
 
 		//// Create a material that overrides the vertex transform of the rendered model. This creates a wobble in the model
 		//// geometry, but doesn't otherwise change the lighting properties (i.e. it still uses the PBR lighting model).
 		HShader vertexShader = ExampleFramework::LoadShader(ExampleShader::CustomVertex);
-		assets.vertexMaterial = createPBRMaterial(vertexShader, assets);
+		assets.VertexMaterial = createPBRMaterial(vertexShader, assets);
 
 		//// Create a material that overrides the surface data that gets used by the lighting evaluation. The material
 		//// ignores the albedo texture provided, and instead uses a noise function to generate the albedo values.
 		HShader deferredSurfaceShader = ExampleFramework::LoadShader(ExampleShader::CustomDeferredSurface);
-		assets.deferredSurfaceMaterial = createPBRMaterial(deferredSurfaceShader, assets);
+		assets.DeferredSurfaceMaterial = createPBRMaterial(deferredSurfaceShader, assets);
 
 		//// Create a material that overrides the lighting calculation by implementing a custom BRDF function, in this case
 		//// using a basic Lambert BRDF. Note that lighting calculations for the deferred pipeline are done globally, so
 		//// this material is created and used differently than others in this example. Instead of being assigned to 
 		//// Renderable it is instead applied globally and will affect all objects using the deferred pipeline.
-		assets.deferredLightingShader = ExampleFramework::LoadShader(ExampleShader::CustomDeferredLighting);
+		assets.DeferredLightingShader = ExampleFramework::LoadShader(ExampleShader::CustomDeferredLighting);
 
 		//// Creates a material that uses the forward rendering pipeline, while all previous materials have used the
 		//// deferred rendering pipeline. Forward rendering is required when the shader is used for rendering transparent
@@ -115,10 +115,10 @@ namespace bs
 		//// and lighting portions in a single shader (unlike with deferred). This custom shader overrides both, using a
 		//// noise function for generating the surface albedo, and overriding the PBR BRDF with a basic Lambert BRDF.
 		HShader forwardSurfaceAndLighting = ExampleFramework::LoadShader(ExampleShader::CustomForward);
-		assets.forwardMaterial = createPBRMaterial(forwardSurfaceAndLighting, assets);
+		assets.ForwardMaterial = createPBRMaterial(forwardSurfaceAndLighting, assets);
 
 		// Load an environment map
-		assets.skyTex = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentPaperMill, false, true, true);
+		assets.SkyTex = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentPaperMill, false, true, true);
 
 		return assets;
 	}
@@ -143,8 +143,8 @@ namespace bs
 		
 		// Attach the Renderable component and hook up the mesh we loaded, and the material we created.
 		gRenderable = pistolSO->AddComponent<CRenderable>();
-		gRenderable->SetMesh(assets.sphere);
-		gRenderable->SetMaterial(assets.standardMaterial);
+		gRenderable->SetMesh(assets.Sphere);
+		gRenderable->SetMaterial(assets.StandardMaterial);
 
 		// Add a rotator component so we can rotate the object during runtime
 		pistolSO->AddComponent<ObjectRotator>();
@@ -169,7 +169,7 @@ namespace bs
 		HSceneObject skyboxSO = SceneObject::Create("Skybox");
 
 		HSkybox skybox = skyboxSO->AddComponent<CSkybox>();
-		skybox->SetTexture(assets.skyTex);
+		skybox->SetTexture(assets.SkyTex);
 
 		/************************************************************************/
 		/* 									CAMERA	                     		*/
@@ -254,10 +254,10 @@ namespace bs
 	{
 		HMaterial materialLookup[] =
 		{
-			gAssets.standardMaterial,
-			gAssets.vertexMaterial,
-			gAssets.deferredSurfaceMaterial,
-			gAssets.forwardMaterial
+			gAssets.StandardMaterial,
+			gAssets.VertexMaterial,
+			gAssets.DeferredSurfaceMaterial,
+			gAssets.ForwardMaterial
 		};
 
 		gMaterialIdx = (gMaterialIdx + 1) % 5;
@@ -267,30 +267,30 @@ namespace bs
 		{
 		case 0:
 			// Standard material, simply apply to renderable
-			gRenderable->SetMaterial(gAssets.standardMaterial);
+			gRenderable->SetMaterial(gAssets.StandardMaterial);
 			break;
 		case 1:
 			// Deferred vertex material, simply apply to renderable
-			gRenderable->SetMaterial(gAssets.vertexMaterial);
+			gRenderable->SetMaterial(gAssets.VertexMaterial);
 			break;
 		case 2:
 			// Deferred surface material, simply apply to renderable
-			gRenderable->SetMaterial(gAssets.deferredSurfaceMaterial);
+			gRenderable->SetMaterial(gAssets.DeferredSurfaceMaterial);
 			break;
 		case 3:
 			// Deferred lighting material. Apply it globally and reset the surface material back to standard.
-			gRenderable->SetMaterial(gAssets.standardMaterial);
-			ct::gRenderer()->SetGlobalShaderOverride(gAssets.deferredLightingShader.GetInternalPtr());
+			gRenderable->SetMaterial(gAssets.StandardMaterial);
+			ct::gRenderer()->SetGlobalShaderOverride(gAssets.DeferredLightingShader.GetInternalPtr());
 			break;
 		case 4:
 			// Forward surface/lighting material. Simply apply to renderable. Also clear the deferred lighting material
 			// override from the last material.
-			gRenderable->SetMaterial(gAssets.forwardMaterial);
+			gRenderable->SetMaterial(gAssets.ForwardMaterial);
 
 			// Clear previous overrides
-			const Vector<SubShader>& subShaders = gAssets.deferredLightingShader->GetSubShaders();
+			const Vector<SubShader>& subShaders = gAssets.DeferredLightingShader->GetSubShaders();
 			for(auto& entry : subShaders)
-				ct::gRenderer()->SetGlobalShaderOverride(entry.name, nullptr);
+				ct::gRenderer()->SetGlobalShaderOverride(entry.Name, nullptr);
 
 			break;
 		}
@@ -311,7 +311,7 @@ namespace bs
 		auto inputConfig = gVirtualInput().GetConfiguration();
 		inputConfig->RegisterButton("SwitchMaterial", BC_Q);
 
-		gVirtualInput().onButtonUp.Connect(
+		gVirtualInput().OnButtonUp.Connect(
 			[](const VirtualButton& btn, UINT32 deviceIdx)
 		{
 			if(btn == SwitchMaterialButton)

@@ -65,7 +65,7 @@ namespace bs
 		// camera background (normal rendering expects colors in gamma space, which is unintuitive for aspects such as 
 		// GUI).
 		const SPtr<RenderSettings>& renderSettings = sceneCamera->GetRenderSettings();
-		renderSettings->overlayOnly = true;
+		renderSettings->OverlayOnly = true;
 		sceneCamera->SetRenderSettings(renderSettings);
 
 		/************************************************************************/
@@ -82,7 +82,7 @@ namespace bs
 		////////////////////// Add a variety of GUI controls /////////////////////
 		// Clickable button with a textual label
 		GUIButton* button = mainPanel->AddNewElement<GUIButton>(HString("Click me!"));
-		button->onClick.Connect([]()
+		button->OnClick.Connect([]()
 		{
 			// Log a message when the user clicks the button
 			BS_LOG(Info, Uncategorized, "Button clicked!");
@@ -93,7 +93,7 @@ namespace bs
 
 		// Toggleable button
 		GUIToggle* toggle = mainPanel->AddNewElement<GUIToggle>(HString(""));
-		toggle->onToggled.Connect([](bool enabled)
+		toggle->OnToggled.Connect([](bool enabled)
 		{
 			// Log a message when the user toggles the button
 			if(enabled)
@@ -114,7 +114,7 @@ namespace bs
 
 		// Single-line box in which user can input text into
 		GUIInputBox* inputBox = mainPanel->AddNewElement<GUIInputBox>();
-		inputBox->onValueChanged.Connect([](const String& value)
+		inputBox->OnValueChanged.Connect([](const String& value)
 		{
 			// Log a message when the user enters new text in the input box
 			BS_LOG(Info, Uncategorized, "User entered: \"" + value + "\"");
@@ -134,7 +134,7 @@ namespace bs
 		};
 
 		GUIListBox* listBox = mainPanel->AddNewElement<GUIListBox>(listBoxElements);
-		listBox->onSelectionToggled.Connect([listBoxElements](UINT32 idx, bool enabled)
+		listBox->OnSelectionToggled.Connect([listBoxElements](UINT32 idx, bool enabled)
 		{
 			// Log a message when the user selects a new element
 			BS_LOG(Info, Uncategorized, "User selected element: \"" + listBoxElements[idx].GetValue() + "\"");
@@ -163,11 +163,11 @@ namespace bs
 		GUIElementStyle headerLabelStyle;
 
 		// Make it use a custom font with size 30
-		headerLabelStyle.font = ExampleFramework::LoadFont(ExampleFont::SegoeUISemiBold, { 24 });
-		headerLabelStyle.fontSize = 24;
+		headerLabelStyle.Font = ExampleFramework::LoadFont(ExampleFont::SegoeUISemiBold, { 24 });
+		headerLabelStyle.FontSize = 24;
 
 		// Set the default text color
-		headerLabelStyle.normal.textColor = Color::White;
+		headerLabelStyle.Normal.TextColor = Color::White;
 
 		// Grab the default GUI skin to which we'll append the new style to. You could also create a new GUI skin and
 		// add the style to it, but that would also require adding default styles for all the GUI element types.
@@ -253,24 +253,24 @@ namespace bs
 		GUIElementStyle customBtnStyle;
 
 		// Set custom textures for 'normal', 'hover' and 'active' states of the button
-		customBtnStyle.normal.texture = SpriteTexture::Create(buttonNormalTex);
-		customBtnStyle.hover.texture = SpriteTexture::Create(buttonHoverTex);
-		customBtnStyle.active.texture = SpriteTexture::Create(buttonActiveTex);
+		customBtnStyle.Normal.Texture = SpriteTexture::Create(buttonNormalTex);
+		customBtnStyle.Hover.Texture = SpriteTexture::Create(buttonHoverTex);
+		customBtnStyle.Active.Texture = SpriteTexture::Create(buttonActiveTex);
 
 		// Button size is fixed, and should match the size of the texture's we're using
-		customBtnStyle.fixedHeight = true;
-		customBtnStyle.fixedWidth = true;
-		customBtnStyle.width = buttonNormalTex->GetProperties().GetWidth();
-		customBtnStyle.height = buttonNormalTex->GetProperties().GetHeight();
+		customBtnStyle.FixedHeight = true;
+		customBtnStyle.FixedWidth = true;
+		customBtnStyle.Width = buttonNormalTex->GetProperties().GetWidth();
+		customBtnStyle.Height = buttonNormalTex->GetProperties().GetHeight();
 
 		// Make the button use a custom font for text
-		customBtnStyle.font = ExampleFramework::LoadFont(ExampleFont::SegoeUILight, { 24 });
-		customBtnStyle.fontSize = 24;
+		customBtnStyle.Font = ExampleFramework::LoadFont(ExampleFont::SegoeUILight, { 24 });
+		customBtnStyle.FontSize = 24;
 
 		// Offset the position of the text within the button, to match the texture
-		customBtnStyle.contentOffset.top = 20;
-		customBtnStyle.contentOffset.left = 15;
-		customBtnStyle.contentOffset.right = 65;
+		customBtnStyle.ContentOffset.Top = 20;
+		customBtnStyle.ContentOffset.Left = 15;
+		customBtnStyle.ContentOffset.Right = 65;
 
 		skin->SetStyle("CustomButtonStyle", customBtnStyle);
 

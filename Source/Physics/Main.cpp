@@ -240,9 +240,9 @@ namespace bs
 		/************************************************************************/
 
 		// Hook up input that launches a sphere when user clicks the mouse, and Esc key to quit
-		gInput().onButtonUp.Connect([=](const ButtonEvent& ev)
+		gInput().OnButtonUp.Connect([=](const ButtonEvent& ev)
 		{
-			if(ev.buttonCode == BC_MOUSE_LEFT)
+			if(ev.ButtonCode == BC_MOUSE_LEFT)
 			{
 				// Create the scene object and renderable geometry of the sphere
 				HSceneObject sphereSO = SceneObject::Create("Sphere");
@@ -266,7 +266,7 @@ namespace bs
 				// Position the sphere in front of the character, and scale it down a bit
 				Vector3 spawnPos = characterSO->GetTransform().GetPosition();
 				spawnPos += sceneCameraSO->GetTransform().GetForward() * 0.5f;
-				spawnPos.y += 0.5f;
+				spawnPos.Y += 0.5f;
 
 				sphereSO->SetPosition(spawnPos);
 				sphereSO->SetScale(Vector3(0.3f, 0.3f, 0.3f));
@@ -274,7 +274,7 @@ namespace bs
 				// Apply force to the sphere, launching it forward in the camera's view direction
 				sphereRigidbody->AddForce(sceneCameraSO->GetTransform().GetForward() * 40.0f, ForceMode::Velocity);
 			}
-			else if(ev.buttonCode == BC_ESCAPE)
+			else if(ev.ButtonCode == BC_ESCAPE)
 			{
 				// Quit the application when Escape key is pressed
 				gApplication().QuitRequested();

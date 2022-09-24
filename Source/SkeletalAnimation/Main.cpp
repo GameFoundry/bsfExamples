@@ -34,14 +34,14 @@ namespace bs
 	/** Container for all resources used by the example. */
 	struct Assets
 	{
-		HMesh exampleModel;
-		HAnimationClip exampleAnimClip;
-		HTexture exampleAlbedoTex;
-		HTexture exampleNormalsTex;
-		HTexture exampleRoughnessTex;
-		HTexture exampleMetalnessTex;
-		HTexture exampleSkyCubemap;
-		HMaterial exampleMaterial;
+		HMesh ExampleModel;
+		HAnimationClip ExampleAnimClip;
+		HTexture ExampleAlbedoTex;
+		HTexture ExampleNormalsTex;
+		HTexture ExampleRoughnessTex;
+		HTexture ExampleMetalnessTex;
+		HTexture ExampleSkyCubemap;
+		HMaterial ExampleMaterial;
 	};
 
 	/** Load the resources we'll be using throughout the example. */
@@ -58,37 +58,37 @@ namespace bs
 		// Set up mesh import options so that we import information about the skeleton and the skin, as well as any
 		// animation clips the model might have.
 		SPtr<MeshImportOptions> meshImportOptions = MeshImportOptions::Create();
-		meshImportOptions->importSkin = true;
-		meshImportOptions->importAnimation = true;
+		meshImportOptions->ImportSkin = true;
+		meshImportOptions->ImportAnimation = true;
 
 		// The FBX file contains multiple resources (a mesh and an animation clip), therefore we use importAll() method,
 		// which imports all resources in a file.
 		SPtr<MultiResource> modelResources = gImporter().ImportAll(modelPath, meshImportOptions);
-		for(auto& entry : modelResources->entries)
+		for(auto& entry : modelResources->Entries)
 		{
-			if(rtti_is_of_type<Mesh>(entry.value.Get()))
-				assets.exampleModel = static_resource_cast<Mesh>(entry.value);
-			else if(rtti_is_of_type<AnimationClip>(entry.value.Get()))
-				assets.exampleAnimClip = static_resource_cast<AnimationClip>(entry.value);
+			if(rtti_is_of_type<Mesh>(entry.Value.Get()))
+				assets.ExampleModel = static_resource_cast<Mesh>(entry.Value);
+			else if(rtti_is_of_type<AnimationClip>(entry.Value.Get()))
+				assets.ExampleAnimClip = static_resource_cast<AnimationClip>(entry.Value);
 		}
 
 		// Load PBR textures for the 3D model
-		assets.exampleAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::DroneAlbedo);
-		assets.exampleNormalsTex = ExampleFramework::LoadTexture(ExampleTexture::DroneNormal, false);
-		assets.exampleRoughnessTex = ExampleFramework::LoadTexture(ExampleTexture::DroneRoughness, false);
-		assets.exampleMetalnessTex = ExampleFramework::LoadTexture(ExampleTexture::DroneMetalness, false);
+		assets.ExampleAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::DroneAlbedo);
+		assets.ExampleNormalsTex = ExampleFramework::LoadTexture(ExampleTexture::DroneNormal, false);
+		assets.ExampleRoughnessTex = ExampleFramework::LoadTexture(ExampleTexture::DroneRoughness, false);
+		assets.ExampleMetalnessTex = ExampleFramework::LoadTexture(ExampleTexture::DroneMetalness, false);
 
 		// Create a material using the default physically based shader, and apply the PBR textures we just loaded
 		HShader shader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
-		assets.exampleMaterial = Material::Create(shader);
+		assets.ExampleMaterial = Material::Create(shader);
 
-		assets.exampleMaterial->SetTexture("gAlbedoTex", assets.exampleAlbedoTex);
-		assets.exampleMaterial->SetTexture("gNormalTex", assets.exampleNormalsTex);
-		assets.exampleMaterial->SetTexture("gRoughnessTex", assets.exampleRoughnessTex);
-		assets.exampleMaterial->SetTexture("gMetalnessTex", assets.exampleMetalnessTex);
+		assets.ExampleMaterial->SetTexture("gAlbedoTex", assets.ExampleAlbedoTex);
+		assets.ExampleMaterial->SetTexture("gNormalTex", assets.ExampleNormalsTex);
+		assets.ExampleMaterial->SetTexture("gRoughnessTex", assets.ExampleRoughnessTex);
+		assets.ExampleMaterial->SetTexture("gMetalnessTex", assets.ExampleMetalnessTex);
 
 		// Load an environment map
-		assets.exampleSkyCubemap = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentRathaus, false, true, true);
+		assets.ExampleSkyCubemap = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentRathaus, false, true, true);
 
 		return assets;
 	}
@@ -109,8 +109,8 @@ namespace bs
 		
 		// Attach the Renderable component and hook up the mesh we loaded, and the material we created.
 		HRenderable renderable = droneSO->AddComponent<CRenderable>();
-		renderable->SetMesh(assets.exampleModel);
-		renderable->SetMaterial(assets.exampleMaterial);
+		renderable->SetMesh(assets.ExampleModel);
+		renderable->SetMaterial(assets.ExampleMaterial);
 
 		/************************************************************************/
 		/* 									ANIMATION	                  		*/
@@ -120,7 +120,7 @@ namespace bs
 		HAnimation animation = droneSO->AddComponent<CAnimation>();
 
 		// Start playing the animation clip we imported
-		animation->Play(assets.exampleAnimClip);
+		animation->Play(assets.ExampleAnimClip);
 
 		/************************************************************************/
 		/* 									SKYBOX                       		*/
@@ -130,7 +130,7 @@ namespace bs
 		HSceneObject skyboxSO = SceneObject::Create("Skybox");
 
 		HSkybox skybox = skyboxSO->AddComponent<CSkybox>();
-		skybox->SetTexture(assets.exampleSkyCubemap);
+		skybox->SetTexture(assets.ExampleSkyCubemap);
 
 		/************************************************************************/
 		/* 									CAMERA	                     		*/
@@ -162,7 +162,7 @@ namespace bs
 
 		// Enable indirect lighting so we get accurate diffuse lighting from the skybox environment map
 		const SPtr<RenderSettings>& renderSettings = sceneCamera->GetRenderSettings();
-		renderSettings->enableIndirectLighting = true;
+		renderSettings->EnableIndirectLighting = true;
 
 		sceneCamera->SetRenderSettings(renderSettings);
 

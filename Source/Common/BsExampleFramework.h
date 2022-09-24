@@ -163,7 +163,7 @@ namespace bs
 				{
 					MeshImportOptions* importOptions = static_cast<MeshImportOptions*>(meshImportOptions.get());
 
-					importOptions->importScale = scale;
+					importOptions->ImportScale = scale;
 				}
 
 				model = gImporter().Import<Mesh>(srcAssetPath, meshImportOptions);
@@ -240,23 +240,23 @@ namespace bs
 					TextureImportOptions* importOptions = static_cast<TextureImportOptions*>(textureImportOptions.get());
 
 					// We want maximum number of mipmaps to be generated
-					importOptions->generateMips = mips;
+					importOptions->GenerateMips = mips;
 
 					// If the texture is in sRGB space the system needs to know about it
-					importOptions->sRGB = isSRGB;
+					importOptions->SRgb = isSRGB;
 
 					// Ensures we can save the texture contents
-					importOptions->cpuCached = true;
+					importOptions->CpuCached = true;
 
 					// Import as cubemap if needed
-					importOptions->cubemap = isCubemap;
+					importOptions->Cubemap = isCubemap;
 
 					// If importing as cubemap, assume source is a panorama
-					importOptions->cubemapSourceType = CubemapSourceType::Cylindrical;
+					importOptions->CubemapSourceType = CubemapSourceType::Cylindrical;
 
 					// Importing using a HDR format if requested
 					if (isHDR)
-						importOptions->format = PF_RG11B10F;
+						importOptions->Format = PF_RG11B10F;
 				}
 
 				// Import texture with specified import options
@@ -339,7 +339,7 @@ namespace bs
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
 				SPtr<FontImportOptions> fontImportOptions = FontImportOptions::Create();
-				fontImportOptions->fontSizes = fontSizes;
+				fontImportOptions->FontSizes = fontSizes;
 
 				font = gImporter().Import<Font>(srcAssetPath, fontImportOptions);
 
@@ -360,7 +360,7 @@ namespace bs
 						Path texPageOutputPath = Path(EXAMPLE_DATA_PATH) + "GUI/";
 
 						UINT32 pageIdx = 0;
-						for (const auto& tex : fontData->texturePages)
+						for (const auto& tex : fontData->TexturePages)
 						{
 							String fontName = srcAssetPath.GetFilename(false);
 							texPageOutputPath.SetFilename(fontName + "_" + toString(size) + "_texpage_" +

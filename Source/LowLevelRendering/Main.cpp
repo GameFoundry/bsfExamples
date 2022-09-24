@@ -160,8 +160,8 @@ namespace bs { namespace ct
 	// Structure that will hold uniform block variables for the GPU programs
 	struct UniformBlock
 	{
-		Matrix4 gMatWVP; // World view projection matrix
-		Color gTint; // Tint to apply on top of the texture
+		Matrix4 GMatWvp; // World view projection matrix
+		Color GTint; // Tint to apply on top of the texture
 	};
 
 	// Initializes any resources required for rendering
@@ -178,10 +178,10 @@ namespace bs { namespace ct
 		const char* vertProgSrc = getVertexProgSource();
 
 		GPU_PROGRAM_DESC vertProgDesc;
-		vertProgDesc.type = GPT_VERTEX_PROGRAM;
-		vertProgDesc.entryPoint = "main";
-		vertProgDesc.language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl" : "glsl4_1";
-		vertProgDesc.source = vertProgSrc;
+		vertProgDesc.Type = GPT_VERTEX_PROGRAM;
+		vertProgDesc.EntryPoint = "main";
+		vertProgDesc.Language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl" : "glsl4_1";
+		vertProgDesc.Source = vertProgSrc;
 
 		SPtr<GpuProgram> vertProg = GpuProgram::Create(vertProgDesc);
 
@@ -189,30 +189,30 @@ namespace bs { namespace ct
 		const char* fragProgSrc = getFragmentProgSource();
 
 		GPU_PROGRAM_DESC fragProgDesc;
-		fragProgDesc.type = GPT_FRAGMENT_PROGRAM;
-		fragProgDesc.entryPoint = "main";
-		fragProgDesc.language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl" : "glsl4_1";
-		fragProgDesc.source = fragProgSrc;
+		fragProgDesc.Type = GPT_FRAGMENT_PROGRAM;
+		fragProgDesc.EntryPoint = "main";
+		fragProgDesc.Language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl" : "glsl4_1";
+		fragProgDesc.Source = fragProgSrc;
 
 		SPtr<GpuProgram> fragProg = GpuProgram::Create(fragProgDesc);
 
 		// Create a graphics pipeline state
 		BLEND_STATE_DESC blendDesc;
-		blendDesc.renderTargetDesc[0].blendEnable = true;
-		blendDesc.renderTargetDesc[0].renderTargetWriteMask = 0b0111; // RGB, don't write to alpha
-		blendDesc.renderTargetDesc[0].blendOp = BO_ADD;
-		blendDesc.renderTargetDesc[0].srcBlend = BF_SOURCE_ALPHA;
-		blendDesc.renderTargetDesc[0].dstBlend = BF_INV_SOURCE_ALPHA;
+		blendDesc.RenderTargetDesc[0].BlendEnable = true;
+		blendDesc.RenderTargetDesc[0].RenderTargetWriteMask = 0b0111; // RGB, don't write to alpha
+		blendDesc.RenderTargetDesc[0].BlendOp = BO_ADD;
+		blendDesc.RenderTargetDesc[0].SrcBlend = BF_SOURCE_ALPHA;
+		blendDesc.RenderTargetDesc[0].DstBlend = BF_INV_SOURCE_ALPHA;
 
 		DEPTH_STENCIL_STATE_DESC depthStencilDesc;
-		depthStencilDesc.depthWriteEnable = false;
-		depthStencilDesc.depthReadEnable = false;
+		depthStencilDesc.DepthWriteEnable = false;
+		depthStencilDesc.DepthReadEnable = false;
 
 		PIPELINE_STATE_DESC pipelineDesc;
-		pipelineDesc.blendState = BlendState::Create(blendDesc);
-		pipelineDesc.depthStencilState = DepthStencilState::Create(depthStencilDesc);
-		pipelineDesc.vertexProgram = vertProg;
-		pipelineDesc.fragmentProgram = fragProg;
+		pipelineDesc.BlendState = BlendState::Create(blendDesc);
+		pipelineDesc.DepthStencilState = DepthStencilState::Create(depthStencilDesc);
+		pipelineDesc.VertexProgram = vertProg;
+		pipelineDesc.FragmentProgram = fragProg;
 
 		gPipelineState = GraphicsPipelineState::Create(pipelineDesc);
 
@@ -230,8 +230,8 @@ namespace bs { namespace ct
 		UINT32 vertexStride = vertexDesc->GetVertexStride();
 
 		VERTEX_BUFFER_DESC vbDesc;
-		vbDesc.numVerts = NUM_VERTICES;
-		vbDesc.vertexSize = vertexStride;
+		vbDesc.NumVerts = NUM_VERTICES;
+		vbDesc.VertexSize = vertexStride;
 
 		gVertexBuffer = VertexBuffer::Create(vbDesc);
 
@@ -246,8 +246,8 @@ namespace bs { namespace ct
 
 		// Create & fill the index buffer for a box mesh
 		INDEX_BUFFER_DESC ibDesc;
-		ibDesc.numIndices = NUM_INDICES;
-		ibDesc.indexType = IT_32BIT;
+		ibDesc.NumIndices = NUM_INDICES;
+		ibDesc.IndexType = IT_32BIT;
 
 		gIndexBuffer = IndexBuffer::Create(ibDesc);
 		UINT32* ibData = (UINT32*)gIndexBuffer->Lock(0, NUM_INDICES * sizeof(UINT32), GBL_WRITE_ONLY_DISCARD);
@@ -266,33 +266,33 @@ namespace bs { namespace ct
 
 		// Create a sampler state for the texture above
 		SAMPLER_STATE_DESC samplerDesc;
-		samplerDesc.minFilter = FO_POINT;
-		samplerDesc.magFilter = FO_POINT;
+		samplerDesc.MinFilter = FO_POINT;
+		samplerDesc.MagFilter = FO_POINT;
 
 		gSurfaceSampler = SamplerState::Create(samplerDesc);
 
 		// Create a color attachment texture for the render surface
 		TEXTURE_DESC colorAttDesc;
-		colorAttDesc.width = windowResWidth;
-		colorAttDesc.height = windowResHeight;
-		colorAttDesc.format = PF_RGBA8;
-		colorAttDesc.usage = TU_RENDERTARGET;
+		colorAttDesc.Width = windowResWidth;
+		colorAttDesc.Height = windowResHeight;
+		colorAttDesc.Format = PF_RGBA8;
+		colorAttDesc.Usage = TU_RENDERTARGET;
 
 		SPtr<Texture> colorAtt = Texture::Create(colorAttDesc);
 
 		// Create a depth attachment texture for the render surface
 		TEXTURE_DESC depthAttDesc;
-		depthAttDesc.width = windowResWidth;
-		depthAttDesc.height = windowResHeight;
-		depthAttDesc.format = PF_D32;
-		depthAttDesc.usage = TU_DEPTHSTENCIL;
+		depthAttDesc.Width = windowResWidth;
+		depthAttDesc.Height = windowResHeight;
+		depthAttDesc.Format = PF_D32;
+		depthAttDesc.Usage = TU_DEPTHSTENCIL;
 
 		SPtr<Texture> depthAtt = Texture::Create(depthAttDesc);
 
 		// Create the render surface
 		RENDER_TEXTURE_DESC desc;
-		desc.colorSurfaces[0].texture = colorAtt;
-		desc.depthStencilSurface.texture = depthAtt;
+		desc.ColorSurfaces[0].Texture = colorAtt;
+		desc.DepthStencilSurface.Texture = depthAtt;
 
 		gRenderTarget = RenderTexture::Create(desc);
 	}
@@ -302,8 +302,8 @@ namespace bs { namespace ct
 	{
 		// Fill out the uniform block variables
 		UniformBlock uniformBlock;
-		uniformBlock.gMatWVP = createWorldViewProjectionMatrix();
-		uniformBlock.gTint = Color(1.0f, 1.0f, 1.0f, 0.5f);
+		uniformBlock.GMatWvp = createWorldViewProjectionMatrix();
+		uniformBlock.GTint = Color(1.0f, 1.0f, 1.0f, 0.5f);
 
 		// Create a uniform block buffer for holding the uniform variables
 		SPtr<GpuParamBlockBuffer> uniformBuffer = GpuParamBlockBuffer::Create(sizeof(UniformBlock));

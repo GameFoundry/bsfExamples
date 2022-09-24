@@ -31,13 +31,13 @@ namespace bs
 	/** Container for all resources used by the example. */
 	struct Assets 
 	{
-		HMesh exampleModel;
-		HTexture exampleAlbedoTex;
-		HTexture exampleNormalsTex;
-		HTexture exampleRoughnessTex;
-		HTexture exampleMetalnessTex;
-		HTexture exampleSkyCubemap;
-		HMaterial exampleMaterial;
+		HMesh ExampleModel;
+		HTexture ExampleAlbedoTex;
+		HTexture ExampleNormalsTex;
+		HTexture ExampleRoughnessTex;
+		HTexture ExampleMetalnessTex;
+		HTexture ExampleSkyCubemap;
+		HMaterial ExampleMaterial;
 	};
 
 	/** Load the resources we'll be using throughout the example. */
@@ -46,25 +46,25 @@ namespace bs
 		Assets assets;
 
 		// Load a 3D model
-		assets.exampleModel = ExampleFramework::LoadMesh(ExampleMesh::Cerberus);
+		assets.ExampleModel = ExampleFramework::LoadMesh(ExampleMesh::Cerberus);
 
 		// Load PBR textures for the 3D model
-		assets.exampleAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::CerberusAlbedo);
-		assets.exampleNormalsTex = ExampleFramework::LoadTexture(ExampleTexture::CerberusNormal, false);
-		assets.exampleRoughnessTex = ExampleFramework::LoadTexture(ExampleTexture::CerberusRoughness, false);
-		assets.exampleMetalnessTex = ExampleFramework::LoadTexture(ExampleTexture::CerberusMetalness, false);
+		assets.ExampleAlbedoTex = ExampleFramework::LoadTexture(ExampleTexture::CerberusAlbedo);
+		assets.ExampleNormalsTex = ExampleFramework::LoadTexture(ExampleTexture::CerberusNormal, false);
+		assets.ExampleRoughnessTex = ExampleFramework::LoadTexture(ExampleTexture::CerberusRoughness, false);
+		assets.ExampleMetalnessTex = ExampleFramework::LoadTexture(ExampleTexture::CerberusMetalness, false);
 
 		// Create a material using the default physically based shader, and apply the PBR textures we just loaded
 		HShader shader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
-		assets.exampleMaterial = Material::Create(shader);
+		assets.ExampleMaterial = Material::Create(shader);
 
-		assets.exampleMaterial->SetTexture("gAlbedoTex", assets.exampleAlbedoTex);
-		assets.exampleMaterial->SetTexture("gNormalTex", assets.exampleNormalsTex);
-		assets.exampleMaterial->SetTexture("gRoughnessTex", assets.exampleRoughnessTex);
-		assets.exampleMaterial->SetTexture("gMetalnessTex", assets.exampleMetalnessTex);
+		assets.ExampleMaterial->SetTexture("gAlbedoTex", assets.ExampleAlbedoTex);
+		assets.ExampleMaterial->SetTexture("gNormalTex", assets.ExampleNormalsTex);
+		assets.ExampleMaterial->SetTexture("gRoughnessTex", assets.ExampleRoughnessTex);
+		assets.ExampleMaterial->SetTexture("gMetalnessTex", assets.ExampleMetalnessTex);
 
 		// Load an environment map
-		assets.exampleSkyCubemap = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentPaperMill, false, true, true);
+		assets.ExampleSkyCubemap = ExampleFramework::LoadTexture(ExampleTexture::EnvironmentPaperMill, false, true, true);
 
 		return assets;
 	}
@@ -85,8 +85,8 @@ namespace bs
 		
 		// Attach the Renderable component and hook up the mesh we loaded, and the material we created.
 		HRenderable renderable = pistolSO->AddComponent<CRenderable>();
-		renderable->SetMesh(assets.exampleModel);
-		renderable->SetMaterial(assets.exampleMaterial);
+		renderable->SetMesh(assets.ExampleModel);
+		renderable->SetMaterial(assets.ExampleMaterial);
 
 		pistolSO->SetRotation(Quaternion(Degree(0.0f), Degree(-160.0f), Degree(0.0f)));
 
@@ -101,7 +101,7 @@ namespace bs
 		HSceneObject skyboxSO = SceneObject::Create("Skybox");
 
 		HSkybox skybox = skyboxSO->AddComponent<CSkybox>();
-		skybox->SetTexture(assets.exampleSkyCubemap);
+		skybox->SetTexture(assets.ExampleSkyCubemap);
 
 		/************************************************************************/
 		/* 									CAMERA	                     		*/

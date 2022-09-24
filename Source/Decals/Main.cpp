@@ -215,9 +215,9 @@ namespace bs
 		/************************************************************************/
 
 		// Hook up input that launches a sphere when user clicks the mouse, and Esc key to quit
-		gInput().onButtonUp.Connect([=](const ButtonEvent& ev)
+		gInput().OnButtonUp.Connect([=](const ButtonEvent& ev)
 		{
-			if(ev.buttonCode == BC_ESCAPE)
+			if(ev.ButtonCode == BC_ESCAPE)
 			{
 				// Quit the application when Escape key is pressed
 				gApplication().QuitRequested();

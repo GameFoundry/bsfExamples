@@ -77,9 +77,9 @@ namespace bs
 		// performance. Also since it's a longer audio clip, use streaming to avoid loading the entire clip into memory,
 		// at the additional cost of performance and IO overhead.
 		SPtr<AudioClipImportOptions> musicImportOptions = AudioClipImportOptions::Create();
-		musicImportOptions->format = AudioFormat::VORBIS;
-		musicImportOptions->readMode = AudioReadMode::Stream;
-		musicImportOptions->is3D = false;
+		musicImportOptions->Format = AudioFormat::VORBIS;
+		musicImportOptions->ReadMode = AudioReadMode::Stream;
+		musicImportOptions->Is3D = false;
 
 		HAudioClip musicClip = gImporter().Import<AudioClip>(musicClipPath, musicImportOptions);
 
@@ -88,16 +88,16 @@ namespace bs
 		// load the compressed data and just uncompress on the fly. This saves on IO overhead at the cost of little
 		// extra memory.
 		SPtr<AudioClipImportOptions> environmentImportOptions = AudioClipImportOptions::Create();
-		environmentImportOptions->format = AudioFormat::VORBIS;
-		environmentImportOptions->readMode = AudioReadMode::LoadCompressed;
-		environmentImportOptions->is3D = true;
+		environmentImportOptions->Format = AudioFormat::VORBIS;
+		environmentImportOptions->ReadMode = AudioReadMode::LoadCompressed;
+		environmentImportOptions->Is3D = true;
 
 		HAudioClip environmentClip = gImporter().Import<AudioClip>(environmentClipPath, environmentImportOptions);
 
 		// Import a short audio cue. Use the uncompressed PCM audio format for fast playback, at the cost of memory.
 		SPtr<AudioClipImportOptions> cueImportOptions = AudioClipImportOptions::Create();
-		cueImportOptions->format = AudioFormat::PCM;
-		cueImportOptions->is3D = true;
+		cueImportOptions->Format = AudioFormat::PCM;
+		cueImportOptions->Is3D = true;
 
 		HAudioClip cueClip = gImporter().Import<AudioClip>(cueClipPath, cueImportOptions);
 
@@ -159,9 +159,9 @@ namespace bs
 		/************************************************************************/
 
 		// Hook up input commands that toggle between the different audio sources.
-		gInput().onButtonUp.Connect([=](const ButtonEvent& event)
+		gInput().OnButtonUp.Connect([=](const ButtonEvent& event)
 		{
-			switch(event.buttonCode)
+			switch(event.ButtonCode)
 			{
 			case BC_1:
 				// Start or resume playing music, if not already playing. Stop the ambient sound playback.

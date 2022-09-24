@@ -59,7 +59,7 @@ namespace bs
 		if (goingLeft) direction -= tfrm.GetRight();
 
 		// Eliminate vertical movement
-		direction.y = 0.0f;
+		direction.Y = 0.0f;
 		direction.Normalize();
 
 		const float frameDelta = gTime().GetFixedFrameDelta();

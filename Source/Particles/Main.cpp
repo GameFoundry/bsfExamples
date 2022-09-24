@@ -81,17 +81,17 @@ namespace bs
 	struct ParticleSystemAssets
 	{
 		// Smoke particle system assets
-		HSpriteTexture smokeTex;
-		HMaterial smokeMat;
+		HSpriteTexture SmokeTex;
+		HMaterial SmokeMat;
 
 		// 3D particle system assets
-		HMesh sphereMesh;
-		HMaterial particles3DMat;
-		HMaterial lightMat;
+		HMesh SphereMesh;
+		HMaterial Particles3DMat;
+		HMaterial LightMat;
 
 		// GPU particle system assets
-		HMaterial litParticleEmissiveMat;
-		HVectorField vectorField;
+		HMaterial LitParticleEmissiveMat;
+		HVectorField VectorField;
 	};
 
 	/** Load the assets used by the particle systems. */
@@ -102,48 +102,48 @@ namespace bs
 		// Smoke particle system assets
 		//// Import the texture and set up a sprite texture so we can animate it
 		HTexture smokeTex = ExampleFramework::LoadTexture(ExampleTexture::ParticleSmoke);
-		assets.smokeTex = SpriteTexture::Create(smokeTex);
+		assets.SmokeTex = SpriteTexture::Create(smokeTex);
 
 		//// Set up sprite sheet animation on the sprite texture
 		SpriteSheetGridAnimation smokeGridAnim(5, 6, 30, 30);
-		assets.smokeTex->SetAnimation(smokeGridAnim);
-		assets.smokeTex->SetAnimationPlayback(SpriteAnimationPlayback::None);
+		assets.SmokeTex->SetAnimation(smokeGridAnim);
+		assets.SmokeTex->SetAnimationPlayback(SpriteAnimationPlayback::None);
 
 		//// Set up a shader without lighting and enable soft particle rendering
 		HShader particleUnlitShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::ParticlesUnlit);
-		assets.smokeMat = Material::Create(particleUnlitShader);
-		assets.smokeMat->SetVariation(ShaderVariation(
+		assets.SmokeMat = Material::Create(particleUnlitShader);
+		assets.SmokeMat->SetVariation(ShaderVariation(
 			{
 				ShaderVariation::Param("SOFT", true)
 			})
 		);
 
 		//// Fade over the range of 2m (used for soft particle blending)
-		assets.smokeMat->SetFloat("gInvDepthRange", 1.0f / 2.0f);
-		assets.smokeMat->SetSpriteTexture("gTexture", assets.smokeTex);
+		assets.SmokeMat->SetFloat("gInvDepthRange", 1.0f / 2.0f);
+		assets.SmokeMat->SetSpriteTexture("gTexture", assets.SmokeTex);
 
 		// Set up an emissive material used in the GPU vector field example
 		HShader particleLitShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::ParticlesLitOpaque);
-		assets.litParticleEmissiveMat = Material::Create(particleLitShader);
-		assets.litParticleEmissiveMat->SetTexture("gEmissiveMaskTex", gBuiltinResources().GetTexture(BuiltinTexture::White));
-		assets.litParticleEmissiveMat->SetColor("gEmissiveColor", Color::White * 10.0f);
+		assets.LitParticleEmissiveMat = Material::Create(particleLitShader);
+		assets.LitParticleEmissiveMat->SetTexture("gEmissiveMaskTex", gBuiltinResources().GetTexture(BuiltinTexture::White));
+		assets.LitParticleEmissiveMat->SetColor("gEmissiveColor", Color::White * 10.0f);
 
 		// 3D particle system assets
 		//// Create another lit material using a plain white albedo texture
-		assets.particles3DMat = Material::Create(particleLitShader);
-		assets.particles3DMat->SetTexture("gAlbedoTex", gBuiltinResources().GetTexture(BuiltinTexture::White));
+		assets.Particles3DMat = Material::Create(particleLitShader);
+		assets.Particles3DMat->SetTexture("gAlbedoTex", gBuiltinResources().GetTexture(BuiltinTexture::White));
 
 		//// Create a material used for rendering the light sphere itself
 		HShader standardShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
-		assets.lightMat = Material::Create(standardShader);
-		assets.lightMat->SetTexture("gEmissiveMaskTex", gBuiltinResources().GetTexture(BuiltinTexture::White));
-		assets.lightMat->SetColor("gEmissiveColor", Color::Red * 5.0f);
+		assets.LightMat = Material::Create(standardShader);
+		assets.LightMat->SetTexture("gEmissiveMaskTex", gBuiltinResources().GetTexture(BuiltinTexture::White));
+		assets.LightMat->SetColor("gEmissiveColor", Color::Red * 5.0f);
 
 		//// Import a vector field used in the GPU simulation
-		assets.vectorField = ExampleFramework::LoadResource<VectorField>(ExampleResource::VectorField);
+		assets.VectorField = ExampleFramework::LoadResource<VectorField>(ExampleResource::VectorField);
 
 		//// Import a sphere mesh used for the 3D particles and the light sphere
-		assets.sphereMesh = gBuiltinResources().GetMesh(BuiltinMesh::Sphere);
+		assets.SphereMesh = gBuiltinResources().GetMesh(BuiltinMesh::Sphere);
 
 		return assets;
 	}
@@ -254,10 +254,10 @@ namespace bs
 
 		// Enable Bloom effect so that emissive materials look better
 		auto rs = sceneCamera->GetRenderSettings();
-		rs->bloom.enabled = true;
-		rs->bloom.intensity = 0.1f;
-		rs->bloom.threshold = 5.0f;
-		rs->bloom.quality = 3;
+		rs->Bloom.Enabled = true;
+		rs->Bloom.Intensity = 0.1f;
+		rs->Bloom.Threshold = 5.0f;
+		rs->Bloom.Quality = 3;
 
 		sceneCamera->SetRenderSettings(rs);
 
@@ -296,9 +296,9 @@ namespace bs
 		/************************************************************************/
 
 		// Hook up Esc key to quit
-		gInput().onButtonUp.Connect([=](const ButtonEvent& ev)
+		gInput().OnButtonUp.Connect([=](const ButtonEvent& ev)
 		{
-			if(ev.buttonCode == BC_ESCAPE)
+			if(ev.ButtonCode == BC_ESCAPE)
 			{
 				// Quit the application when Escape key is pressed
 				gApplication().QuitRequested();
@@ -344,10 +344,10 @@ namespace bs
 		PARTICLE_CONE_SHAPE_DESC coneShape;
 
 		// All particles will spawn at the narrow point in the cone (position doesn't vary)
-		coneShape.type = ParticleEmitterConeType::Base;
+		coneShape.Type = ParticleEmitterConeType::Base;
 
 		// The particle travel direction will be in the 10 degrees spawned by the cone
-		coneShape.angle = Degree(10.0f);
+		coneShape.Angle = Degree(10.0f);
 
 		// Assign the shape to the emitter
 		emitter->SetShape(ParticleEmitterConeShape::Create(coneShape));
@@ -362,7 +362,7 @@ namespace bs
 		PARTICLE_TEXTURE_ANIMATION_DESC texAnimDesc;
 
 		// Perform one animation cycle during the particle lifetime
-		texAnimDesc.numCycles = 1;
+		texAnimDesc.NumCycles = 1;
 
 		// Create and add the texture animation evolver
 		SPtr<ParticleEvolver> texAnimEvolver = bs_shared_ptr_new<ParticleTextureAnimation>(texAnimDesc);
@@ -370,7 +370,7 @@ namespace bs
 
 		// Scale particles from size 1 to size 4 over their lifetime
 		PARTICLE_SIZE_DESC sizeDesc;
-		sizeDesc.size = TAnimationCurve<float>(
+		sizeDesc.Size = TAnimationCurve<float>(
 			{
 				TKeyframe<float>{1.0f, 0.0f, 1.0f, 0.0f},
 				TKeyframe<float>{4.0f, 1.0f, 0.0f, 1.0f},
@@ -382,7 +382,7 @@ namespace bs
 
 		// Modify particle tint from white (no tint) to dark gray over first 40% of their lifetime
 		PARTICLE_COLOR_DESC colorDesc;
-		colorDesc.color = ColorGradient(
+		colorDesc.Color = ColorGradient(
 			{
 				ColorGradientKey(Color::White, 0.0f),
 				ColorGradientKey(Color(0.1f, 0.1f, 0.1f, 1.0f), 0.4f)
@@ -395,14 +395,14 @@ namespace bs
 
 		// Apply force moving the particles to the right
 		PARTICLE_FORCE_DESC forceDesc;
-		forceDesc.force = TAnimationCurve<Vector3>(
+		forceDesc.Force = TAnimationCurve<Vector3>(
 			{
 				TKeyframe<Vector3>{Vector3::ZERO, Vector3::ZERO, Vector3::ONE, 0.0f},
 				TKeyframe<Vector3>{Vector3(100.0f, 0.0f, 0.0f), -Vector3::ONE, Vector3::ZERO, 0.5f},
 			});
 
 		// Lets the system know the provided force direction is in world space
-		forceDesc.worldSpace = true;
+		forceDesc.WorldSpace = true;
 
 		// Create and add the force evolver
 		SPtr<ParticleEvolver> forceEvolver = bs_shared_ptr_new<ParticleForce>(forceDesc);
@@ -415,16 +415,16 @@ namespace bs
 		ParticleSystemSettings psSettings;
 
 		// Orient the particles towards the camera plane (standard for billboard particles)
-		psSettings.orientation = ParticleOrientation::ViewPlane;
+		psSettings.Orientation = ParticleOrientation::ViewPlane;
 
 		// But lock the Y orientation
-		psSettings.orientationLockY = true;
+		psSettings.OrientationLockY = true;
 
 		// Sort based on distance from the camera so that transparency looks appropriate
-		psSettings.sortMode = ParticleSortMode::Distance;
+		psSettings.SortMode = ParticleSortMode::Distance;
 
 		// Assign the material we created earlier
-		psSettings.material = assets.smokeMat;
+		psSettings.Material = assets.SmokeMat;
 
 		// And actually apply the settings
 		particleSystem->SetSettings(psSettings);
@@ -465,10 +465,10 @@ namespace bs
 		PARTICLE_CONE_SHAPE_DESC coneShape;
 
 		// All particles will spawn at the narrow point in the cone (position doesn't vary)
-		coneShape.type = ParticleEmitterConeType::Base;
+		coneShape.Type = ParticleEmitterConeType::Base;
 
 		// The particle travel direction will be in the 45 degrees spawned by the cone
-		coneShape.angle = Degree(45.0f);
+		coneShape.Angle = Degree(45.0f);
 
 		// Assign the shape to the emitter
 		emitter->SetShape(ParticleEmitterConeShape::Create(coneShape));
@@ -482,7 +482,7 @@ namespace bs
 		// Set up an evolver at applies gravity to the particles. The gravity as set by the physics system is used, but
 		// can be scaled as needed
 		PARTICLE_GRAVITY_DESC gravityDesc;
-		gravityDesc.scale = 1.0f;
+		gravityDesc.Scale = 1.0f;
 
 		// Create and add the gravity evolver
 		SPtr<ParticleGravity> gravityEvolver = bs_shared_ptr_new<ParticleGravity>(gravityDesc);
@@ -493,10 +493,10 @@ namespace bs
 
 		// We use plane collisions but we could have also used world collisions (which are more expensive, but perform
 		// general purpose collisions with all physical objects)
-		collisionsDesc.mode = ParticleCollisionMode::Plane;
+		collisionsDesc.Mode = ParticleCollisionMode::Plane;
 
 		// Set up the particle radius used for collisions (2cm, same as visible size)
-		collisionsDesc.radius = 0.02f;
+		collisionsDesc.Radius = 0.02f;
 
 		// Create the collision evolver
 		SPtr<ParticleCollisions> collisionEvolver = bs_shared_ptr_new<ParticleCollisions>(collisionsDesc);
@@ -514,13 +514,13 @@ namespace bs
 		ParticleSystemSettings psSettings;
 
 		// Specify that we want to render 3D meshes instead of billboards
-		psSettings.renderMode = ParticleRenderMode::Mesh;
+		psSettings.RenderMode = ParticleRenderMode::Mesh;
 
 		// Specify the mesh to use for particles
-		psSettings.mesh = assets.sphereMesh;
+		psSettings.Mesh = assets.SphereMesh;
 
 		// Set up a plain white diffuse material
-		psSettings.material = assets.particles3DMat;
+		psSettings.Material = assets.Particles3DMat;
 
 		// And actually apply the settings
 		particleSystem->SetSettings(psSettings);
@@ -540,8 +540,8 @@ namespace bs
 
 		//// Add a sphere using an emissive material to represent the light
 		HRenderable lightSphere = lightSO->AddComponent<CRenderable>();
-		lightSphere->SetMesh(assets.sphereMesh);
-		lightSphere->SetMaterial(assets.lightMat);
+		lightSphere->SetMesh(assets.SphereMesh);
+		lightSphere->SetMaterial(assets.LightMat);
 
 		//// Add a component that orbits the light at 1m of its original position
 		lightSO->AddComponent<LightOrbit>(1.0f);
@@ -580,7 +580,7 @@ namespace bs
 		PARTICLE_SPHERE_SHAPE_DESC sphereShape;
 
 		// Spawn on a sphere with radius of 30 cm
-		sphereShape.radius = 0.3f;
+		sphereShape.Radius = 0.3f;
 
 		// Assign the shape to the emitter
 		emitter->SetShape(ParticleEmitterSphereShape::Create(sphereShape));
@@ -592,22 +592,22 @@ namespace bs
 		ParticleSystemSettings psSettings;
 
 		// Orient the particles towards the camera plane (standard for billboard particles)
-		psSettings.orientation = ParticleOrientation::ViewPlane;
+		psSettings.Orientation = ParticleOrientation::ViewPlane;
 
 		// But lock the Y orientation
-		psSettings.orientationLockY = true;
+		psSettings.OrientationLockY = true;
 
 		// Sort by distance from camera so that transparency renders properly
-		psSettings.sortMode = ParticleSortMode::Distance;
+		psSettings.SortMode = ParticleSortMode::Distance;
 
 		// Use an emissive material to render the particles
-		psSettings.material = assets.litParticleEmissiveMat;
+		psSettings.Material = assets.LitParticleEmissiveMat;
 
 		// Actually enable the GPU simulation
-		psSettings.gpuSimulation = true;
+		psSettings.GpuSimulation = true;
 
 		// Increase the maximum particle count since we'll be emitting them quickly
-		psSettings.maxParticles = 10000;
+		psSettings.MaxParticles = 10000;
 
 		// And actually apply the general settings
 		particleSystem->SetSettings(psSettings);
@@ -616,13 +616,13 @@ namespace bs
 		ParticleGpuSimulationSettings gpuSimSettings;
 
 		// Set up a vector field. Use the vector field resource we imported earlier
-		gpuSimSettings.vectorField.vectorField = assets.vectorField;
+		gpuSimSettings.VectorField.VectorField = assets.VectorField;
 
 		// Increase the intensity of the forces in the vector field
-		gpuSimSettings.vectorField.intensity = 3.0f;
+		gpuSimSettings.VectorField.Intensity = 3.0f;
 
 		// Setting this to zero ensures the vector field only applies forces, not velocities, to the particles
-		gpuSimSettings.vectorField.tightness = 0.0f;
+		gpuSimSettings.VectorField.Tightness = 0.0f;
 
 		// And actually apply the GPU simulation settings
 		particleSystem->SetGpuSimulationSettings(gpuSimSettings);
