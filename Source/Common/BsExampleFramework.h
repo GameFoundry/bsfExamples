@@ -125,8 +125,8 @@ namespace bs
 
 			// Camera controls for axes (analog input, e.g. mouse or gamepad thumbstick)
 			// These return values in [-1.0, 1.0] range.
-			inputConfig->RegisterAxis("Horizontal", VIRTUAL_AXIS_DESC((UINT32)InputAxis::MouseX));
-			inputConfig->RegisterAxis("Vertical", VIRTUAL_AXIS_DESC((UINT32)InputAxis::MouseY));
+			inputConfig->RegisterAxis("Horizontal", VIRTUAL_AXIS_DESC((u32)InputAxis::MouseX));
+			inputConfig->RegisterAxis("Vertical", VIRTUAL_AXIS_DESC((u32)InputAxis::MouseY));
 		}
 
 		/** 
@@ -145,7 +145,7 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus.FBX",
 			};
 
-			const Path& srcAssetPath = assetPaths[(UINT32)type];
+			const Path& srcAssetPath = assetPaths[(u32)type];
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
@@ -221,7 +221,7 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "Decal/DecalNormal.png",
 			};
 
-			const Path& srcAssetPath = assetPaths[(UINT32)type];
+			const Path& srcAssetPath = assetPaths[(u32)type];
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
@@ -289,7 +289,7 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "Shaders/CustomForward.bsl",
 			};
 
-			const Path& srcAssetPath = assetPaths[(UINT32)type];
+			const Path& srcAssetPath = assetPaths[(u32)type];
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
@@ -319,7 +319,7 @@ namespace bs
 		 * Use the 'fontSizes' parameter to determine which sizes of this font should be imported. Note this option is only
 		 * relevant when a font is being imported (i.e. when the asset file is missing).
 		 */
-		static HFont LoadFont(ExampleFont type, Vector<UINT32> fontSizes)
+		static HFont LoadFont(ExampleFont type, Vector<u32> fontSizes)
 		{
 			// Map from the enum to the actual file path
 			static Path assetPaths[] =
@@ -328,7 +328,7 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "GUI/seguisb.ttf",
 			};
 
-			const Path& srcAssetPath = assetPaths[(UINT32)type];
+			const Path& srcAssetPath = assetPaths[(u32)type];
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
@@ -359,7 +359,7 @@ namespace bs
 
 						Path texPageOutputPath = Path(EXAMPLE_DATA_PATH) + "GUI/";
 
-						UINT32 pageIdx = 0;
+						u32 pageIdx = 0;
 						for (const auto& tex : fontData->TexturePages)
 						{
 							String fontName = srcAssetPath.GetFilename(false);
@@ -391,7 +391,7 @@ namespace bs
 				Path(EXAMPLE_DATA_PATH) + "Particles/VectorField.fga",
 			};
 
-			const Path& srcAssetPath = assetPaths[(UINT32)type];
+			const Path& srcAssetPath = assetPaths[(u32)type];
 
 			// Attempt to load the previously processed asset
 			Path assetPath = srcAssetPath;
