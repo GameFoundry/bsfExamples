@@ -39,8 +39,8 @@ namespace bs
 {
 	constexpr float GROUND_PLANE_SCALE = 50.0f;
 
-	UINT32 windowResWidth = 1280;
-	UINT32 windowResHeight = 720;
+	u32 windowResWidth = 1280;
+	u32 windowResHeight = 720;
 
 	SPtr<Decal> decal;
 

@@ -35,8 +35,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace bs
 {
-	UINT32 windowResWidth = 1280;
-	UINT32 windowResHeight = 720;
+	u32 windowResWidth = 1280;
+	u32 windowResHeight = 720;
 
 	// Declare the methods we'll use to do work on the core thread. Note the "ct" namespace, which we use because we render
 	// on the core thread (ct = core thread). Every object usable on the core thread lives in this namespace.
@@ -134,8 +134,8 @@ int main()
 namespace bs { namespace ct
 {
 	// Declarations for some helper methods we'll use during setup
-	void writeBoxVertices(const AABox& box, UINT8* positions, UINT8* uvs, UINT32 stride);
-	void writeBoxIndices(UINT32* indices);
+	void writeBoxVertices(const AABox& box, u8* positions, u8* uvs, u32 stride);
+	void writeBoxIndices(u32* indices);
 	const char* getVertexProgSource();
 	const char* getFragmentProgSource();
 	Matrix4 createWorldViewProjectionMatrix();
@@ -154,8 +154,8 @@ namespace bs { namespace ct
 	bool gUseHLSL = true;
 	bool gUseVKSL = false;
 
-	const UINT32 NUM_VERTICES = 24;
-	const UINT32 NUM_INDICES = 36;
+	const u32 NUM_VERTICES = 24;
+	const u32 NUM_INDICES = 36;
 
 	// Structure that will hold uniform block variables for the GPU programs
 	struct UniformBlock
@@ -227,7 +227,7 @@ namespace bs { namespace ct
 		gVertexDecl = VertexDeclaration::Create(vertexDesc);
 
 		// Create & fill the vertex buffer for a box mesh
-		UINT32 vertexStride = vertexDesc->GetVertexStride();
+		u32 vertexStride = vertexDesc->GetVertexStride();
 
 		VERTEX_BUFFER_DESC vbDesc;
 		vbDesc.NumVerts = NUM_VERTICES;
@@ -235,9 +235,9 @@ namespace bs { namespace ct
 
 		gVertexBuffer = VertexBuffer::Create(vbDesc);
 
-		UINT8* vbData = (UINT8*)gVertexBuffer->Lock(0, vertexStride * NUM_VERTICES, GBL_WRITE_ONLY_DISCARD);
-		UINT8* positions = vbData + vertexDesc->GetElementOffsetFromStream(VES_POSITION);
-		UINT8* uvs = vbData + vertexDesc->GetElementOffsetFromStream(VES_TEXCOORD);
+		u8* vbData = (u8*)gVertexBuffer->Lock(0, vertexStride * NUM_VERTICES, GBL_WRITE_ONLY_DISCARD);
+		u8* positions = vbData + vertexDesc->GetElementOffsetFromStream(VES_POSITION);
+		u8* uvs = vbData + vertexDesc->GetElementOffsetFromStream(VES_TEXCOORD);
 
 		AABox box(Vector3::ONE * -10.0f, Vector3::ONE * 10.0f);
 		writeBoxVertices(box, positions, uvs, vertexStride);
@@ -250,7 +250,7 @@ namespace bs { namespace ct
 		ibDesc.IndexType = IT_32BIT;
 
 		gIndexBuffer = IndexBuffer::Create(ibDesc);
-		UINT32* ibData = (UINT32*)gIndexBuffer->Lock(0, NUM_INDICES * sizeof(UINT32), GBL_WRITE_ONLY_DISCARD);
+		u32* ibData = (u32*)gIndexBuffer->Lock(0, NUM_INDICES * sizeof(u32), GBL_WRITE_ONLY_DISCARD);
 		writeBoxIndices(ibData);
 
 		gIndexBuffer->Unlock();
@@ -380,7 +380,7 @@ namespace bs { namespace ct
 	/////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////HELPER METHODS/////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////
-	void writeBoxVertices(const AABox& box, UINT8* positions, UINT8* uvs, UINT32 stride)
+	void writeBoxVertices(const AABox& box, UINT8* positions, UINT8* uvs, u32 stride)
 	{
 		AABox::Corner vertOrder[] =
 		{
@@ -400,7 +400,7 @@ namespace bs { namespace ct
 			positions += stride;
 		}
 
-		for (UINT32 i = 0; i < 6; i++)
+		for (u32 i = 0; i < 6; i++)
 		{
 			Vector2 uv;
 
@@ -422,11 +422,11 @@ namespace bs { namespace ct
 		}
 	}
 
-	void writeBoxIndices(UINT32* indices)
+	void writeBoxIndices(u32* indices)
 	{
-		for (UINT32 face = 0; face < 6; face++)
+		for (u32 face = 0; face < 6; face++)
 		{
-			UINT32 faceVertOffset = face * 4;
+			u32 faceVertOffset = face * 4;
 
 			indices[face * 6 + 0] = faceVertOffset + 2;
 			indices[face * 6 + 1] = faceVertOffset + 1;

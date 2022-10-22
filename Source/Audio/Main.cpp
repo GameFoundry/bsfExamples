@@ -35,8 +35,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace bs
 {
-	UINT32 windowResWidth = 1280;
-	UINT32 windowResHeight = 720;
+	u32 windowResWidth = 1280;
+	u32 windowResHeight = 720;
 
 	/** Create a helper component that causes its scene object to move around in a circle around the world origin. */
 	class ObjectFlyer : public Component

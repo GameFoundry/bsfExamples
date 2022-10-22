@@ -42,8 +42,8 @@ namespace bs
 {
 	constexpr float GROUND_PLANE_SCALE = 50.0f;
 
-	UINT32 windowResWidth = 1280;
-	UINT32 windowResHeight = 720;
+	u32 windowResWidth = 1280;
+	u32 windowResHeight = 720;
 
 	/** Set up the scene used by the example, and the camera to view the world through. */
 	void setUpScene()
@@ -147,7 +147,7 @@ namespace bs
 				Vector3(0.0f, 2.65f, 0.0f),
 			};
 
-			for(UINT32 i = 0; i < 6; i++)
+			for(u32 i = 0; i < 6; i++)
 			{
 				Vector3 pos = rotation.Rotate(positions[i]) + position;
 				boxSO[i]->SetPosition(pos);

@@ -28,8 +28,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace bs
 {
-	UINT32 windowResWidth = 1280;
-	UINT32 windowResHeight = 720;
+	u32 windowResWidth = 1280;
+	u32 windowResHeight = 720;
 
 	/** Container for all resources used by the example. */
 	struct Assets

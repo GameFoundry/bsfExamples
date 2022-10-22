@@ -33,8 +33,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace bs
 {
-	UINT32 windowResWidth = 1280;
-	UINT32 windowResHeight = 720;
+	u32 windowResWidth = 1280;
+	u32 windowResHeight = 720;
 
 	/** Set up the GUI elements and the camera. */
 	void setUpGUI()
@@ -134,7 +134,7 @@ namespace bs
 		};
 
 		GUIListBox* listBox = mainPanel->AddNewElement<GUIListBox>(listBoxElements);
-		listBox->OnSelectionToggled.Connect([listBoxElements](UINT32 idx, bool enabled)
+		listBox->OnSelectionToggled.Connect([listBoxElements](u32 idx, bool enabled)
 		{
 			// Log a message when the user selects a new element
 			BS_LOG(Info, Uncategorized, "User selected element: \"" + listBoxElements[idx].GetValue() + "\"");
@@ -184,7 +184,7 @@ namespace bs
 		GUILayoutY* vertLayout = mainPanel->AddNewElement<GUILayoutY>();
 
 		// Add five buttons to the layout
-		for(UINT32 i = 0; i < 5; i++)
+		for(u32 i = 0; i < 5; i++)
 		{
 			vertLayout->AddNewElement<GUIButton>(HString("Click me!"));
 
@@ -209,7 +209,7 @@ namespace bs
 		horzLayout->AddNewElement<GUIFlexibleSpace>();
 
 		// Add vive buttons to the layout
-		for(UINT32 i = 0; i < 5; i++)
+		for(u32 i = 0; i < 5; i++)
 		{
 			horzLayout->AddNewElement<GUIButton>(HString("Click me!"));
 			horzLayout->AddNewElement<GUIFlexibleSpace>();
@@ -231,7 +231,7 @@ namespace bs
 		// Scroll areas have a vertical layout we can append elements to, same as with a normal layout
 		GUILayout& scrollLayout = scrollArea->GetLayout();
 
-		for(UINT32 i = 0; i < 15; i++)
+		for(u32 i = 0; i < 15; i++)
 			scrollLayout.AddNewElement<GUIButton>(HString("Click me!"));
 
 		scrollArea->SetPosition(565, 50);

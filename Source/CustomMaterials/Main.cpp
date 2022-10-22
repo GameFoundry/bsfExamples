@@ -38,8 +38,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace bs
 {
-	UINT32 windowResWidth = 1280;
-	UINT32 windowResHeight = 720;
+	u32 windowResWidth = 1280;
+	u32 windowResHeight = 720;
 
 	/** Container for all resources used by the example. */
 	struct Assets
@@ -125,7 +125,7 @@ namespace bs
 
 	HRenderable gRenderable;
 	HGUIWidget gGUI;
-	UINT32 gMaterialIdx = 0;
+	u32 gMaterialIdx = 0;
 
 	/** Set up the 3D object used by the example, and the camera to view the world through. */
 	void setUp3DScene(const Assets& assets)
@@ -312,7 +312,7 @@ namespace bs
 		inputConfig->RegisterButton("SwitchMaterial", BC_Q);
 
 		gVirtualInput().OnButtonUp.Connect(
-			[](const VirtualButton& btn, UINT32 deviceIdx)
+			[](const VirtualButton& btn, u32 deviceIdx)
 		{
 			if(btn == SwitchMaterialButton)
 				switchMaterial();
