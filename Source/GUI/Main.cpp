@@ -23,7 +23,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This example demonstrates how to set up a graphical user interface. It demoes a variety of common GUI elements, as well
-// as demonstrating the capability of layouts. It also shows how to customize the look of GUI elements. 
+// as demonstrating the capability of layouts. It also shows how to customize the look of GUI elements.
 //
 // The example starts off by setting up a camera, which is required for any kind of rendering, including GUI. It then
 // proceeds to demonstrate a set of basic controls, while using manual positioning. It then shows how to create a custom
@@ -48,21 +48,21 @@ namespace bs
 		// Like before, we create a new scene object at (0, 0, 0).
 		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
-		// Get the primary render window we need for creating the camera. 
+		// Get the primary render window we need for creating the camera.
 		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
-		// Add a Camera component that will output whatever it sees into that window 
+		// Add a Camera component that will output whatever it sees into that window
 		// (You could also use a render texture or another window you created).
 		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
 		sceneCamera->GetViewport()->SetTarget(window);
 
 		// Pick a prettier background color
-		Color gray = Color(51/255.0f, 51/255.0f, 51/255.0f);
+		Color gray = Color(51 / 255.0f, 51 / 255.0f, 51 / 255.0f);
 		sceneCamera->GetViewport()->SetClearColorValue(gray);
 
 		// Let the camera know it will be used for overlay rendering only. This stops the renderer from running potentially
 		// expensive effects that ultimately don't effect anything. It also allows us to use a linear-space color for the
-		// camera background (normal rendering expects colors in gamma space, which is unintuitive for aspects such as 
+		// camera background (normal rendering expects colors in gamma space, which is unintuitive for aspects such as
 		// GUI).
 		const SPtr<RenderSettings>& renderSettings = sceneCamera->GetRenderSettings();
 		renderSettings->OverlayOnly = true;
@@ -83,10 +83,9 @@ namespace bs
 		// Clickable button with a textual label
 		GUIButton* button = mainPanel->AddNewElement<GUIButton>(HString("Click me!"));
 		button->OnClick.Connect([]()
-		{
+								{
 			// Log a message when the user clicks the button
-			BS_LOG(Info, Uncategorized, "Button clicked!");
-		});
+			BS_LOG(Info, Uncategorized, "Button clicked!"); });
 
 		button->SetPosition(10, 50);
 		button->SetSize(100, 30);
@@ -94,7 +93,7 @@ namespace bs
 		// Toggleable button
 		GUIToggle* toggle = mainPanel->AddNewElement<GUIToggle>(HString(""));
 		toggle->OnToggled.Connect([](bool enabled)
-		{
+								  {
 			// Log a message when the user toggles the button
 			if(enabled)
 			{
@@ -103,8 +102,7 @@ namespace bs
 			else
 			{
 				BS_LOG(Info, Uncategorized, "Toggle turned off");
-			}
-		});
+			} });
 
 		toggle->SetPosition(10, 90);
 
@@ -115,18 +113,16 @@ namespace bs
 		// Single-line box in which user can input text into
 		GUIInputBox* inputBox = mainPanel->AddNewElement<GUIInputBox>();
 		inputBox->OnValueChanged.Connect([](const String& value)
-		{
+										 {
 			// Log a message when the user enters new text in the input box
-			BS_LOG(Info, Uncategorized, "User entered: \"" + value + "\"");
-		});
+			BS_LOG(Info, Uncategorized, "User entered: \"" + value + "\""); });
 
 		inputBox->SetText("Type in me...");
 		inputBox->SetPosition(10, 115);
 		inputBox->SetWidth(100);
 
 		// List box allowing you to select one of the specified elements
-		Vector<HString> listBoxElements =
-		{
+		Vector<HString> listBoxElements = {
 			HString("Blue"),
 			HString("Black"),
 			HString("Green"),
@@ -135,11 +131,10 @@ namespace bs
 
 		GUIListBox* listBox = mainPanel->AddNewElement<GUIListBox>(listBoxElements);
 		listBox->OnSelectionToggled.Connect([listBoxElements](u32 idx, bool enabled)
-		{
-			// Log a message when the user selects a new element
-			BS_LOG(Info, Uncategorized, "User selected element: \"" + listBoxElements[idx].GetValue() + "\"");
-			
-		});
+											{
+												// Log a message when the user selects a new element
+												BS_LOG(Info, Uncategorized, "User selected element: \"" + listBoxElements[idx].GetValue() + "\"");
+											});
 
 		listBox->SetPosition(10, 140);
 		listBox->SetWidth(100);
@@ -242,12 +237,9 @@ namespace bs
 		scrollAreaLbl->SetPosition(550, 10);
 
 		///////////////////////////// Button using a custom style ///////////////////
-		HTexture buttonNormalTex = ExampleFramework::LoadTexture(ExampleTexture::GUIExampleButtonNormal, false, false, 
-			false, false);
-		HTexture buttonHoverTex = ExampleFramework::LoadTexture(ExampleTexture::GUIExampleButtonHover, false, false,  
-			false, false);
-		HTexture buttonActiveTex = ExampleFramework::LoadTexture(ExampleTexture::GUIExampleButtonActive, false, false, 
-			false, false);
+		HTexture buttonNormalTex = ExampleFramework::LoadTexture(ExampleTexture::GUIExampleButtonNormal, false, false, false, false);
+		HTexture buttonHoverTex = ExampleFramework::LoadTexture(ExampleTexture::GUIExampleButtonHover, false, false, false, false);
+		HTexture buttonActiveTex = ExampleFramework::LoadTexture(ExampleTexture::GUIExampleButtonActive, false, false, false, false);
 
 		// Create a new style
 		GUIElementStyle customBtnStyle;
@@ -282,18 +274,17 @@ namespace bs
 		GUILabel* customButtonLbl = mainPanel->AddNewElement<GUILabel>(HString("Custom button"), "HeaderLabelStyle");
 		customButtonLbl->SetPosition(800, 10);
 	}
-}
+} // namespace bs
 
 /** Main entry point into the application. */
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
+#	include <windows.h>
 
 int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-	)
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine,
+	_In_ int nCmdShow)
 #else
 int main()
 #endif

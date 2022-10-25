@@ -24,15 +24,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This example renders an object using a variety of custom materials, showing you how you can customize the rendering of
-// your objects if the built-in materials are not adequate. The example is structuraly very similar to the 
+// your objects if the built-in materials are not adequate. The example is structuraly very similar to the
 // PhysicallyBasedShading example, with the addition of custom materials. The most important part of this example are in
 // fact the shaders that it uses, so make sure to also study the BSL code of the shaders we import below.
 //
 // The example first loads necessary resources, including a mesh and textures to use for rendering. Then it imports a set
-// of custom shaders and creates a set of materials based on those shaders. It then proceeds to register the relevant keys 
+// of custom shaders and creates a set of materials based on those shaders. It then proceeds to register the relevant keys
 // used for controling the camera and the rendered object, as well as a key to switch between different materials. It then
 // sets up the 3D scene using the mesh, textures, and the initial material, as well as a camera, along with CameraFlyer and
-// ObjectRotator components that allow the user to fly around the scene and rotate the 3D model. Finally it hooks up a 
+// ObjectRotator components that allow the user to fly around the scene and rotate the 3D model. Finally it hooks up a
 // callback that switches between the materials when the user presses the relevant key, and adds a bit of GUI to let the
 // user know which key to press.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ namespace bs
 
 		//// Create a material that overrides the lighting calculation by implementing a custom BRDF function, in this case
 		//// using a basic Lambert BRDF. Note that lighting calculations for the deferred pipeline are done globally, so
-		//// this material is created and used differently than others in this example. Instead of being assigned to 
+		//// this material is created and used differently than others in this example. Instead of being assigned to
 		//// Renderable it is instead applied globally and will affect all objects using the deferred pipeline.
 		assets.DeferredLightingShader = ExampleFramework::LoadShader(ExampleShader::CustomDeferredLighting);
 
@@ -134,13 +134,13 @@ namespace bs
 		/* 									RENDERABLE                  		*/
 		/************************************************************************/
 
-		// Now we create a scene object that has a position, orientation, scale and optionally components to govern its 
+		// Now we create a scene object that has a position, orientation, scale and optionally components to govern its
 		// logic. In this particular case we are creating a SceneObject with a Renderable component which will render a
 		// mesh at the position of the scene object with the provided material.
 
 		// Create new scene object at (0, 0, 0)
 		HSceneObject pistolSO = SceneObject::Create("Pistol");
-		
+
 		// Attach the Renderable component and hook up the mesh we loaded, and the material we created.
 		gRenderable = pistolSO->AddComponent<CRenderable>();
 		gRenderable->SetMesh(assets.Sphere);
@@ -180,10 +180,10 @@ namespace bs
 		// Like before, we create a new scene object at (0, 0, 0).
 		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
-		// Get the primary render window we need for creating the camera. 
+		// Get the primary render window we need for creating the camera.
 		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
-		// Add a Camera component that will output whatever it sees into that window 
+		// Add a Camera component that will output whatever it sees into that window
 		// (You could also use a render texture or another window you created).
 		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
 		sceneCamera->GetViewport()->SetTarget(window);
@@ -214,7 +214,7 @@ namespace bs
 		HSceneObject guiSO = SceneObject::Create("GUI");
 		gGUI = guiSO->AddComponent<CGUIWidget>(sceneCamera);
 	}
-	
+
 	/** Sets up or rebuilds any GUI elements used by the example. */
 	void updateGUI()
 	{
@@ -224,8 +224,7 @@ namespace bs
 		mainPanel->Clear();
 
 		// Set up strings to display
-		String materialNameLookup[] =
-		{
+		String materialNameLookup[] = {
 			"Standard",
 			"Vertex wobble (Deferred)",
 			"Surface noise (Deferred)",
@@ -252,8 +251,7 @@ namespace bs
 	/** Switches the material used for rendering the renderable object. */
 	void switchMaterial()
 	{
-		HMaterial materialLookup[] =
-		{
+		HMaterial materialLookup[] = {
 			gAssets.StandardMaterial,
 			gAssets.VertexMaterial,
 			gAssets.DeferredSurfaceMaterial,
@@ -304,7 +302,7 @@ namespace bs
 	{
 		// Registers a default set of input controls
 		ExampleFramework::SetupInputConfig();
-	
+
 		static VirtualButton SwitchMaterialButton("SwitchMaterial");
 
 		// Register a key for toggling between different materials
@@ -313,23 +311,22 @@ namespace bs
 
 		gVirtualInput().OnButtonUp.Connect(
 			[](const VirtualButton& btn, u32 deviceIdx)
-		{
-			if(btn == SwitchMaterialButton)
-				switchMaterial();
-		});
+			{
+				if(btn == SwitchMaterialButton)
+					switchMaterial();
+			});
 	}
-}
+} // namespace bs
 
 /** Main entry point into the application. */
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
+#	include <windows.h>
 
 int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-	)
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine,
+	_In_ int nCmdShow)
 #else
 int main()
 #endif
@@ -340,7 +337,7 @@ int main()
 	VideoMode videoMode(windowResWidth, windowResHeight);
 	Application::StartUp(videoMode, "Example", false);
 
-	// Register buttons for controlling the example 
+	// Register buttons for controlling the example
 	setupInput();
 
 	// Load a model and textures, create materials
@@ -351,7 +348,7 @@ int main()
 
 	// Sets up any GUI elements used by the example.
 	updateGUI();
-	
+
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
 	Application::Instance().RunMainLoop();

@@ -5,15 +5,15 @@
 #include "Physics/BsPhysics.h"
 
 namespace bs
-{ 
+{
 	/** Determines speed of camera rotation. */
 	constexpr float ROTATION_SPEED = 3.0f;
 
 	/** Determines range of movement for pitch rotation, in either direction. */
-	constexpr Degree PITCH_RANGE = Degree(45.0f); 
+	constexpr Degree PITCH_RANGE = Degree(45.0f);
 
 	FPSCamera::FPSCamera(const HSceneObject& parent)
-		:Component(parent)
+		: Component(parent)
 	{
 		// Set a name for the component, so we can find it later if needed
 		SetName("FPSCamera");
@@ -77,4 +77,4 @@ namespace bs
 		}
 	}
 
-}
+} // namespace bs

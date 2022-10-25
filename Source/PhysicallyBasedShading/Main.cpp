@@ -15,7 +15,7 @@
 #include "BsExampleFramework.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// This example renders an object using the standard built-in physically based material. 
+// This example renders an object using the standard built-in physically based material.
 //
 // The example first loads necessary resources, including a mesh and textures to use for rendering. Then it creates a
 // material using the standard PBR shader. It then proceeds to register the relevant keys used for controling the camera
@@ -29,7 +29,7 @@ namespace bs
 	u32 windowResHeight = 720;
 
 	/** Container for all resources used by the example. */
-	struct Assets 
+	struct Assets
 	{
 		HMesh ExampleModel;
 		HTexture ExampleAlbedoTex;
@@ -76,13 +76,13 @@ namespace bs
 		/* 									RENDERABLE                  		*/
 		/************************************************************************/
 
-		// Now we create a scene object that has a position, orientation, scale and optionally components to govern its 
+		// Now we create a scene object that has a position, orientation, scale and optionally components to govern its
 		// logic. In this particular case we are creating a SceneObject with a Renderable component which will render a
 		// mesh at the position of the scene object with the provided material.
 
 		// Create new scene object at (0, 0, 0)
 		HSceneObject pistolSO = SceneObject::Create("Pistol");
-		
+
 		// Attach the Renderable component and hook up the mesh we loaded, and the material we created.
 		HRenderable renderable = pistolSO->AddComponent<CRenderable>();
 		renderable->SetMesh(assets.ExampleModel);
@@ -112,10 +112,10 @@ namespace bs
 		// Like before, we create a new scene object at (0, 0, 0).
 		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
-		// Get the primary render window we need for creating the camera. 
+		// Get the primary render window we need for creating the camera.
 		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
-		// Add a Camera component that will output whatever it sees into that window 
+		// Add a Camera component that will output whatever it sees into that window
 		// (You could also use a render texture or another window you created).
 		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
 		sceneCamera->GetViewport()->SetTarget(window);
@@ -135,18 +135,17 @@ namespace bs
 		sceneCameraSO->SetPosition(Vector3(0.2f, 0.05f, 1.4f));
 		sceneCameraSO->LookAt(Vector3(0.2f, 0.05f, 0.0f));
 	}
-}
+} // namespace bs
 
 /** Main entry point into the application. */
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
+#	include <windows.h>
 
 int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-	)
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine,
+	_In_ int nCmdShow)
 #else
 int main()
 #endif
@@ -165,7 +164,7 @@ int main()
 
 	// Set up the scene with an object to render and a camera
 	setUp3DScene(assets);
-	
+
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
 	Application::Instance().RunMainLoop();

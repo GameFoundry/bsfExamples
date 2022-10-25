@@ -20,7 +20,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // This example uses the low-level rendering API to render a textured cube mesh. This is opposed to using scene objects
 // and components, in which case objects are rendered automatically based on their transform and other properties.
-// 
+//
 // Using low-level rendering API gives you full control over rendering, similar to using Vulkan, DirectX or OpenGL APIs.
 //
 // In order to use the low-level rendering system we need to override the Application class so we get notified of updates
@@ -45,7 +45,7 @@ namespace bs
 		void setup(const SPtr<RenderWindow>& renderWindow);
 		void render();
 		void shutdown();
-	}
+	} // namespace ct
 
 	// Override the default Application so we can get notified when engine starts-up, shuts-down and when it executes
 	// every frame
@@ -54,8 +54,8 @@ namespace bs
 	public:
 		// Pass along the start-up structure to the parent, we don't need to handle it
 		MyApplication(const START_UP_DESC& desc)
-			:Application(desc)
-		{ }
+			: Application(desc)
+		{}
 
 	private:
 		// Called when the engine is first started up
@@ -96,18 +96,17 @@ namespace bs
 			Application::PreUpdate();
 		}
 	};
-}
+} // namespace bs
 
 // Main entry point into the application
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
+#	include <windows.h>
 
 int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-)
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine,
+	_In_ int nCmdShow)
 #else
 int main()
 #endif
@@ -131,317 +130,320 @@ int main()
 	return 0;
 }
 
-namespace bs { namespace ct
+namespace bs
 {
-	// Declarations for some helper methods we'll use during setup
-	void writeBoxVertices(const AABox& box, u8* positions, u8* uvs, u32 stride);
-	void writeBoxIndices(u32* indices);
-	const char* getVertexProgSource();
-	const char* getFragmentProgSource();
-	Matrix4 createWorldViewProjectionMatrix();
-
-	// Fields where we'll store the resources required during calls to render(). These are initialized in setup()
-	// and cleaned up in shutDown()
-	SPtr<GraphicsPipelineState> gPipelineState;
-	SPtr<Texture> gSurfaceTex;
-	SPtr<SamplerState> gSurfaceSampler;
-	SPtr<GpuParams> gGpuParams;
-	SPtr<VertexDeclaration> gVertexDecl;
-	SPtr<VertexBuffer> gVertexBuffer;
-	SPtr<IndexBuffer> gIndexBuffer;
-	SPtr<RenderTexture> gRenderTarget;
-	SPtr<RenderWindow> gRenderWindow;
-	bool gUseHLSL = true;
-	bool gUseVKSL = false;
-
-	const u32 NUM_VERTICES = 24;
-	const u32 NUM_INDICES = 36;
-
-	// Structure that will hold uniform block variables for the GPU programs
-	struct UniformBlock
+	namespace ct
 	{
-		Matrix4 GMatWvp; // World view projection matrix
-		Color GTint; // Tint to apply on top of the texture
-	};
+		// Declarations for some helper methods we'll use during setup
+		void writeBoxVertices(const AABox& box, u8* positions, u8* uvs, u32 stride);
+		void writeBoxIndices(u32* indices);
+		const char* getVertexProgSource();
+		const char* getFragmentProgSource();
+		Matrix4 createWorldViewProjectionMatrix();
 
-	// Initializes any resources required for rendering
-	void setup(const SPtr<RenderWindow>& renderWindow)
-	{
-		// Determine which shading language to use (depending on the RenderAPI chosen during build)
-		gUseHLSL = strcmp(BS_RENDER_API_MODULE, "bsfD3D11RenderAPI") == 0;
-		gUseVKSL = strcmp(BS_RENDER_API_MODULE, "bsfVulkanRenderAPI") == 0;
+		// Fields where we'll store the resources required during calls to render(). These are initialized in setup()
+		// and cleaned up in shutDown()
+		SPtr<GraphicsPipelineState> gPipelineState;
+		SPtr<Texture> gSurfaceTex;
+		SPtr<SamplerState> gSurfaceSampler;
+		SPtr<GpuParams> gGpuParams;
+		SPtr<VertexDeclaration> gVertexDecl;
+		SPtr<VertexBuffer> gVertexBuffer;
+		SPtr<IndexBuffer> gIndexBuffer;
+		SPtr<RenderTexture> gRenderTarget;
+		SPtr<RenderWindow> gRenderWindow;
+		bool gUseHLSL = true;
+		bool gUseVKSL = false;
 
-		// This will be the primary output for our rendering (created by the main thread on start-up)
-		gRenderWindow = renderWindow;
+		const u32 NUM_VERTICES = 24;
+		const u32 NUM_INDICES = 36;
 
-		// Create a vertex GPU program
-		const char* vertProgSrc = getVertexProgSource();
-
-		GPU_PROGRAM_DESC vertProgDesc;
-		vertProgDesc.Type = GPT_VERTEX_PROGRAM;
-		vertProgDesc.EntryPoint = "main";
-		vertProgDesc.Language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl" : "glsl4_1";
-		vertProgDesc.Source = vertProgSrc;
-
-		SPtr<GpuProgram> vertProg = GpuProgram::Create(vertProgDesc);
-
-		// Create a fragment GPU program
-		const char* fragProgSrc = getFragmentProgSource();
-
-		GPU_PROGRAM_DESC fragProgDesc;
-		fragProgDesc.Type = GPT_FRAGMENT_PROGRAM;
-		fragProgDesc.EntryPoint = "main";
-		fragProgDesc.Language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl" : "glsl4_1";
-		fragProgDesc.Source = fragProgSrc;
-
-		SPtr<GpuProgram> fragProg = GpuProgram::Create(fragProgDesc);
-
-		// Create a graphics pipeline state
-		BLEND_STATE_DESC blendDesc;
-		blendDesc.RenderTargetDesc[0].BlendEnable = true;
-		blendDesc.RenderTargetDesc[0].RenderTargetWriteMask = 0b0111; // RGB, don't write to alpha
-		blendDesc.RenderTargetDesc[0].BlendOp = BO_ADD;
-		blendDesc.RenderTargetDesc[0].SrcBlend = BF_SOURCE_ALPHA;
-		blendDesc.RenderTargetDesc[0].DstBlend = BF_INV_SOURCE_ALPHA;
-
-		DEPTH_STENCIL_STATE_DESC depthStencilDesc;
-		depthStencilDesc.DepthWriteEnable = false;
-		depthStencilDesc.DepthReadEnable = false;
-
-		PIPELINE_STATE_DESC pipelineDesc;
-		pipelineDesc.BlendState = BlendState::Create(blendDesc);
-		pipelineDesc.DepthStencilState = DepthStencilState::Create(depthStencilDesc);
-		pipelineDesc.VertexProgram = vertProg;
-		pipelineDesc.FragmentProgram = fragProg;
-
-		gPipelineState = GraphicsPipelineState::Create(pipelineDesc);
-
-		// Create an object containing GPU program parameters
-		gGpuParams = GpuParams::Create(gPipelineState);
-
-		// Create a vertex declaration for shader inputs
-		SPtr<VertexDataDesc> vertexDesc = VertexDataDesc::Create();
-		vertexDesc->AddVertElem(VET_FLOAT3, VES_POSITION);
-		vertexDesc->AddVertElem(VET_FLOAT2, VES_TEXCOORD);
-
-		gVertexDecl = VertexDeclaration::Create(vertexDesc);
-
-		// Create & fill the vertex buffer for a box mesh
-		u32 vertexStride = vertexDesc->GetVertexStride();
-
-		VERTEX_BUFFER_DESC vbDesc;
-		vbDesc.NumVerts = NUM_VERTICES;
-		vbDesc.VertexSize = vertexStride;
-
-		gVertexBuffer = VertexBuffer::Create(vbDesc);
-
-		u8* vbData = (u8*)gVertexBuffer->Lock(0, vertexStride * NUM_VERTICES, GBL_WRITE_ONLY_DISCARD);
-		u8* positions = vbData + vertexDesc->GetElementOffsetFromStream(VES_POSITION);
-		u8* uvs = vbData + vertexDesc->GetElementOffsetFromStream(VES_TEXCOORD);
-
-		AABox box(Vector3::ONE * -10.0f, Vector3::ONE * 10.0f);
-		writeBoxVertices(box, positions, uvs, vertexStride);
-
-		gVertexBuffer->Unlock();
-
-		// Create & fill the index buffer for a box mesh
-		INDEX_BUFFER_DESC ibDesc;
-		ibDesc.NumIndices = NUM_INDICES;
-		ibDesc.IndexType = IT_32BIT;
-
-		gIndexBuffer = IndexBuffer::Create(ibDesc);
-		u32* ibData = (u32*)gIndexBuffer->Lock(0, NUM_INDICES * sizeof(u32), GBL_WRITE_ONLY_DISCARD);
-		writeBoxIndices(ibData);
-
-		gIndexBuffer->Unlock();
-
-		// Create a simple 2x2 checkerboard texture to map to the object we're about to render
-		SPtr<PixelData> pixelData = PixelData::Create(2, 2, 1, PF_RGBA8);
-		pixelData->SetColorAt(Color::White, 0, 0);
-		pixelData->SetColorAt(Color::Black, 1, 0);
-		pixelData->SetColorAt(Color::White, 1, 1);
-		pixelData->SetColorAt(Color::Black, 0, 1);
-
-		gSurfaceTex = Texture::Create(pixelData);
-
-		// Create a sampler state for the texture above
-		SAMPLER_STATE_DESC samplerDesc;
-		samplerDesc.MinFilter = FO_POINT;
-		samplerDesc.MagFilter = FO_POINT;
-
-		gSurfaceSampler = SamplerState::Create(samplerDesc);
-
-		// Create a color attachment texture for the render surface
-		TEXTURE_DESC colorAttDesc;
-		colorAttDesc.Width = windowResWidth;
-		colorAttDesc.Height = windowResHeight;
-		colorAttDesc.Format = PF_RGBA8;
-		colorAttDesc.Usage = TU_RENDERTARGET;
-
-		SPtr<Texture> colorAtt = Texture::Create(colorAttDesc);
-
-		// Create a depth attachment texture for the render surface
-		TEXTURE_DESC depthAttDesc;
-		depthAttDesc.Width = windowResWidth;
-		depthAttDesc.Height = windowResHeight;
-		depthAttDesc.Format = PF_D32;
-		depthAttDesc.Usage = TU_DEPTHSTENCIL;
-
-		SPtr<Texture> depthAtt = Texture::Create(depthAttDesc);
-
-		// Create the render surface
-		RENDER_TEXTURE_DESC desc;
-		desc.ColorSurfaces[0].Texture = colorAtt;
-		desc.DepthStencilSurface.Texture = depthAtt;
-
-		gRenderTarget = RenderTexture::Create(desc);
-	}
-
-	// Render the box, called every frame
-	void render()
-	{
-		// Fill out the uniform block variables
-		UniformBlock uniformBlock;
-		uniformBlock.GMatWvp = createWorldViewProjectionMatrix();
-		uniformBlock.GTint = Color(1.0f, 1.0f, 1.0f, 0.5f);
-
-		// Create a uniform block buffer for holding the uniform variables
-		SPtr<GpuParamBlockBuffer> uniformBuffer = GpuParamBlockBuffer::Create(sizeof(UniformBlock));
-		uniformBuffer->Write(0, &uniformBlock, sizeof(uniformBlock));
-
-		// Assign the uniform buffer & texture
-		gGpuParams->SetParamBlockBuffer(GPT_FRAGMENT_PROGRAM, "Params", uniformBuffer);
-		gGpuParams->SetParamBlockBuffer(GPT_VERTEX_PROGRAM, "Params", uniformBuffer);
-
-		gGpuParams->SetTexture(GPT_FRAGMENT_PROGRAM, "gMainTexture", gSurfaceTex);
-
-		// HLSL uses separate sampler states, so we need to use a different name for the sampler
-		if(gUseHLSL)
-			gGpuParams->SetSamplerState(GPT_FRAGMENT_PROGRAM, "gMainTexSamp", gSurfaceSampler);
-		else
-			gGpuParams->SetSamplerState(GPT_FRAGMENT_PROGRAM, "gMainTexture", gSurfaceSampler);
-
-		// Create a command buffer
-		SPtr<CommandBuffer> cmds = CommandBuffer::Create(GQT_GRAPHICS);
-
-		// Get the primary render API access point
-		RenderAPI& rapi = RenderAPI::Instance();
-
-		// Bind render surface & clear it
-		rapi.SetRenderTarget(gRenderTarget, 0, RT_NONE, cmds);
-		rapi.ClearRenderTarget(FBT_COLOR | FBT_DEPTH, Color::Blue, 1, 0, 0xFF, cmds);
-
-		// Bind the pipeline state
-		rapi.SetGraphicsPipeline(gPipelineState, cmds);
-
-		// Set the vertex & index buffers, as well as vertex declaration and draw type
-		rapi.SetVertexBuffers(0, &gVertexBuffer, 1, cmds);
-		rapi.SetIndexBuffer(gIndexBuffer, cmds);
-		rapi.SetVertexDeclaration(gVertexDecl, cmds);
-		rapi.SetDrawOperation(DOT_TRIANGLE_LIST, cmds);
-
-		// Bind the GPU program parameters (i.e. resource descriptors)
-		rapi.SetGpuParams(gGpuParams, cmds);
-
-		// Draw
-		rapi.DrawIndexed(0, NUM_INDICES, 0, NUM_VERTICES, 1, cmds);
-
-		// Submit the command buffer
-		rapi.SubmitCommandBuffer(cmds);
-
-		// Blit the image from the render texture, to the render window
-		rapi.SetRenderTarget(gRenderWindow);
-
-		// Get the color attachment
-		SPtr<Texture> colorTexture = gRenderTarget->GetColorTexture(0);
-
-		// Use the helper RendererUtility to draw a full-screen quad of the provided texture and output it to the currently
-		// bound render target. Internally this uses the same calls we used above, just with a different pipeline and mesh.
-		gRendererUtility().Blit(colorTexture);
-
-		// Present the rendered image to the user
-		rapi.SwapBuffers(gRenderWindow);
-	}
-
-	// Clean up any resources
-	void shutdown()
-	{
-		gPipelineState = nullptr;
-		gSurfaceTex = nullptr;
-		gGpuParams = nullptr;
-		gVertexDecl = nullptr;
-		gVertexBuffer = nullptr;
-		gIndexBuffer = nullptr;
-		gRenderTarget = nullptr;
-		gRenderWindow = nullptr;
-		gSurfaceSampler = nullptr;
-	}
-
-	/////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////HELPER METHODS/////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////
-	void writeBoxVertices(const AABox& box, UINT8* positions, UINT8* uvs, u32 stride)
-	{
-		AABox::Corner vertOrder[] =
+		// Structure that will hold uniform block variables for the GPU programs
+		struct UniformBlock
 		{
-			AABox::NEAR_LEFT_BOTTOM,	AABox::NEAR_RIGHT_BOTTOM,	AABox::NEAR_RIGHT_TOP,		AABox::NEAR_LEFT_TOP,
-			AABox::FAR_RIGHT_BOTTOM,	AABox::FAR_LEFT_BOTTOM,		AABox::FAR_LEFT_TOP,		AABox::FAR_RIGHT_TOP,
-			AABox::FAR_LEFT_BOTTOM,		AABox::NEAR_LEFT_BOTTOM,	AABox::NEAR_LEFT_TOP,		AABox::FAR_LEFT_TOP,
-			AABox::NEAR_RIGHT_BOTTOM,	AABox::FAR_RIGHT_BOTTOM,	AABox::FAR_RIGHT_TOP,		AABox::NEAR_RIGHT_TOP,
-			AABox::FAR_LEFT_TOP,		AABox::NEAR_LEFT_TOP,		AABox::NEAR_RIGHT_TOP,		AABox::FAR_RIGHT_TOP,
-			AABox::FAR_LEFT_BOTTOM,		AABox::FAR_RIGHT_BOTTOM,	AABox::NEAR_RIGHT_BOTTOM,	AABox::NEAR_LEFT_BOTTOM
+			Matrix4 GMatWvp; // World view projection matrix
+			Color GTint; // Tint to apply on top of the texture
 		};
 
-		for (auto& entry : vertOrder)
+		// Initializes any resources required for rendering
+		void setup(const SPtr<RenderWindow>& renderWindow)
 		{
-			Vector3 pos = box.GetCorner(entry);
-			memcpy(positions, &pos, sizeof(pos));
+			// Determine which shading language to use (depending on the RenderAPI chosen during build)
+			gUseHLSL = strcmp(BS_RENDER_API_MODULE, "bsfD3D11RenderAPI") == 0;
+			gUseVKSL = strcmp(BS_RENDER_API_MODULE, "bsfVulkanRenderAPI") == 0;
 
-			positions += stride;
+			// This will be the primary output for our rendering (created by the main thread on start-up)
+			gRenderWindow = renderWindow;
+
+			// Create a vertex GPU program
+			const char* vertProgSrc = getVertexProgSource();
+
+			GPU_PROGRAM_DESC vertProgDesc;
+			vertProgDesc.Type = GPT_VERTEX_PROGRAM;
+			vertProgDesc.EntryPoint = "main";
+			vertProgDesc.Language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl"
+																 : "glsl4_1";
+			vertProgDesc.Source = vertProgSrc;
+
+			SPtr<GpuProgram> vertProg = GpuProgram::Create(vertProgDesc);
+
+			// Create a fragment GPU program
+			const char* fragProgSrc = getFragmentProgSource();
+
+			GPU_PROGRAM_DESC fragProgDesc;
+			fragProgDesc.Type = GPT_FRAGMENT_PROGRAM;
+			fragProgDesc.EntryPoint = "main";
+			fragProgDesc.Language = gUseHLSL ? "hlsl" : gUseVKSL ? "vksl"
+																 : "glsl4_1";
+			fragProgDesc.Source = fragProgSrc;
+
+			SPtr<GpuProgram> fragProg = GpuProgram::Create(fragProgDesc);
+
+			// Create a graphics pipeline state
+			BLEND_STATE_DESC blendDesc;
+			blendDesc.RenderTargetDesc[0].BlendEnable = true;
+			blendDesc.RenderTargetDesc[0].RenderTargetWriteMask = 0b0111; // RGB, don't write to alpha
+			blendDesc.RenderTargetDesc[0].BlendOp = BO_ADD;
+			blendDesc.RenderTargetDesc[0].SrcBlend = BF_SOURCE_ALPHA;
+			blendDesc.RenderTargetDesc[0].DstBlend = BF_INV_SOURCE_ALPHA;
+
+			DEPTH_STENCIL_STATE_DESC depthStencilDesc;
+			depthStencilDesc.DepthWriteEnable = false;
+			depthStencilDesc.DepthReadEnable = false;
+
+			PIPELINE_STATE_DESC pipelineDesc;
+			pipelineDesc.BlendState = BlendState::Create(blendDesc);
+			pipelineDesc.DepthStencilState = DepthStencilState::Create(depthStencilDesc);
+			pipelineDesc.VertexProgram = vertProg;
+			pipelineDesc.FragmentProgram = fragProg;
+
+			gPipelineState = GraphicsPipelineState::Create(pipelineDesc);
+
+			// Create an object containing GPU program parameters
+			gGpuParams = GpuParams::Create(gPipelineState);
+
+			// Create a vertex declaration for shader inputs
+			SPtr<VertexDataDesc> vertexDesc = VertexDataDesc::Create();
+			vertexDesc->AddVertElem(VET_FLOAT3, VES_POSITION);
+			vertexDesc->AddVertElem(VET_FLOAT2, VES_TEXCOORD);
+
+			gVertexDecl = VertexDeclaration::Create(vertexDesc);
+
+			// Create & fill the vertex buffer for a box mesh
+			u32 vertexStride = vertexDesc->GetVertexStride();
+
+			VERTEX_BUFFER_DESC vbDesc;
+			vbDesc.NumVerts = NUM_VERTICES;
+			vbDesc.VertexSize = vertexStride;
+
+			gVertexBuffer = VertexBuffer::Create(vbDesc);
+
+			u8* vbData = (u8*)gVertexBuffer->Lock(0, vertexStride * NUM_VERTICES, GBL_WRITE_ONLY_DISCARD);
+			u8* positions = vbData + vertexDesc->GetElementOffsetFromStream(VES_POSITION);
+			u8* uvs = vbData + vertexDesc->GetElementOffsetFromStream(VES_TEXCOORD);
+
+			AABox box(Vector3::ONE * -10.0f, Vector3::ONE * 10.0f);
+			writeBoxVertices(box, positions, uvs, vertexStride);
+
+			gVertexBuffer->Unlock();
+
+			// Create & fill the index buffer for a box mesh
+			INDEX_BUFFER_DESC ibDesc;
+			ibDesc.NumIndices = NUM_INDICES;
+			ibDesc.IndexType = IT_32BIT;
+
+			gIndexBuffer = IndexBuffer::Create(ibDesc);
+			u32* ibData = (u32*)gIndexBuffer->Lock(0, NUM_INDICES * sizeof(u32), GBL_WRITE_ONLY_DISCARD);
+			writeBoxIndices(ibData);
+
+			gIndexBuffer->Unlock();
+
+			// Create a simple 2x2 checkerboard texture to map to the object we're about to render
+			SPtr<PixelData> pixelData = PixelData::Create(2, 2, 1, PF_RGBA8);
+			pixelData->SetColorAt(Color::White, 0, 0);
+			pixelData->SetColorAt(Color::Black, 1, 0);
+			pixelData->SetColorAt(Color::White, 1, 1);
+			pixelData->SetColorAt(Color::Black, 0, 1);
+
+			gSurfaceTex = Texture::Create(pixelData);
+
+			// Create a sampler state for the texture above
+			SAMPLER_STATE_DESC samplerDesc;
+			samplerDesc.MinFilter = FO_POINT;
+			samplerDesc.MagFilter = FO_POINT;
+
+			gSurfaceSampler = SamplerState::Create(samplerDesc);
+
+			// Create a color attachment texture for the render surface
+			TEXTURE_DESC colorAttDesc;
+			colorAttDesc.Width = windowResWidth;
+			colorAttDesc.Height = windowResHeight;
+			colorAttDesc.Format = PF_RGBA8;
+			colorAttDesc.Usage = TU_RENDERTARGET;
+
+			SPtr<Texture> colorAtt = Texture::Create(colorAttDesc);
+
+			// Create a depth attachment texture for the render surface
+			TEXTURE_DESC depthAttDesc;
+			depthAttDesc.Width = windowResWidth;
+			depthAttDesc.Height = windowResHeight;
+			depthAttDesc.Format = PF_D32;
+			depthAttDesc.Usage = TU_DEPTHSTENCIL;
+
+			SPtr<Texture> depthAtt = Texture::Create(depthAttDesc);
+
+			// Create the render surface
+			RENDER_TEXTURE_DESC desc;
+			desc.ColorSurfaces[0].Texture = colorAtt;
+			desc.DepthStencilSurface.Texture = depthAtt;
+
+			gRenderTarget = RenderTexture::Create(desc);
 		}
 
-		for (u32 i = 0; i < 6; i++)
+		// Render the box, called every frame
+		void render()
 		{
-			Vector2 uv;
+			// Fill out the uniform block variables
+			UniformBlock uniformBlock;
+			uniformBlock.GMatWvp = createWorldViewProjectionMatrix();
+			uniformBlock.GTint = Color(1.0f, 1.0f, 1.0f, 0.5f);
 
-			uv = Vector2(0.0f, 1.0f);
-			memcpy(uvs, &uv, sizeof(uv));
-			uvs += stride;
+			// Create a uniform block buffer for holding the uniform variables
+			SPtr<GpuParamBlockBuffer> uniformBuffer = GpuParamBlockBuffer::Create(sizeof(UniformBlock));
+			uniformBuffer->Write(0, &uniformBlock, sizeof(uniformBlock));
 
-			uv = Vector2(1.0f, 1.0f);
-			memcpy(uvs, &uv, sizeof(uv));
-			uvs += stride;
+			// Assign the uniform buffer & texture
+			gGpuParams->SetParamBlockBuffer(GPT_FRAGMENT_PROGRAM, "Params", uniformBuffer);
+			gGpuParams->SetParamBlockBuffer(GPT_VERTEX_PROGRAM, "Params", uniformBuffer);
 
-			uv = Vector2(1.0f, 0.0f);
-			memcpy(uvs, &uv, sizeof(uv));
-			uvs += stride;
+			gGpuParams->SetTexture(GPT_FRAGMENT_PROGRAM, "gMainTexture", gSurfaceTex);
 
-			uv = Vector2(0.0f, 0.0f);
-			memcpy(uvs, &uv, sizeof(uv));
-			uvs += stride;
+			// HLSL uses separate sampler states, so we need to use a different name for the sampler
+			if(gUseHLSL)
+				gGpuParams->SetSamplerState(GPT_FRAGMENT_PROGRAM, "gMainTexSamp", gSurfaceSampler);
+			else
+				gGpuParams->SetSamplerState(GPT_FRAGMENT_PROGRAM, "gMainTexture", gSurfaceSampler);
+
+			// Create a command buffer
+			SPtr<CommandBuffer> cmds = CommandBuffer::Create(GQT_GRAPHICS);
+
+			// Get the primary render API access point
+			RenderAPI& rapi = RenderAPI::Instance();
+
+			// Bind render surface & clear it
+			rapi.SetRenderTarget(gRenderTarget, 0, RT_NONE, cmds);
+			rapi.ClearRenderTarget(FBT_COLOR | FBT_DEPTH, Color::Blue, 1, 0, 0xFF, cmds);
+
+			// Bind the pipeline state
+			rapi.SetGraphicsPipeline(gPipelineState, cmds);
+
+			// Set the vertex & index buffers, as well as vertex declaration and draw type
+			rapi.SetVertexBuffers(0, &gVertexBuffer, 1, cmds);
+			rapi.SetIndexBuffer(gIndexBuffer, cmds);
+			rapi.SetVertexDeclaration(gVertexDecl, cmds);
+			rapi.SetDrawOperation(DOT_TRIANGLE_LIST, cmds);
+
+			// Bind the GPU program parameters (i.e. resource descriptors)
+			rapi.SetGpuParams(gGpuParams, cmds);
+
+			// Draw
+			rapi.DrawIndexed(0, NUM_INDICES, 0, NUM_VERTICES, 1, cmds);
+
+			// Submit the command buffer
+			rapi.SubmitCommandBuffer(cmds);
+
+			// Blit the image from the render texture, to the render window
+			rapi.SetRenderTarget(gRenderWindow);
+
+			// Get the color attachment
+			SPtr<Texture> colorTexture = gRenderTarget->GetColorTexture(0);
+
+			// Use the helper RendererUtility to draw a full-screen quad of the provided texture and output it to the currently
+			// bound render target. Internally this uses the same calls we used above, just with a different pipeline and mesh.
+			gRendererUtility().Blit(colorTexture);
+
+			// Present the rendered image to the user
+			rapi.SwapBuffers(gRenderWindow);
 		}
-	}
 
-	void writeBoxIndices(u32* indices)
-	{
-		for (u32 face = 0; face < 6; face++)
+		// Clean up any resources
+		void shutdown()
 		{
-			u32 faceVertOffset = face * 4;
-
-			indices[face * 6 + 0] = faceVertOffset + 2;
-			indices[face * 6 + 1] = faceVertOffset + 1;
-			indices[face * 6 + 2] = faceVertOffset + 0;
-			indices[face * 6 + 3] = faceVertOffset + 0;
-			indices[face * 6 + 4] = faceVertOffset + 3;
-			indices[face * 6 + 5] = faceVertOffset + 2;
+			gPipelineState = nullptr;
+			gSurfaceTex = nullptr;
+			gGpuParams = nullptr;
+			gVertexDecl = nullptr;
+			gVertexBuffer = nullptr;
+			gIndexBuffer = nullptr;
+			gRenderTarget = nullptr;
+			gRenderWindow = nullptr;
+			gSurfaceSampler = nullptr;
 		}
-	}
 
-	const char* getVertexProgSource()
-	{
-		if(gUseHLSL)
+		/////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////HELPER METHODS/////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////
+		void writeBoxVertices(const AABox& box, UINT8* positions, UINT8* uvs, u32 stride)
 		{
-			static const char* src = R"(
+			AABox::Corner vertOrder[] = {
+				AABox::NEAR_LEFT_BOTTOM, AABox::NEAR_RIGHT_BOTTOM, AABox::NEAR_RIGHT_TOP, AABox::NEAR_LEFT_TOP,
+				AABox::FAR_RIGHT_BOTTOM, AABox::FAR_LEFT_BOTTOM, AABox::FAR_LEFT_TOP, AABox::FAR_RIGHT_TOP,
+				AABox::FAR_LEFT_BOTTOM, AABox::NEAR_LEFT_BOTTOM, AABox::NEAR_LEFT_TOP, AABox::FAR_LEFT_TOP,
+				AABox::NEAR_RIGHT_BOTTOM, AABox::FAR_RIGHT_BOTTOM, AABox::FAR_RIGHT_TOP, AABox::NEAR_RIGHT_TOP,
+				AABox::FAR_LEFT_TOP, AABox::NEAR_LEFT_TOP, AABox::NEAR_RIGHT_TOP, AABox::FAR_RIGHT_TOP,
+				AABox::FAR_LEFT_BOTTOM, AABox::FAR_RIGHT_BOTTOM, AABox::NEAR_RIGHT_BOTTOM, AABox::NEAR_LEFT_BOTTOM
+			};
+
+			for(auto& entry : vertOrder)
+			{
+				Vector3 pos = box.GetCorner(entry);
+				memcpy(positions, &pos, sizeof(pos));
+
+				positions += stride;
+			}
+
+			for(u32 i = 0; i < 6; i++)
+			{
+				Vector2 uv;
+
+				uv = Vector2(0.0f, 1.0f);
+				memcpy(uvs, &uv, sizeof(uv));
+				uvs += stride;
+
+				uv = Vector2(1.0f, 1.0f);
+				memcpy(uvs, &uv, sizeof(uv));
+				uvs += stride;
+
+				uv = Vector2(1.0f, 0.0f);
+				memcpy(uvs, &uv, sizeof(uv));
+				uvs += stride;
+
+				uv = Vector2(0.0f, 0.0f);
+				memcpy(uvs, &uv, sizeof(uv));
+				uvs += stride;
+			}
+		}
+
+		void writeBoxIndices(u32* indices)
+		{
+			for(u32 face = 0; face < 6; face++)
+			{
+				u32 faceVertOffset = face * 4;
+
+				indices[face * 6 + 0] = faceVertOffset + 2;
+				indices[face * 6 + 1] = faceVertOffset + 1;
+				indices[face * 6 + 2] = faceVertOffset + 0;
+				indices[face * 6 + 3] = faceVertOffset + 0;
+				indices[face * 6 + 4] = faceVertOffset + 3;
+				indices[face * 6 + 5] = faceVertOffset + 2;
+			}
+		}
+
+		const char* getVertexProgSource()
+		{
+			if(gUseHLSL)
+			{
+				static const char* src = R"(
 cbuffer Params
 {
 	float4x4 gMatWVP;
@@ -459,11 +461,11 @@ void main(
 }
 )";
 
-			return src;
-		}
-		else if(gUseVKSL)
-		{
-			static const char* src = R"(
+				return src;
+			}
+			else if(gUseVKSL)
+			{
+				static const char* src = R"(
 layout (binding = 0, std140) uniform Params
 {
 	mat4 gMatWVP;
@@ -487,11 +489,11 @@ void main()
 }
 )";
 
-			return src;
-		}
-		else
-		{
-			static const char* src = R"(
+				return src;
+			}
+			else
+			{
+				static const char* src = R"(
 layout (std140) uniform Params
 {
 	mat4 gMatWVP;
@@ -514,15 +516,15 @@ void main()
 	texcoord0 = bs_texcoord0;
 }
 )";
-			return src;
+				return src;
+			}
 		}
-	}
 
-	const char* getFragmentProgSource()
-	{
-		if (gUseHLSL)
+		const char* getFragmentProgSource()
 		{
-			static const char* src = R"(
+			if(gUseHLSL)
+			{
+				static const char* src = R"(
 cbuffer Params
 {
 	float4x4 gMatWVP;
@@ -539,11 +541,11 @@ float4 main(in float4 inPos : SV_Position, float2 uv : TEXCOORD0) : SV_Target
 }
 )";
 
-			return src;
-		}
-		else if(gUseVKSL)
-		{
-			static const char* src = R"(
+				return src;
+			}
+			else if(gUseVKSL)
+			{
+				static const char* src = R"(
 layout (binding = 0, std140) uniform Params
 {
 	mat4 gMatWVP;
@@ -562,12 +564,12 @@ void main()
 }
 )";
 
-			return src;
-		}
-		else
-		{
+				return src;
+			}
+			else
+			{
 
-			static const char* src = R"(
+				static const char* src = R"(
 layout (std140) uniform Params
 {
 	mat4 gMatWVP;
@@ -585,32 +587,33 @@ void main()
 	fragColor = color * gTint;
 }
 )";
-			return src;
+				return src;
+			}
 		}
-	}
 
-	Matrix4 createWorldViewProjectionMatrix()
-	{
-		Matrix4 proj = Matrix4::ProjectionPerspective(Degree(75.0f), 16.0f / 9.0f, 0.05f, 1000.0f);
-		bs::RenderAPI::ConvertProjectionMatrix(proj, proj);
+		Matrix4 createWorldViewProjectionMatrix()
+		{
+			Matrix4 proj = Matrix4::ProjectionPerspective(Degree(75.0f), 16.0f / 9.0f, 0.05f, 1000.0f);
+			bs::RenderAPI::ConvertProjectionMatrix(proj, proj);
 
-		Vector3 cameraPos = Vector3(0.0f, -20.0f, 50.0f);
-		Vector3 lookDir = -Vector3::Normalize(cameraPos);
+			Vector3 cameraPos = Vector3(0.0f, -20.0f, 50.0f);
+			Vector3 lookDir = -Vector3::Normalize(cameraPos);
 
-		Quaternion cameraRot(BsIdentity);
-		cameraRot.LookRotation(lookDir);
+			Quaternion cameraRot(BsIdentity);
+			cameraRot.LookRotation(lookDir);
 
-		Matrix4 view = Matrix4::View(cameraPos, cameraRot);
+			Matrix4 view = Matrix4::View(cameraPos, cameraRot);
 
-		Quaternion rotation(Vector3::UNIT_Y, Degree(gTime().GetTime() * 90.0f));
-		Matrix4 world = Matrix4::TRS(Vector3::ZERO, rotation, Vector3::ONE);
+			Quaternion rotation(Vector3::UNIT_Y, Degree(gTime().GetTime() * 90.0f));
+			Matrix4 world = Matrix4::TRS(Vector3::ZERO, rotation, Vector3::ONE);
 
-		Matrix4 viewProj = proj * view * world;
+			Matrix4 viewProj = proj * view * world;
 
-		// GLSL uses column major matrices, so transpose
-		if(!gUseHLSL)
-			viewProj = viewProj.Transpose();
+			// GLSL uses column major matrices, so transpose
+			if(!gUseHLSL)
+				viewProj = viewProj.Transpose();
 
-		return viewProj;
-	}
-}}
+			return viewProj;
+		}
+	} // namespace ct
+} // namespace bs

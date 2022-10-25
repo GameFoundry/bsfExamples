@@ -100,13 +100,13 @@ namespace bs
 		/* 									RENDERABLE                  		*/
 		/************************************************************************/
 
-		// Now we create a scene object that has a position, orientation, scale and optionally components to govern its 
+		// Now we create a scene object that has a position, orientation, scale and optionally components to govern its
 		// logic. In this particular case we are creating a SceneObject with a Renderable component which will render a
 		// mesh at the position of the scene object with the provided material.
 
 		// Create new scene object at (0, 0, 0)
 		HSceneObject droneSO = SceneObject::Create("Drone");
-		
+
 		// Attach the Renderable component and hook up the mesh we loaded, and the material we created.
 		HRenderable renderable = droneSO->AddComponent<CRenderable>();
 		renderable->SetMesh(assets.ExampleModel);
@@ -141,10 +141,10 @@ namespace bs
 		// Like before, we create a new scene object at (0, 0, 0).
 		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
-		// Get the primary render window we need for creating the camera. 
+		// Get the primary render window we need for creating the camera.
 		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
-		// Add a Camera component that will output whatever it sees into that window 
+		// Add a Camera component that will output whatever it sees into that window
 		// (You could also use a render texture or another window you created).
 		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
 		sceneCamera->GetViewport()->SetTarget(window);
@@ -173,18 +173,17 @@ namespace bs
 		sceneCameraSO->SetPosition(Vector3(0.0f, 2.5f, -4.0f) * 0.65f);
 		sceneCameraSO->LookAt(Vector3(0, 1.5f, 0));
 	}
-}
+} // namespace bs
 
 /** Main entry point into the application. */
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
+#	include <windows.h>
 
 int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-	)
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine,
+	_In_ int nCmdShow)
 #else
 int main()
 #endif
@@ -203,7 +202,7 @@ int main()
 
 	// Set up the scene with an object to render and a camera
 	setUp3DScene(assets);
-	
+
 	// Runs the main loop that does most of the work. This method will exit when user closes the main
 	// window or exits in some other way.
 	Application::Instance().RunMainLoop();

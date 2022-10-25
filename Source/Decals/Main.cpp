@@ -30,9 +30,9 @@
 // It also sets up necessary physical objects for collision, as well as the character collider and necessary components
 // for walking around the environment.
 //
-// The example first sets up the scene consisting of a floor, box and a skybox. Character controller is created next, 
+// The example first sets up the scene consisting of a floor, box and a skybox. Character controller is created next,
 // as well as the camera. Components for moving the character controller and the camera are attached to allow the user to
-// control the character. It then loads the required decal textures, sets up a decal material and initializes the actual 
+// control the character. It then loads the required decal textures, sets up a decal material and initializes the actual
 // decal component. Finally the cursor is hidden and quit on Esc key press hooked up.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace bs
@@ -59,7 +59,7 @@ namespace bs
 
 		// Grab the default PBR shader
 		HShader shader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
-		
+
 		// Create a set of materials to apply to renderables used
 		HMaterial planeMaterial = Material::Create(shader);
 		planeMaterial->SetTexture("gAlbedoTex", gridPattern2);
@@ -98,7 +98,7 @@ namespace bs
 		boxRenderable->SetMesh(boxMesh);
 		boxRenderable->SetMaterial(boxMaterial);
 
-		// Set a non-default layer for the box, so we can use it for masking on which surfaces should the decal be 
+		// Set a non-default layer for the box, so we can use it for masking on which surfaces should the decal be
 		// projected onto
 		boxRenderable->SetLayer(1 << 1);
 
@@ -131,10 +131,10 @@ namespace bs
 		// Like before, we create a new scene object at (0, 0, 0).
 		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
-		// Get the primary render window we need for creating the camera. 
+		// Get the primary render window we need for creating the camera.
 		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
-		// Add a Camera component that will output whatever it sees into that window 
+		// Add a Camera component that will output whatever it sees into that window
 		// (You could also use a render texture or another window you created).
 		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
 		sceneCamera->GetViewport()->SetTarget(window);
@@ -189,13 +189,10 @@ namespace bs
 		decalMaterial->SetTexture("gNormalTex", decalNormalTex);
 
 		decalMaterial->SetVariation(ShaderVariation(
-			{
-				// Use the default, transparent blend mode that uses traditional PBR textures to project. Normally no need
-				// to set the default explicitly but it's done here for example purposes. See the manual for all available 
-				// modes
-				ShaderVariation::Param("BLEND_MODE", 0)
-			})
-		);
+			{ // Use the default, transparent blend mode that uses traditional PBR textures to project. Normally no need
+			  // to set the default explicitly but it's done here for example purposes. See the manual for all available
+			  // modes
+			  ShaderVariation::Param("BLEND_MODE", 0) }));
 
 		// Create the decal scene object, position and orient it, facing down
 		HSceneObject decalSO = SceneObject::Create("Decal");
@@ -216,27 +213,24 @@ namespace bs
 
 		// Hook up input that launches a sphere when user clicks the mouse, and Esc key to quit
 		gInput().OnButtonUp.Connect([=](const ButtonEvent& ev)
-		{
+									{
 			if(ev.ButtonCode == BC_ESCAPE)
 			{
 				// Quit the application when Escape key is pressed
 				gApplication().QuitRequested();
-			}
-		});
-
+			} });
 	}
-}
+} // namespace bs
 
 /** Main entry point into the application. */
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
+#	include <windows.h>
 
 int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-	)
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine,
+	_In_ int nCmdShow)
 #else
 int main()
 #endif

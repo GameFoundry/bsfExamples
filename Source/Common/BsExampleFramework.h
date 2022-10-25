@@ -83,7 +83,7 @@ namespace bs
 			const Path dataPath = EXAMPLE_DATA_PATH;
 			const Path manifestPath = dataPath + "ResourceManifest.asset";
 
-			if (FileSystem::Exists(manifestPath))
+			if(FileSystem::Exists(manifestPath))
 				manifest = ResourceManifest::Load(manifestPath, dataPath);
 			else
 				manifest = ResourceManifest::Create("ExampleAssets");
@@ -129,18 +129,17 @@ namespace bs
 			inputConfig->RegisterAxis("Vertical", VIRTUAL_AXIS_DESC((u32)InputAxis::MouseY));
 		}
 
-		/** 
+		/**
 		 * Loads one of the builtin mesh assets. If the asset doesn't exist, the mesh will be re-imported from the source
-		 * file, and then saved so it can be loaded on the next call to this method. 
-		 * 
+		 * file, and then saved so it can be loaded on the next call to this method.
+		 *
 		 * Use the 'scale' parameter to control the size of the mesh. Note this option is only relevant when a mesh is
 		 * being imported (i.e. when the asset file is missing).
 		 */
 		static HMesh LoadMesh(ExampleMesh type, float scale = 1.0f)
 		{
 			// Map from the enum to the actual file path
-			static Path assetPaths[] =
-			{
+			static Path assetPaths[] = {
 				Path(EXAMPLE_DATA_PATH) + "Pistol/Pistol01.fbx",
 				Path(EXAMPLE_DATA_PATH) + "Cerberus/Cerberus.FBX",
 			};
@@ -152,14 +151,14 @@ namespace bs
 			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
 			HMesh model = gResources().Load<Mesh>(assetPath);
-			if (model == nullptr) // Mesh file doesn't exist, import from the source file.
+			if(model == nullptr) // Mesh file doesn't exist, import from the source file.
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
 				SPtr<ImportOptions> meshImportOptions = Importer::Instance().CreateImportOptions(srcAssetPath);
 
 				// rtti_is_of_type checks if the import options are of valid type, in case the provided path is pointing to a
 				// non-mesh resource. This is similar to dynamic_cast but uses Banshee internal RTTI system for type checking.
-				if (rtti_is_of_type<MeshImportOptions>(meshImportOptions))
+				if(rtti_is_of_type<MeshImportOptions>(meshImportOptions))
 				{
 					MeshImportOptions* importOptions = static_cast<MeshImportOptions*>(meshImportOptions.get());
 
@@ -181,20 +180,18 @@ namespace bs
 		}
 
 		/**
-		 * Loads one of the builtin texture assets. If the asset doesn't exist, the texture will be re-imported from the 
-		 * source file, and then saved so it can be loaded on the next call to this method. 
-		 * 
-		 * Textures not in sRGB space (e.g. normal maps) need to be specially marked by setting 'isSRGB' to false. Also 
+		 * Loads one of the builtin texture assets. If the asset doesn't exist, the texture will be re-imported from the
+		 * source file, and then saved so it can be loaded on the next call to this method.
+		 *
+		 * Textures not in sRGB space (e.g. normal maps) need to be specially marked by setting 'isSRGB' to false. Also
 		 * allows for conversion of texture to cubemap by setting the 'isCubemap' parameter. If the data should be imported
 		 * in a floating point format, specify 'isHDR' to true. Note these options are only relevant when a texture is
 		 * being imported (i.e. when asset file is missing). If 'mips' is true, mip-map levels will be generated.
 		 */
-		static HTexture LoadTexture(ExampleTexture type, bool isSRGB = true, bool isCubemap = false, bool isHDR = false, 
-			bool mips = true)
+		static HTexture LoadTexture(ExampleTexture type, bool isSRGB = true, bool isCubemap = false, bool isHDR = false, bool mips = true)
 		{
 			// Map from the enum to the actual file path
-			static Path assetPaths[] =
-			{
+			static Path assetPaths[] = {
 				Path(EXAMPLE_DATA_PATH) + "Pistol/Pistol_DFS.png",
 				Path(EXAMPLE_DATA_PATH) + "Pistol/Pistol_NM.png",
 				Path(EXAMPLE_DATA_PATH) + "Pistol/Pistol_RGH.png",
@@ -228,14 +225,14 @@ namespace bs
 			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
 			HTexture texture = gResources().Load<Texture>(assetPath);
-			if (texture == nullptr) // Texture file doesn't exist, import from the source file.
+			if(texture == nullptr) // Texture file doesn't exist, import from the source file.
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
 				SPtr<ImportOptions> textureImportOptions = Importer::Instance().CreateImportOptions(srcAssetPath);
 
-				// rtti_is_of_type checks if the import options are of valid type, in case the provided path is pointing to a 
+				// rtti_is_of_type checks if the import options are of valid type, in case the provided path is pointing to a
 				// non-texture resource. This is similar to dynamic_cast but uses Banshee internal RTTI system for type checking.
-				if (rtti_is_of_type<TextureImportOptions>(textureImportOptions))
+				if(rtti_is_of_type<TextureImportOptions>(textureImportOptions))
 				{
 					TextureImportOptions* importOptions = static_cast<TextureImportOptions*>(textureImportOptions.get());
 
@@ -255,7 +252,7 @@ namespace bs
 					importOptions->CubemapSourceType = CubemapSourceType::Cylindrical;
 
 					// Importing using a HDR format if requested
-					if (isHDR)
+					if(isHDR)
 						importOptions->Format = PF_RG11B10F;
 				}
 
@@ -274,15 +271,14 @@ namespace bs
 			return texture;
 		}
 
-		/** 
-		 * Loads one of the builtin shader assets. If the asset doesn't exist, the shader will be re-imported from the 
-		 * source file, and then saved so it can be loaded on the next call to this method. 
+		/**
+		 * Loads one of the builtin shader assets. If the asset doesn't exist, the shader will be re-imported from the
+		 * source file, and then saved so it can be loaded on the next call to this method.
 		 */
 		static HShader LoadShader(ExampleShader type)
 		{
 			// Map from the enum to the actual file path
-			static Path assetPaths[] =
-			{
+			static Path assetPaths[] = {
 				Path(EXAMPLE_DATA_PATH) + "Shaders/CustomVertex.bsl",
 				Path(EXAMPLE_DATA_PATH) + "Shaders/CustomDeferredSurface.bsl",
 				Path(EXAMPLE_DATA_PATH) + "Shaders/CustomDeferredLighting.bsl",
@@ -296,7 +292,7 @@ namespace bs
 			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
 			HShader shader = gResources().Load<Shader>(assetPath);
-			if (shader == nullptr) // Shader file doesn't exist, import from the source file.
+			if(shader == nullptr) // Shader file doesn't exist, import from the source file.
 			{
 				shader = gImporter().Import<Shader>(srcAssetPath);
 
@@ -312,9 +308,9 @@ namespace bs
 			return shader;
 		}
 
-		/** 
-		 * Loads one of the builtin font assets. If the asset doesn't exist, the font will be re-imported from the 
-		 * source file, and then saved so it can be loaded on the next call to this method. 
+		/**
+		 * Loads one of the builtin font assets. If the asset doesn't exist, the font will be re-imported from the
+		 * source file, and then saved so it can be loaded on the next call to this method.
 		 *
 		 * Use the 'fontSizes' parameter to determine which sizes of this font should be imported. Note this option is only
 		 * relevant when a font is being imported (i.e. when the asset file is missing).
@@ -322,8 +318,7 @@ namespace bs
 		static HFont LoadFont(ExampleFont type, Vector<u32> fontSizes)
 		{
 			// Map from the enum to the actual file path
-			static Path assetPaths[] =
-			{
+			static Path assetPaths[] = {
 				Path(EXAMPLE_DATA_PATH) + "GUI/segoeuil.ttf",
 				Path(EXAMPLE_DATA_PATH) + "GUI/seguisb.ttf",
 			};
@@ -335,7 +330,7 @@ namespace bs
 			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
 			HFont font = gResources().Load<Font>(assetPath);
-			if (font == nullptr) // Font file doesn't exist, import from the source file.
+			if(font == nullptr) // Font file doesn't exist, import from the source file.
 			{
 				// When importing you may specify optional import options that control how is the asset imported.
 				SPtr<FontImportOptions> fontImportOptions = FontImportOptions::Create();
@@ -353,18 +348,17 @@ namespace bs
 					manifest->RegisterResource(font.GetUuid(), assetPath);
 
 					// Font has child resources, which also need to be registered
-					for (auto& size : fontSizes)
+					for(auto& size : fontSizes)
 					{
 						SPtr<const FontBitmap> fontData = font->GetBitmap(size);
 
 						Path texPageOutputPath = Path(EXAMPLE_DATA_PATH) + "GUI/";
 
 						u32 pageIdx = 0;
-						for (const auto& tex : fontData->TexturePages)
+						for(const auto& tex : fontData->TexturePages)
 						{
 							String fontName = srcAssetPath.GetFilename(false);
-							texPageOutputPath.SetFilename(fontName + "_" + toString(size) + "_texpage_" +
-								toString(pageIdx) + ".asset");
+							texPageOutputPath.SetFilename(fontName + "_" + toString(size) + "_texpage_" + toString(pageIdx) + ".asset");
 
 							gResources().Save(tex, texPageOutputPath, true);
 							manifest->RegisterResource(tex.GetUuid(), texPageOutputPath);
@@ -378,16 +372,15 @@ namespace bs
 			return font;
 		}
 
-		/** 
-		 * Loads one of the builtin non-specific assets. If the asset doesn't exist, it will be re-imported from the 
-		 * source file, and then saved so it can be loaded on the next call to this method. 
+		/**
+		 * Loads one of the builtin non-specific assets. If the asset doesn't exist, it will be re-imported from the
+		 * source file, and then saved so it can be loaded on the next call to this method.
 		 */
-		template<class T>
+		template <class T>
 		static ResourceHandle<T> LoadResource(ExampleResource type)
 		{
 			// Map from the enum to the actual file path
-			static Path assetPaths[] =
-			{
+			static Path assetPaths[] = {
 				Path(EXAMPLE_DATA_PATH) + "Particles/VectorField.fga",
 			};
 
@@ -398,7 +391,7 @@ namespace bs
 			assetPath.SetExtension(srcAssetPath.GetExtension() + ".asset");
 
 			ResourceHandle<T> resource = gResources().Load<T>(assetPath);
-			if (resource == nullptr) // Shader file doesn't exist, import from the source file.
+			if(resource == nullptr) // Shader file doesn't exist, import from the source file.
 			{
 				resource = gImporter().Import<T>(srcAssetPath);
 
@@ -414,10 +407,9 @@ namespace bs
 			return resource;
 		}
 
-
 	private:
 		static SPtr<ResourceManifest> manifest;
 	};
 
 	SPtr<ResourceManifest> ExampleFramework::manifest;
-}
+} // namespace bs

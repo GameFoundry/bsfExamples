@@ -17,17 +17,17 @@ namespace bs
 	/** Wraps an angle so it always stays in [0, 360) range. */
 	Degree wrapAngle(Degree angle)
 	{
-		if (angle.ValueDegrees() < -360.0f)
+		if(angle.ValueDegrees() < -360.0f)
 			angle += Degree(360.0f);
 
-		if (angle.ValueDegrees() > 360.0f)
+		if(angle.ValueDegrees() > 360.0f)
 			angle -= Degree(360.0f);
 
 		return angle;
 	}
 
 	CameraFlyer::CameraFlyer(const HSceneObject& parent)
-		:Component(parent)
+		: Component(parent)
 	{
 		// Set a name for the component, so we can find it later if needed
 		SetName("CameraFlyer");
@@ -54,9 +54,9 @@ namespace bs
 		bool camRotating = gVirtualInput().IsButtonHeld(mRotateCam);
 
 		// If switch to or from rotation mode, hide or show the cursor
-		if (camRotating != mLastButtonState)
+		if(camRotating != mLastButtonState)
 		{
-			if (camRotating)
+			if(camRotating)
 				Cursor::Instance().Hide();
 			else
 				Cursor::Instance().Show();
@@ -67,7 +67,7 @@ namespace bs
 		// If camera is rotating, apply new pitch/yaw rotation values depending on the amount of rotation from the
 		// vertical/horizontal axes.
 		float frameDelta = gTime().GetFrameDelta();
-		if (camRotating)
+		if(camRotating)
 		{
 			mYaw += Degree(gVirtualInput().GetAxisValue(mHorizontalAxis) * ROTATION_SPEED);
 			mPitch += Degree(gVirtualInput().GetAxisValue(mVerticalAxis) * ROTATION_SPEED);
@@ -91,19 +91,19 @@ namespace bs
 
 		// If the movement button is pressed, determine direction to move in
 		Vector3 direction = Vector3::ZERO;
-		if (goingForward) direction += tfrm.GetForward();
-		if (goingBack) direction -= tfrm.GetForward();
-		if (goingRight) direction += tfrm.GetRight();
-		if (goingLeft) direction -= tfrm.GetRight();
+		if(goingForward) direction += tfrm.GetForward();
+		if(goingBack) direction -= tfrm.GetForward();
+		if(goingRight) direction += tfrm.GetRight();
+		if(goingLeft) direction -= tfrm.GetRight();
 
 		// If a direction is chosen, normalize it to determine final direction.
-		if (direction.SquaredLength() != 0)
+		if(direction.SquaredLength() != 0)
 		{
 			direction.Normalize();
 
 			// Apply fast move multiplier if the fast move button is held.
 			float multiplier = 1.0f;
-			if (fastMove)
+			if(fastMove)
 				multiplier = FAST_MODE_MULTIPLIER;
 
 			// Calculate current speed of the camera
@@ -117,10 +117,10 @@ namespace bs
 
 		// If the current speed isn't too small, move the camera in the wanted direction
 		float tooSmall = std::numeric_limits<float>::epsilon();
-		if (mCurrentSpeed > tooSmall)
+		if(mCurrentSpeed > tooSmall)
 		{
 			Vector3 velocity = direction * mCurrentSpeed;
 			SO()->Move(velocity * frameDelta);
 		}
 	}
-}
+} // namespace bs

@@ -24,7 +24,7 @@ namespace bs
 	constexpr float FAST_MODE_MULTIPLIER = 2.0f;
 
 	FPSWalker::FPSWalker(const HSceneObject& parent)
-		:Component(parent)
+		: Component(parent)
 	{
 		// Set a name for the component, so we can find it later if needed
 		SetName("FPSWalker");
@@ -53,10 +53,10 @@ namespace bs
 
 		// If the movement button is pressed, determine direction to move in
 		Vector3 direction = Vector3::ZERO;
-		if (goingForward) direction += tfrm.GetForward();
-		if (goingBack) direction -= tfrm.GetForward();
-		if (goingRight) direction += tfrm.GetRight();
-		if (goingLeft) direction -= tfrm.GetRight();
+		if(goingForward) direction += tfrm.GetForward();
+		if(goingBack) direction -= tfrm.GetForward();
+		if(goingRight) direction += tfrm.GetRight();
+		if(goingLeft) direction -= tfrm.GetRight();
 
 		// Eliminate vertical movement
 		direction.Y = 0.0f;
@@ -65,13 +65,13 @@ namespace bs
 		const float frameDelta = gTime().GetFixedFrameDelta();
 
 		// If a direction is chosen, normalize it to determine final direction.
-		if (direction.SquaredLength() != 0)
+		if(direction.SquaredLength() != 0)
 		{
 			direction.Normalize();
 
 			// Apply fast move multiplier if the fast move button is held.
 			float multiplier = 1.0f;
-			if (fastMove)
+			if(fastMove)
 				multiplier = FAST_MODE_MULTIPLIER;
 
 			// Calculate current speed of the camera
@@ -86,9 +86,8 @@ namespace bs
 		// If the current speed isn't too small, move the camera in the wanted direction
 		Vector3 velocity(BsZero);
 		float tooSmall = std::numeric_limits<float>::epsilon();
-		if (mCurrentSpeed > tooSmall)
+		if(mCurrentSpeed > tooSmall)
 			velocity = direction * mCurrentSpeed;
-
 
 		const SPtr<SceneInstance> sceneInstance = SceneManager::Instance().GetMainScene();
 		BS_ASSERT(sceneInstance != nullptr);
@@ -99,4 +98,4 @@ namespace bs
 		Vector3 gravity = physicsScene->GetGravity();
 		mController->Move((velocity + gravity) * frameDelta);
 	}
-}
+} // namespace bs

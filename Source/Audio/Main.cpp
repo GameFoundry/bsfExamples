@@ -43,8 +43,8 @@ namespace bs
 	{
 	public:
 		ObjectFlyer(const HSceneObject& parent)
-			:Component(parent)
-		{ }
+			: Component(parent)
+		{}
 
 		/** Triggered once per frame. */
 		void Update() override
@@ -53,7 +53,7 @@ namespace bs
 
 			const float x = cos(time);
 			const float z = sin(time);
-			
+
 			SO()->SetPosition(Vector3(x, 0.0f, z));
 		}
 	};
@@ -110,10 +110,10 @@ namespace bs
 		// Like before, we create a new scene object at (0, 0, 0).
 		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
-		// Get the primary render window we need for creating the camera. 
+		// Get the primary render window we need for creating the camera.
 		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
-		// Add a Camera component that will output whatever it sees into that window 
+		// Add a Camera component that will output whatever it sees into that window
 		// (You could also use a render texture or another window you created).
 		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
 		sceneCamera->GetViewport()->SetTarget(window);
@@ -130,7 +130,7 @@ namespace bs
 		HAudioListener listener = sceneCameraSO->AddComponent<CAudioListener>();
 
 		// Add an audio source for playing back the music. Position of the audio source is not important as it is not
-		// a 3D sound. 
+		// a 3D sound.
 		HSceneObject musicSourceSO = SceneObject::Create("Music");
 		HAudioSource musicSource = musicSourceSO->AddComponent<CAudioSource>();
 
@@ -160,7 +160,7 @@ namespace bs
 
 		// Hook up input commands that toggle between the different audio sources.
 		gInput().OnButtonUp.Connect([=](const ButtonEvent& event)
-		{
+									{
 			switch(event.ButtonCode)
 			{
 			case BC_1:
@@ -180,8 +180,7 @@ namespace bs
 				break;
 			default:
 				break;
-			}
-		});
+			} });
 
 		/************************************************************************/
 		/* 									GUI		                     		*/
@@ -211,18 +210,17 @@ namespace bs
 		// Register the layout with the main GUI panel, placing the layout in top left corner of the screen by default
 		mainPanel->AddElement(vertLayout);
 	}
-}
+} // namespace bs
 
 /** Main entry point into the application. */
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
+#	include <windows.h>
 
 int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-	)
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine,
+	_In_ int nCmdShow)
 #else
 int main()
 #endif

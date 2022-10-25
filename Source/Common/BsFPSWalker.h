@@ -6,8 +6,8 @@
 
 namespace bs
 {
-	/** 
-	 * Component that controls movement through a character controller, used for first-person movement. The 
+	/**
+	 * Component that controls movement through a character controller, used for first-person movement. The
 	 * CharacterController component must be attached to the same SceneObject this component is on.
 	 */
 	class FPSWalker : public Component
@@ -16,7 +16,7 @@ namespace bs
 		FPSWalker(const HSceneObject& parent);
 
 		/** Triggered once per frame. Allows the component to handle input and move. */
-		void FixedUpdate() ;
+		void FixedUpdate();
 
 	private:
 		HCharacterController mController;
@@ -31,4 +31,4 @@ namespace bs
 	};
 
 	using HFPSWalker = GameObjectHandle<FPSWalker>;
-}
+} // namespace bs

@@ -36,7 +36,7 @@
 // for walking around the environment.
 //
 // The example first loads necessary resources, including textures and materials. Then it set up the scene, consisting of a
-// floor and a skybox. Character controller is created next, as well as the camera. Components for moving the character 
+// floor and a skybox. Character controller is created next, as well as the camera. Components for moving the character
 // controller and the camera are attached to allow the user to control the character. Finally it sets up three separate
 // particle systems, their creation wrapped in their own creation methods. Finally the cursor is hidden and quit on Esc
 // key press hooked up.
@@ -54,8 +54,8 @@ namespace bs
 	{
 	public:
 		LightOrbit(const HSceneObject& parent, float radius)
-			:Component(parent), mRadius(radius)
-		{ }
+			: Component(parent), mRadius(radius)
+		{}
 
 		void OnInitialized() override
 		{
@@ -113,10 +113,7 @@ namespace bs
 		HShader particleUnlitShader = gBuiltinResources().GetBuiltinShader(BuiltinShader::ParticlesUnlit);
 		assets.SmokeMat = Material::Create(particleUnlitShader);
 		assets.SmokeMat->SetVariation(ShaderVariation(
-			{
-				ShaderVariation::Param("SOFT", true)
-			})
-		);
+			{ ShaderVariation::Param("SOFT", true) }));
 
 		//// Fade over the range of 2m (used for soft particle blending)
 		assets.SmokeMat->SetFloat("gInvDepthRange", 1.0f / 2.0f);
@@ -166,7 +163,7 @@ namespace bs
 
 		// Grab the default PBR shader
 		HShader shader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
-		
+
 		// Create a material for rendering the ground and apply the ground texture
 		HMaterial planeMaterial = Material::Create(shader);
 		planeMaterial->SetTexture("gAlbedoTex", gridPattern);
@@ -222,10 +219,10 @@ namespace bs
 		// Like before, we create a new scene object at (0, 0, 0).
 		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
-		// Get the primary render window we need for creating the camera. 
+		// Get the primary render window we need for creating the camera.
 		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
-		// Add a Camera component that will output whatever it sees into that window 
+		// Add a Camera component that will output whatever it sees into that window
 		// (You could also use a render texture or another window you created).
 		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
 		sceneCamera->GetViewport()->SetTarget(window);
@@ -297,17 +294,16 @@ namespace bs
 
 		// Hook up Esc key to quit
 		gInput().OnButtonUp.Connect([=](const ButtonEvent& ev)
-		{
+									{
 			if(ev.ButtonCode == BC_ESCAPE)
 			{
 				// Quit the application when Escape key is pressed
 				gApplication().QuitRequested();
-			}
-		});
+			} });
 	}
 
-	/** 
-	 * Sets up a particle system using traditional billboard particles to render a smoke effect. The particles are emitted 
+	/**
+	 * Sets up a particle system using traditional billboard particles to render a smoke effect. The particles are emitted
 	 * from the base and distributed towards a cone shape. After emission particle color, size and velocity is modified
 	 * through particle evolvers.
 	 */
@@ -353,7 +349,7 @@ namespace bs
 		emitter->SetShape(ParticleEmitterConeShape::Create(coneShape));
 
 		// Assign the emitter to the particle system
-		particleSystem->SetEmitters({emitter});
+		particleSystem->SetEmitters({ emitter });
 
 		// Set up evolvers that will modify the particle systems over its lifetime
 		Vector<SPtr<ParticleEvolver>> evolvers;
@@ -372,8 +368,8 @@ namespace bs
 		PARTICLE_SIZE_DESC sizeDesc;
 		sizeDesc.Size = TAnimationCurve<float>(
 			{
-				TKeyframe<float>{1.0f, 0.0f, 1.0f, 0.0f},
-				TKeyframe<float>{4.0f, 1.0f, 0.0f, 1.0f},
+				TKeyframe<float>{ 1.0f, 0.0f, 1.0f, 0.0f },
+				TKeyframe<float>{ 4.0f, 1.0f, 0.0f, 1.0f },
 			});
 
 		// Create and add the size evolver
@@ -383,11 +379,8 @@ namespace bs
 		// Modify particle tint from white (no tint) to dark gray over first 40% of their lifetime
 		PARTICLE_COLOR_DESC colorDesc;
 		colorDesc.Color = ColorGradient(
-			{
-				ColorGradientKey(Color::White, 0.0f),
-				ColorGradientKey(Color(0.1f, 0.1f, 0.1f, 1.0f), 0.4f)
-			}
-		);
+			{ ColorGradientKey(Color::White, 0.0f),
+			  ColorGradientKey(Color(0.1f, 0.1f, 0.1f, 1.0f), 0.4f) });
 
 		// Create and add the color evolver
 		SPtr<ParticleEvolver> colorEvolver = bs_shared_ptr_new<ParticleColor>(colorDesc);
@@ -397,8 +390,8 @@ namespace bs
 		PARTICLE_FORCE_DESC forceDesc;
 		forceDesc.Force = TAnimationCurve<Vector3>(
 			{
-				TKeyframe<Vector3>{Vector3::ZERO, Vector3::ZERO, Vector3::ONE, 0.0f},
-				TKeyframe<Vector3>{Vector3(100.0f, 0.0f, 0.0f), -Vector3::ONE, Vector3::ZERO, 0.5f},
+				TKeyframe<Vector3>{ Vector3::ZERO, Vector3::ZERO, Vector3::ONE, 0.0f },
+				TKeyframe<Vector3>{ Vector3(100.0f, 0.0f, 0.0f), -Vector3::ONE, Vector3::ZERO, 0.5f },
 			});
 
 		// Lets the system know the provided force direction is in world space
@@ -430,7 +423,7 @@ namespace bs
 		particleSystem->SetSettings(psSettings);
 	}
 
-	/** 
+	/**
 	 * Sets up a particle system using 3D mesh particles. The particles support lighting which is demonstrated via an
 	 * addition of an orbiting point light. Once emitted the particles are evolved through the gravity evolver, ensuring
 	 * they fall down. After which they collide with the ground plane by using the collider evolver.
@@ -474,7 +467,7 @@ namespace bs
 		emitter->SetShape(ParticleEmitterConeShape::Create(coneShape));
 
 		// Assign the emitter to the particle system
-		particleSystem->SetEmitters({emitter});
+		particleSystem->SetEmitters({ emitter });
 
 		// Set up evolvers that will modify the particle systems over its lifetime
 		Vector<SPtr<ParticleEvolver>> evolvers;
@@ -502,7 +495,7 @@ namespace bs
 		SPtr<ParticleCollisions> collisionEvolver = bs_shared_ptr_new<ParticleCollisions>(collisionsDesc);
 
 		// Assign the plane the particles will collide with
-		collisionEvolver->SetPlanes( { Plane(Vector3::UNIT_Y, 0.0f)});
+		collisionEvolver->SetPlanes({ Plane(Vector3::UNIT_Y, 0.0f) });
 
 		// Register the collision evolver
 		evolvers.push_back(collisionEvolver);
@@ -547,7 +540,7 @@ namespace bs
 		lightSO->AddComponent<LightOrbit>(1.0f);
 	}
 
-	/** 
+	/**
 	 * Sets up a particle system that uses the GPU particle simulation. Particles are spawned on a surface of a sphere and
 	 * a vector field is used for evolving the particles during their lifetime.
 	 */
@@ -586,7 +579,7 @@ namespace bs
 		emitter->SetShape(ParticleEmitterSphereShape::Create(sphereShape));
 
 		// Assign the emitter to the particle system
-		particleSystem->SetEmitters({emitter});
+		particleSystem->SetEmitters({ emitter });
 
 		// Set up general particle system settings
 		ParticleSystemSettings psSettings;
@@ -627,18 +620,17 @@ namespace bs
 		// And actually apply the GPU simulation settings
 		particleSystem->SetGpuSimulationSettings(gpuSimSettings);
 	}
-}
+} // namespace bs
 
 /** Main entry point into the application. */
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
+#	include <windows.h>
 
 int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-	)
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine,
+	_In_ int nCmdShow)
 #else
 int main()
 #endif

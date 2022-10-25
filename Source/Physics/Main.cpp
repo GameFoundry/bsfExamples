@@ -32,11 +32,11 @@
 // and shoot the placed geometry demonstrating various aspects of the physics system. This includes a demonstration of
 // static colliders, dynamic rigidbodies, physical materials, character controller and manual application of forces.
 //
-// The example first loads necessary resources, including textures, materialss and physical materials. Then it sets up the 
-// scene, consisting of a floor, and multiple stacks of boxes that can be knocked down. Character controller is created 
-// next, as well as the camera. Components for moving the character controller and the camera are attached to allow the 
-// user to control the character. Finally an input callback is hooked up that shoots spheres when user presses the left 
-// mouse button. 
+// The example first loads necessary resources, including textures, materialss and physical materials. Then it sets up the
+// scene, consisting of a floor, and multiple stacks of boxes that can be knocked down. Character controller is created
+// next, as well as the camera. Components for moving the character controller and the camera are attached to allow the
+// user to control the character. Finally an input callback is hooked up that shoots spheres when user presses the left
+// mouse button.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace bs
 {
@@ -60,7 +60,7 @@ namespace bs
 
 		// Grab the default PBR shader
 		HShader shader = gBuiltinResources().GetBuiltinShader(BuiltinShader::Standard);
-		
+
 		// Create a set of materials to apply to renderables used
 		HMaterial planeMaterial = Material::Create(shader);
 		planeMaterial->SetTexture("gAlbedoTex", gridPattern2);
@@ -111,7 +111,7 @@ namespace bs
 		auto createBoxStack = [=](const Vector3& position, const Quaternion& rotation = Quaternion::IDENTITY)
 		{
 			HSceneObject boxSO[6];
-			for (auto& entry : boxSO)
+			for(auto& entry : boxSO)
 			{
 				// Create a scene object and a renderable
 				entry = SceneObject::Create("Box");
@@ -134,8 +134,7 @@ namespace bs
 			}
 
 			// Stack the boxes in a pyramid
-			Vector3 positions[] =
-			{
+			Vector3 positions[] = {
 				// First row
 				Vector3(-1.25f, 0.55f, 0.0f),
 				Vector3(0.0f, 0.55f, 0.0f),
@@ -185,10 +184,10 @@ namespace bs
 		// Like before, we create a new scene object at (0, 0, 0).
 		HSceneObject sceneCameraSO = SceneObject::Create("SceneCamera");
 
-		// Get the primary render window we need for creating the camera. 
+		// Get the primary render window we need for creating the camera.
 		SPtr<RenderWindow> window = gApplication().GetPrimaryWindow();
 
-		// Add a Camera component that will output whatever it sees into that window 
+		// Add a Camera component that will output whatever it sees into that window
 		// (You could also use a render texture or another window you created).
 		HCamera sceneCamera = sceneCameraSO->AddComponent<CCamera>();
 		sceneCamera->GetViewport()->SetTarget(window);
@@ -241,7 +240,7 @@ namespace bs
 
 		// Hook up input that launches a sphere when user clicks the mouse, and Esc key to quit
 		gInput().OnButtonUp.Connect([=](const ButtonEvent& ev)
-		{
+									{
 			if(ev.ButtonCode == BC_MOUSE_LEFT)
 			{
 				// Create the scene object and renderable geometry of the sphere
@@ -278,8 +277,7 @@ namespace bs
 			{
 				// Quit the application when Escape key is pressed
 				gApplication().QuitRequested();
-			}
-		});
+			} });
 
 		/************************************************************************/
 		/* 									GUI		                     		*/
@@ -307,18 +305,17 @@ namespace bs
 		// Register the layout with the main GUI panel, placing the layout in top left corner of the screen by default
 		mainPanel->AddElement(vertLayout);
 	}
-}
+} // namespace bs
 
 /** Main entry point into the application. */
 #if BS_PLATFORM == BS_PLATFORM_WIN32
-#include <windows.h>
+#	include <windows.h>
 
 int CALLBACK WinMain(
-	_In_  HINSTANCE hInstance,
-	_In_  HINSTANCE hPrevInstance,
-	_In_  LPSTR lpCmdLine,
-	_In_  int nCmdShow
-	)
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR lpCmdLine,
+	_In_ int nCmdShow)
 #else
 int main()
 #endif

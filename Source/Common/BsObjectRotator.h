@@ -14,7 +14,7 @@ namespace bs
 		ObjectRotator(const HSceneObject& parent);
 
 		/** Triggered once per frame. Allows the component to handle input and move. */
-		void Update() ;
+		void Update();
 
 	private:
 		Degree mPitch; /**< Current pitch rotation of the object (up or down). */
@@ -27,4 +27,4 @@ namespace bs
 
 		static const float ROTATION_SPEED; /**< Determines speed for rotation, in degrees per second. */
 	};
-}
+} // namespace bs

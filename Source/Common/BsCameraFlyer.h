@@ -14,7 +14,7 @@ namespace bs
 		CameraFlyer(const HSceneObject& parent);
 
 		/** Triggered once per frame. Allows the component to handle input and move. */
-		void Update() ;
+		void Update();
 
 	private:
 		float mCurrentSpeed; /**< Current speed of the camera. */
@@ -38,4 +38,4 @@ namespace bs
 		static const float FAST_MODE_MULTIPLIER; /**< Multiplier applied to the speed when the fast move button is held. */
 		static const float ROTATION_SPEED; /**< Determines speed of camera rotation. */
 	};
-}
+} // namespace bs

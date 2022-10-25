@@ -12,17 +12,17 @@ namespace bs
 	/** Wraps an angle so it always stays in [0, 360) range. */
 	Degree wrapAngle2(Degree angle)
 	{
-		if (angle.ValueDegrees() < -360.0f)
+		if(angle.ValueDegrees() < -360.0f)
 			angle += Degree(360.0f);
 
-		if (angle.ValueDegrees() > 360.0f)
+		if(angle.ValueDegrees() > 360.0f)
 			angle -= Degree(360.0f);
 
 		return angle;
 	}
 
 	ObjectRotator::ObjectRotator(const HSceneObject& parent)
-		:Component(parent), mPitch(0.0f), mYaw(0.0f), mLastButtonState(false)
+		: Component(parent), mPitch(0.0f), mYaw(0.0f), mLastButtonState(false)
 	{
 		// Set a name for the component, so we can find it later if needed
 		SetName("ObjectRotator");
@@ -48,9 +48,9 @@ namespace bs
 		bool isRotating = gVirtualInput().IsButtonHeld(mRotateObj);
 
 		// If switch to or from rotation mode, hide or show the cursor
-		if (isRotating != mLastButtonState)
+		if(isRotating != mLastButtonState)
 		{
-			if (isRotating)
+			if(isRotating)
 				Cursor::Instance().Hide();
 			else
 				Cursor::Instance().Show();
@@ -60,7 +60,7 @@ namespace bs
 
 		// If we're rotating, apply new pitch/yaw rotation values depending on the amount of rotation from the
 		// vertical/horizontal axes.
-		if (isRotating)
+		if(isRotating)
 		{
 			mYaw -= Degree(gVirtualInput().GetAxisValue(mHorizontalAxis) * ROTATION_SPEED);
 			mPitch -= Degree(gVirtualInput().GetAxisValue(mVerticalAxis) * ROTATION_SPEED);
@@ -80,4 +80,4 @@ namespace bs
 			SO()->SetRotation(camRot);
 		}
 	}
-}
+} // namespace bs
